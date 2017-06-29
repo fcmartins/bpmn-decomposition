@@ -1,0 +1,36 @@
+{-
+ - Mutual recursive procedures and polymorphism
+ -
+ - Vasco T. Vasconcelos
+ - March 2001
+ -}
+
+{-
+ - A forwarder of type
+ -	forall a. {val: a} <val: a>
+ -}
+def
+Forward (a, b) =
+  a ? (x) =
+    b ! [x]
+
+{-
+ - The next "in def" line is crucial for the program to be typable.
+ - If you delete the line, the program is still syntatically correct,
+ - but it will not be typable.  The reason is that procedures Forward
+ - and Test will be typed together and abstracted thereafter.  Then,
+ - line "Forward [x, y] | x ! [1]" will set Forward to be of type
+ -	{val: Integer, <val: Integer>}
+ - and line "Forward [u, v] | u ! [true]" will not type.
+ -}
+
+in def
+
+Test () =
+  new x, y
+  Forward [x, y] | x ! [1] |
+  new u, v
+  Forward [u, v] | u ! [true]
+in
+inaction
+    

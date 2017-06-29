@@ -1,0 +1,55 @@
+{-
+ - A program with polymorphism over variant records.
+ - A program not typable in TyCO 0.1, but accepted by the compiler.
+ -
+ - Vasco T. Vasconcelos
+ - $Id: variant.tyco,v 1.1 2004/02/12 17:44:20 tyco Exp $
+ -}
+
+def
+  A (x) = x ! a [5]
+  B (x) = x ! b [true]
+  C (x) = x ! c ["TyCO"]
+in
+
+{ new y
+  A [y] |
+  y ? {
+    a (x) = io ! printi [x]
+    d (x) = io ! printb [x]
+  }
+} |
+
+{ new y
+  A [y] |
+  B [y] |
+  y ? {
+    a (x) = io ! printi [x]
+    b (x) = io ! printb [x]
+  }
+} |
+
+{ new y
+  B [y] |
+  C [y] |
+  y ? {
+    b (x) = io ! printb [x]
+    c (x) = io ! prints [x]
+  }
+} |
+
+def
+X (x) = x ! a []
+in
+new y
+X [y] |
+y ? {
+  a () = inaction
+  b () = inaction
+} |
+new z
+X [z] |
+z ? {
+  a () = inaction
+  c () = inaction
+}

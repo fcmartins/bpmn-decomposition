@@ -1,0 +1,36 @@
+{--
+ - The client of the math server
+ - 
+ - @author Vasco T. Vasconcelos, Herve' Paulino
+ - $Id: client.tyco,v 1.3 2004/04/16 13:19:12 tyco Exp $
+ -}
+ 
+import aMathServer from mathServer
+include "../../datatypes/simpleList.tyc"
+include "printServer.tyc"
+
+-- Setup printer's list 
+let printers = NewCons[NewPrinter ["Printer 1"], 
+						NewCons[NewPrinter ["Printer 2"], 
+							NewCons[NewPrinter ["Printer 3"], NewEmptyList[]]]]
+in
+-- Setup a printer server
+let aPrintServer = NewPrintServer [printers] in
+def Loop() = 
+	-- List all available functions.
+	io ! puts ["Available functions: "] ;
+	io ! puts [aMathServer ! list[] ^ "\n"] ; 
+	-- Finally, ask for a function, and for an argument, and
+	-- print at some printer the result of applying the argument to the function  
+	io ! puts ["Give me the name of a function and then an argument "] ; 
+	let 
+		printer = aPrintServer ! getPrinter[] 
+		function = io ! gets []
+		argument =  io ! geti []
+	in	
+		printer ! [aMathServer ! getFunction[function] ! [argument]]  ;
+		Loop[]
+in			
+	Loop[]
+		
+	

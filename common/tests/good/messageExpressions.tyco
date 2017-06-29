@@ -1,0 +1,15 @@
+{-
+ - Expressions that contain method calls
+ -
+ - Vasco T. Vasconcelos
+ - $Id: messageExpressions.tyco,v 1.1 2004/02/12 17:44:20 tyco Exp $
+ -}
+
+def Double (x, replyTo) =
+  replyTo ! [2 * x]
+in
+new id
+{id ? (x, replyTo) = replyTo ! [x]} |
+io ! puti [Double [- id ! [5]]] ;
+io ! prints ["\n"]
+

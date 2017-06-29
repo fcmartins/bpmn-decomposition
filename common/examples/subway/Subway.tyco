@@ -1,0 +1,67 @@
+include "LisbonUnderground.tyc"
+include "Gather.tyc"
+include "ShortestPathFun.tyc"
+
+{--
+ - Compute the shortest path between two nodes in a graph.
+ -
+ - @author Paulo Rafael
+ - $Id: Subway.tyco,v 1.7 2005/03/09 14:21:25 tyco Exp $
+ -}
+def 
+Main () = 
+
+  def 
+  PrintAnswer (text) :
+    io!prints ["\nAnswer\n" ^ text ^ "\n\n"]
+
+  ChooseOption (replyTo) =
+    io!puts ["1 - All possible paths\n"] ;
+    io!puts ["2 - Shortest path\n"] ;
+    io!puts ["0 - Exit\n"] ;
+    io!puts ["Choose option "] ;
+    let option = io ! gets[] in 
+    if option == "1" or option == "2" then 
+      replyTo ! [option]
+    else if option == "0" then
+      io!prints ["Exiting program"]
+    else 
+      io!puts ["ERROR: No such option, please choose again\n"] ; 
+      ChooseOption [replyTo]
+
+  ChooseNode (text, replyTo) =
+    io!puts ["Choose " ^ text ^ " node "] ;
+    let name = io!gets[] in 
+    case lisbon ! get [NewNode [NewString[name], nil]] ! [] of {
+      cons(h, t) = 
+        replyTo ! [h]
+      nil () =
+        io!puts ["ERROR: Node " ^ name ^ " not found, please choose again\n"] ; 
+        ChooseNode [text, replyTo]
+    } 
+  in
+  let option = ChooseOption [] in
+  io!puts ["\nStations\n" ^ lisbon ! toString[] ^ "\n"] ; 
+  let startNode = ChooseNode ["start"] in
+  let endNode = ChooseNode ["end"] in
+  new replyToGather
+  let gather = NewGather [replyToGather] in  
+
+  startNode ! computePaths [endNode, gather] |
+
+  replyToGather ? (foundPaths) =
+  if foundPaths ! length [] == 0 then
+     PrintAnswer ["No such path"] ;
+    Main []
+  else
+    if option == "1" then
+      PrintAnswer [foundPaths ! toString []] ;
+      Main []
+    else
+      new replyToShortestPath
+      foundPaths ! val [NewShortestPathFun [NewEmptyList [], replyToShortestPath]] |
+      replyToShortestPath ? (shortestPath)=      
+      PrintAnswer [shortestPath ! toString []] ;
+      Main []
+in
+Main []

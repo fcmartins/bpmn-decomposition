@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <resourceExtensions />
+    <wildcardResourcePatterns>
+      <entry name="!?*.java" />
+      <entry name="!?*.form" />
+      <entry name="!?*.class" />
+      <entry name="!?*.groovy" />
+      <entry name="!?*.scala" />
+      <entry name="!?*.flex" />
+      <entry name="!?*.kt" />
+      <entry name="!?*.clj" />
+      <entry name="!?*.aj" />
+    </wildcardResourcePatterns>
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="false">
+        <processorPath useClasspath="true" />
+      </profile>
+      <profile default="false" name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="MiddlewareSubscriberService" />
+        <module name="MiddlewareWebServiceCommon" />
+        <module name="SubscriberService" />
+      </profile>
+      <profile default="false" name="Annotation profile for MiddlewareJbpmService" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="MiddlewareJbpmService" />
+      </profile>
+      <profile default="false" name="Annotation profile for DatabaseCommon" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="DatabaseCommon" />
+      </profile>
+      <profile default="false" name="Annotation profile for DemoProgramVariables" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="DemoProgramVariables" />
+      </profile>
+      <profile default="false" name="Annotation profile for WsnInternalService" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="WsnInternalService" />
+      </profile>
+      <profile default="false" name="Annotation profile for MiddlewareExecuteService" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="MiddlewareExecuteService" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="DatabaseCommon" target="1.7" />
+      <module name="DemoProgramVariables" target="1.7" />
+      <module name="MiddlewareExecuteService" target="1.7" />
+      <module name="MiddlewareJbpmService" target="1.7" />
+      <module name="MiddlewareSubscriberService" target="1.5" />
+      <module name="MiddlewareWebServiceCommon" target="1.5" />
+      <module name="SubscriberService" target="1.5" />
+      <module name="WsnInternalService" target="1.7" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

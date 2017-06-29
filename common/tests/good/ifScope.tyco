@@ -1,0 +1,9 @@
+{-
+ - Check the scope of the then branch
+ -
+ - Vasco T. Vasconcelos
+ - March 2001
+ -}
+
+if false
+then inaction | inaction

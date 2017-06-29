@@ -1,0 +1,19 @@
+{-
+ - Takeuchi numbers
+ -
+ - Luis Lopes
+ - $Id: tak.tyco,v 1.1 2004/02/12 17:44:20 tyco Exp $
+ -}
+
+
+def
+tak (x, y, z, r) =
+  if y >= x
+  then 
+     r ! [z]
+  else
+    r ! [tak [tak [x - 1, y, z], tak [y - 1, z, x] , tak [z - 1, x, y]]]
+in  
+io ! puts ["tak (22, 16, 8) = "] ;
+io ! puti [tak [22, 16, 8]] ;
+io ! prints ["\n"]

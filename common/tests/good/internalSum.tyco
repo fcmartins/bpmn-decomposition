@@ -1,0 +1,12 @@
+{-
+ - Internal non-determinism
+ - Use with the -rand option
+ -
+ - Vasco T. vasconcelos
+ - $Id: internalSum.tyco,v 1.1 2004/02/12 17:44:20 tyco Exp $
+ -}
+
+new c
+c ! [] |
+{c ? () = io ! prints ["One\n"]} |	-- The parenthesis are awful
+c ? () = io ! prints ["Two\n"]

@@ -1,0 +1,11 @@
+{--
+ - Test a message with a label. The server.
+ - 
+ - @author Herve' Paulino
+ -}
+export new s 
+s ? {
+	f(x) = inaction 
+	m(x) = io!prints[x] 
+}
+

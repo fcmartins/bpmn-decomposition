@@ -1,0 +1,42 @@
+{--
+ - Spreads to cover all the paths in the list and in the children of the head node
+ - keeping track of how many paths have been formed with gather
+ - Function to use in the List method val
+ - 
+ - @param self reference to the object
+ - @param path current searching path
+ - @param endNode node to find
+ - @param gather keep the accounting of the new paths and number of expected answers
+ - 
+ - @author Paulo Rafael
+ - $Id:$
+ -}
+def 
+ComputePathsFun (self, path, endNode, gather) = 
+  self ? {
+  cons (head, tail) =
+    --expect one more response
+    gather ! inc[] ;  
+
+    --search the rest of the list
+    tail ! val [NewComputePathsFun [path, endNode, gather]] |      
+
+    --analyse the head node
+    if path ! elem [head] then 
+      gather ! dec[] 
+    else       
+      if head ! equals [endNode] then
+        gather ! newPath [path ! add [head]] ;
+        gather ! dec []
+      else 
+        --continue search in children of head node
+        head ! children [] ! val [NewComputePathsFun [path ! add[head], endNode, gather]]
+
+  nil() =  gather ! dec[]
+  }
+-- Constructor
+NewComputePathsFun (path, endNode, gather, replyTo) =
+  new newSelf
+  replyTo ! [newSelf] |
+  ComputePathsFun [newSelf, path, endNode, gather]
+in

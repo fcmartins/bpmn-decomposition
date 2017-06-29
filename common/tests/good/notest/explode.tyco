@@ -1,0 +1,22 @@
+{-
+ - Exhausting head space.
+ -
+ - Luis Lopes
+ - $Id: explode.tyco,v 1.1 2004/04/07 13:35:34 tyco Exp $
+ -}
+
+def 
+  X(x,y) = y ? (w) = x![w^"a"] | io!prints[w] | Y[y,x] | new z X[z,x]
+  Y(x,y) = x ? (w) = y![w^"b"] | io!prints[w] | X[y,x] | new z Y[z,y]
+in  
+new 
+  x,y 
+  x!["b"] | 
+  y!["a"] | 
+  X[x,y]  | 
+  Y[x,y]
+
+-- def X(x,y) = io!prints[x^y] | X[x^y^x,x] in X["a","b"]
+
+--def X(x) = io!prints[x^"a"] | X[x^"b"] | X["b"]
+--in X[""]

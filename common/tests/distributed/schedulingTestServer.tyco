@@ -1,0 +1,19 @@
+{--
+ - Test the scheduling when of a message received from the network
+ - when all the threads have work to process.
+ - 
+ - @author Herve' Paulino
+ -}
+export new x
+new y
+def 
+	Y(self) = Y[self]
+	
+	X(self) = 
+		io ! puts["Enqueued\n"] ;
+		self ? () = 
+			io ! puts["Received and processing\n"] ;
+			X[self]
+in
+Y[y] |
+X[x]

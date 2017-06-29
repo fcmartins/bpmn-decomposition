@@ -1,0 +1,44 @@
+include "reader.tyc"
+{--
+ -  Interface between the client and the keyboard.
+ - 
+ - @param self A reference to the object.
+ - @param id The identifier of the client.
+ - @param server A reference to the server.
+ - 
+ - @author Herve' Paulino
+ - $Id:$
+ -}
+def Interface(self, id, server) = 
+	self  ? () = 
+		io ! puts ["List of logged users:\n" ^ server ! list[] ^ "\n"] ; 
+		io ! puts ["Select a user to chat, or type \"quit\" to quit "] ;
+		let str = io ! gets[] in
+			if str == "quit" then {
+				server ! logout[id] |
+				io ! prints ["Your connection has been terminated. Press Ctrl-C to leave chat.\n"] 
+			}
+			else { 
+				case server ! getPeer[str] of {
+					ok(peer) = 
+						io ! puts ["Type the message to " ^ str ^ 
+										" (enter a line  with \".\" to end).\n"] ;
+						let reader = NewReader[id, peer] in 
+							reader ! [] ;
+							self ! []
+					error() =  
+						io ! puts["Error: user " ^ str ^ " is not logged in.\n"] ; 
+						self ! []
+				} |
+				Interface[self, id, server] 
+			}
+			
+	{-
+	 - The constructor
+	 -}
+	NewInterface(myId, server, replyTo) = 
+		new result
+		Interface	 [result, myId, server] |
+		replyTo ! [result]	
+in
+	

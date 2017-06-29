@@ -1,0 +1,9 @@
+To enable proxy in ant (actually in Java) use the following command:
+
+  export ANT_OPTS="-Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080"
+
+Or run ant with -autoproxy as an alias:
+
+  alias ant="ant -autoproxy"
+
+For more information consult <http://ant.apache.org/manual/proxy.html>

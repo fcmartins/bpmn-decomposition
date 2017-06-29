@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.omg.org/bpmn20" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" xmlns:model="http://www.omg.org/spec/BPMN/20100524/MODEL" id="_66ducXp_EeKHtf-K3TnVow" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" targetNamespace="http://www.omg.org/bpmn20">
+  <model:itemDefinition id="_tempItem" structureRef="Float"/>
+  <model:process id="DataObject" drools:packageName="Sensors" name="DataObject" isExecutable="true">
+    <model:startEvent id="_6D11F3E7-B022-40F5-9E16-5F5F770BE169" drools:bgcolor="#9acd32" drools:selectable="true" name="">
+      <model:outgoing>_4AEC285D-0E16-4363-A67C-D02C09A64659</model:outgoing>
+    </model:startEvent>
+    <model:task id="_45BA2F3D-F312-40F7-BA5D-13C02464E502" drools:selectable="true" drools:taskName="GetTemp" name="GetTemp">
+      <model:incoming>_4AEC285D-0E16-4363-A67C-D02C09A64659</model:incoming>
+      <model:outgoing>_AA9606D9-6E96-4D95-9FE2-BEF8FAD1FE95</model:outgoing>
+      <model:ioSpecification id="_66eVgHp_EeKHtf-K3TnVow">
+        <model:dataInput id="_45BA2F3D-F312-40F7-BA5D-13C02464E502_TaskNameInput" name="TaskName"/>
+        <model:dataOutput id="_45BA2F3D-F312-40F7-BA5D-13C02464E502__B9B0CB84-1086-444C-B7E5-A46D0DA4C7FFOutput" name="_B9B0CB84-1086-444C-B7E5-A46D0DA4C7FF"/>
+        <model:dataOutput id="_45BA2F3D-F312-40F7-BA5D-13C02464E502_tempOutput" name="temp"/>
+        <model:inputSet id="_66eVgnp_EeKHtf-K3TnVow"/>
+        <model:outputSet id="_66eVgXp_EeKHtf-K3TnVow">
+          <model:dataOutputRefs>_45BA2F3D-F312-40F7-BA5D-13C02464E502__B9B0CB84-1086-444C-B7E5-A46D0DA4C7FFOutput</model:dataOutputRefs>
+          <model:dataOutputRefs>_45BA2F3D-F312-40F7-BA5D-13C02464E502_tempOutput</model:dataOutputRefs>
+        </model:outputSet>
+      </model:ioSpecification>
+      <model:dataInputAssociation id="_66eVg3p_EeKHtf-K3TnVow">
+        <model:targetRef>_45BA2F3D-F312-40F7-BA5D-13C02464E502_TaskNameInput</model:targetRef>
+        <model:assignment id="_66eVhHp_EeKHtf-K3TnVow">
+          <model:from xsi:type="model:tFormalExpression" id="_66eVhXp_EeKHtf-K3TnVow">GetTemp</model:from>
+          <model:to xsi:type="model:tFormalExpression" id="_66eVhnp_EeKHtf-K3TnVow">_45BA2F3D-F312-40F7-BA5D-13C02464E502_TaskNameInput</model:to>
+        </model:assignment>
+      </model:dataInputAssociation>
+      <model:dataOutputAssociation id="_66eVh3p_EeKHtf-K3TnVow">
+        <model:sourceRef>_45BA2F3D-F312-40F7-BA5D-13C02464E502__B9B0CB84-1086-444C-B7E5-A46D0DA4C7FFOutput</model:sourceRef>
+        <model:targetRef>temp</model:targetRef>
+      </model:dataOutputAssociation>
+      <model:dataOutputAssociation id="_66eViHp_EeKHtf-K3TnVow">
+        <model:sourceRef>_45BA2F3D-F312-40F7-BA5D-13C02464E502_tempOutput</model:sourceRef>
+        <model:targetRef>temp</model:targetRef>
+      </model:dataOutputAssociation>
+    </model:task>
+    <model:sequenceFlow id="_4AEC285D-0E16-4363-A67C-D02C09A64659" drools:selectable="true" sourceRef="_6D11F3E7-B022-40F5-9E16-5F5F770BE169" targetRef="_45BA2F3D-F312-40F7-BA5D-13C02464E502"/>
+    <model:task id="_5C702DDD-F3A1-4C46-B8E2-1D1C9B773533" drools:selectable="true" drools:taskName="Send" name="Send">
+      <model:incoming>_AA9606D9-6E96-4D95-9FE2-BEF8FAD1FE95</model:incoming>
+      <model:outgoing>_276B5444-BB59-4F78-896A-7BF5DC3C9D80</model:outgoing>
+      <model:ioSpecification id="_66eViXp_EeKHtf-K3TnVow">
+        <model:dataInput id="_5C702DDD-F3A1-4C46-B8E2-1D1C9B773533_TaskNameInput" name="TaskName"/>
+        <model:dataInput id="_5C702DDD-F3A1-4C46-B8E2-1D1C9B773533__B9B0CB84-1086-444C-B7E5-A46D0DA4C7FFInputInput" name="_B9B0CB84-1086-444C-B7E5-A46D0DA4C7FFInput"/>
+        <model:dataInput id="_5C702DDD-F3A1-4C46-B8E2-1D1C9B773533_tempInputInput" name="tempInput"/>
+        <model:dataInput id="_5C702DDD-F3A1-4C46-B8E2-1D1C9B773533_tempInput" name="tempInput"/>
+        <model:inputSet id="_66eVinp_EeKHtf-K3TnVow">
+          <model:dataInputRefs>_5C702DDD-F3A1-4C46-B8E2-1D1C9B773533__B9B0CB84-1086-444C-B7E5-A46D0DA4C7FFInputInput</model:dataInputRefs>
+          <model:dataInputRefs>_5C702DDD-F3A1-4C46-B8E2-1D1C9B773533_tempInputInput</model:dataInputRefs>
+          <model:dataInputRefs>_5C702DDD-F3A1-4C46-B8E2-1D1C9B773533_TaskNameInput</model:dataInputRefs>
+          <model:dataInputRefs>_5C702DDD-F3A1-4C46-B8E2-1D1C9B773533_tempInput</model:dataInputRefs>
+        </model:inputSet>
+        <model:outputSet id="_66e8kHp_EeKHtf-K3TnVow"/>
+      </model:ioSpecification>
+      <model:dataInputAssociation id="_66e8kXp_EeKHtf-K3TnVow">
+        <model:targetRef>_5C702DDD-F3A1-4C46-B8E2-1D1C9B773533_TaskNameInput</model:targetRef>
+        <model:assignment id="_66e8knp_EeKHtf-K3TnVow">
+          <model:from xsi:type="model:tFormalExpression" id="_66e8k3p_EeKHtf-K3TnVow">Send</model:from>
+          <model:to xsi:type="model:tFormalExpression" id="_66e8lHp_EeKHtf-K3TnVow">_5C702DDD-F3A1-4C46-B8E2-1D1C9B773533_TaskNameInput</model:to>
+        </model:assignment>
+      </model:dataInputAssociation>
+      <model:dataInputAssociation id="_66e8lXp_EeKHtf-K3TnVow">
+        <model:sourceRef>temp</model:sourceRef>
+        <model:targetRef>_5C702DDD-F3A1-4C46-B8E2-1D1C9B773533__B9B0CB84-1086-444C-B7E5-A46D0DA4C7FFInputInput</model:targetRef>
+      </model:dataInputAssociation>
+      <model:dataInputAssociation id="_66e8lnp_EeKHtf-K3TnVow">
+        <model:sourceRef>temp</model:sourceRef>
+        <model:targetRef>_5C702DDD-F3A1-4C46-B8E2-1D1C9B773533_tempInputInput</model:targetRef>
+      </model:dataInputAssociation>
+      <model:dataInputAssociation id="_66e8l3p_EeKHtf-K3TnVow">
+        <model:sourceRef>temp</model:sourceRef>
+        <model:targetRef>_5C702DDD-F3A1-4C46-B8E2-1D1C9B773533_tempInput</model:targetRef>
+      </model:dataInputAssociation>
+    </model:task>
+    <model:sequenceFlow id="_AA9606D9-6E96-4D95-9FE2-BEF8FAD1FE95" drools:selectable="true" sourceRef="_45BA2F3D-F312-40F7-BA5D-13C02464E502" targetRef="_5C702DDD-F3A1-4C46-B8E2-1D1C9B773533"/>
+    <model:dataObject id="temp" drools:bgcolor="#d3d3d3" drools:selectable="true" drools:bordercolor="#778899" drools:datype="Float" name="temp" itemSubjectRef="_tempItem"/>
+    <model:endEvent id="_9B1745D0-7F9C-4910-84F6-92C9EDAAE875" drools:bgcolor="#ff6347" drools:selectable="true" name="">
+      <model:incoming>_276B5444-BB59-4F78-896A-7BF5DC3C9D80</model:incoming>
+    </model:endEvent>
+    <model:sequenceFlow id="_276B5444-BB59-4F78-896A-7BF5DC3C9D80" drools:selectable="true" sourceRef="_5C702DDD-F3A1-4C46-B8E2-1D1C9B773533" targetRef="_9B1745D0-7F9C-4910-84F6-92C9EDAAE875"/>
+    <model:association id="_D6B9E799-35EF-4068-8762-41D016CB3483" associationDirection="One" sourceRef="_45BA2F3D-F312-40F7-BA5D-13C02464E502" targetRef="temp"/>
+    <model:association id="_372680DC-3926-4B1C-A22A-5126BE06DFCB" associationDirection="One" sourceRef="temp" targetRef="_5C702DDD-F3A1-4C46-B8E2-1D1C9B773533"/>
+  </model:process>
+  <bpmndi:BPMNDiagram id="_66e8mHp_EeKHtf-K3TnVow">
+    <bpmndi:BPMNPlane id="_66e8mXp_EeKHtf-K3TnVow" bpmnElement="Sensors.TEsteOnly">
+      <bpmndi:BPMNShape id="_66e8mnp_EeKHtf-K3TnVow" bpmnElement="_6D11F3E7-B022-40F5-9E16-5F5F770BE169">
+        <dc:Bounds height="30.0" width="30.0" x="87.0" y="116.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_66e8m3p_EeKHtf-K3TnVow" bpmnElement="_45BA2F3D-F312-40F7-BA5D-13C02464E502">
+        <dc:Bounds height="80.0" width="100.0" x="240.0" y="91.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_66e8nHp_EeKHtf-K3TnVow" bpmnElement="_4AEC285D-0E16-4363-A67C-D02C09A64659">
+        <di:waypoint xsi:type="dc:Point" x="102.0" y="131.0"/>
+        <di:waypoint xsi:type="dc:Point" x="290.0" y="131.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_66e8nXp_EeKHtf-K3TnVow" bpmnElement="_5C702DDD-F3A1-4C46-B8E2-1D1C9B773533">
+        <dc:Bounds height="80.0" width="100.0" x="495.0" y="91.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_66e8nnp_EeKHtf-K3TnVow" bpmnElement="_AA9606D9-6E96-4D95-9FE2-BEF8FAD1FE95">
+        <di:waypoint xsi:type="dc:Point" x="290.0" y="131.0"/>
+        <di:waypoint xsi:type="dc:Point" x="545.0" y="131.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_66e8n3p_EeKHtf-K3TnVow" bpmnElement="temp">
+        <dc:Bounds height="97.0" width="88.0" x="375.0" y="210.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_66e8oHp_EeKHtf-K3TnVow" bpmnElement="_9B1745D0-7F9C-4910-84F6-92C9EDAAE875">
+        <dc:Bounds height="28.0" width="28.0" x="638.0" y="115.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_66e8oXp_EeKHtf-K3TnVow" bpmnElement="_276B5444-BB59-4F78-896A-7BF5DC3C9D80">
+        <di:waypoint xsi:type="dc:Point" x="545.0" y="131.0"/>
+        <di:waypoint xsi:type="dc:Point" x="652.0" y="129.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_66e8onp_EeKHtf-K3TnVow" bpmnElement="_D6B9E799-35EF-4068-8762-41D016CB3483">
+        <di:waypoint xsi:type="dc:Point" x="290.0" y="131.0"/>
+        <di:waypoint xsi:type="dc:Point" x="419.0" y="258.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_66e8o3p_EeKHtf-K3TnVow" bpmnElement="_372680DC-3926-4B1C-A22A-5126BE06DFCB">
+        <di:waypoint xsi:type="dc:Point" x="419.0" y="258.5"/>
+        <di:waypoint xsi:type="dc:Point" x="545.0" y="258.0"/>
+        <di:waypoint xsi:type="dc:Point" x="545.0" y="131.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</model:definitions>

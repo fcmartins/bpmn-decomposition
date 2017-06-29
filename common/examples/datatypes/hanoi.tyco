@@ -1,0 +1,24 @@
+{-
+ - The towers of Hanoi
+ -
+ - Luis Lopes
+ - $Id: hanoi.tyco,v 1.1 2004/02/12 17:44:20 tyco Exp $
+ -}
+
+include "simpleList.tyc"
+
+def 
+Transfer (source, destination, spare, n, replyTo) =
+  if n == 0 then
+    replyTo ! [NewEmptyList[]]
+  else
+      replyTo ! [
+       Append [
+         Transfer [source, spare, destination, n - 1], 
+         NewCons[source,
+            NewCons[destination, Transfer [spare, destination, source, n - 1]]]]]
+in
+let moves = Transfer ["Left peg", "Middle peg", "Right peg", 15] in
+io ! puts ["Number of moves = "] ;
+io ! puti [moves ! length[] / 2] ;
+io ! prints ["\n"]

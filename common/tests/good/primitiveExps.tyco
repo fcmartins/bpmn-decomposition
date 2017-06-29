@@ -1,0 +1,67 @@
+{-
+ - Check the primitive operators.
+ -
+ - Novelties include:
+ -   Equality extensible to all types.
+ -
+ - Vasco T. Vasconcelos
+ - March 2001
+ -}
+
+-- Start with the equality operator
+
+if "lala" == "lulu" then io ! prints ["yes\n"] else io ! prints ["no\n"] |
+
+if true == false then io ! prints ["yes\n"] else io ! prints ["no\n"] |
+
+if 6435 == 435 % 423 / 3 then io ! prints ["yes\n"] else io ! prints ["no\n"] |
+
+if (true and false) == (435 == 423)
+then io ! prints ["yes\n"]
+else io ! prints ["no\n"] |
+
+new a
+a ? {
+  push (e) = inaction
+  pop (r) = inaction
+} |
+new b
+b ? { 
+  push (f) = inaction
+  pop (s) = inaction
+} |
+if a == b then  io ! prints ["yes\n"] else io ! prints ["no\n"] |
+
+-- Aritmetic (Integer) expressions
+
+io ! printi [0] |
+io ! printi [-432] |
+io ! printi [433 + 432] |
+io ! printi [433 * 432] |
+io ! printi [433 / 432] |
+io ! printi [433 - 432] |
+io ! printi [433 % 432] |
+io ! printi [-433] |
+io ! printi [-(433 % 432) * 435 - 675 / - -(6435 + 45 - 4532 % -43)] |
+
+-- Aritmetic (Float) expressions
+{- Not currently supported
+io ! printf [0.0] |
+io ! printf [-0.432] |
+io ! printf [1.432] |
+io ! printf [-321.432] |
+io ! printf [433.435 + 432.87] |
+io ! printf [433.0e4 * 432.0e-4] |
+io ! printf [433.432 / 0.432432] |
+io ! printf [-4.33e-13 - 432.43E12] |
+io ! printf [-433.43 / ((-4.33e-13 - 432.43E12) * -4.33e-13 - 432.43E12)] |
+-}
+
+-- String
+
+io ! prints [hd "Typed" ^ "y" ^ tl "TyCO"]
+
+-- Conversion
+{-
+io ! printb [toFloat 3 ==  3.0]
+-}

@@ -1,0 +1,101 @@
+<!-- Version $Id: build.xml,v 1.5 2011/02/16 20:12:03 cogumbreiro Exp $ -->
+
+<project name="cvm-udp" default="dist">
+	<property name="cvm-udp.jar" value="${basedir}/target/cvm-udp.jar" />
+
+	<!-- Load user properties in the project directory, file 'user.properties'. -->
+	<property file="${basedir}/build.properties" />
+
+	<!-- tycocommon preamble -->
+	<!-- The following are defaults and warning messages. -->
+	<property name="propfile-warning" value=" Create or update properties-file with filename &quot;${basedir}${file.separator}build.properties&quot; in order to declare the aforementioned property." />
+	<property name="tycocommon.path" value="${basedir}/../common" description="The default path for the tycocommon project." />
+	<fail unless="tycocommon.path" message="Set the &quot;tycocommon.path&quot; property key to the path of project &quot;common&quot;.${propfile-warning}" />
+
+	<!-- internal properties -->
+	<property name="target" value="${basedir}/target" />
+	<property name="src" value="${basedir}/src" />
+	<property name="main-src" value="${src}/main/java" />
+	<property name="main-bin" value="${target}/classes" />
+	<property name="test-src" value="${basedir}/src/test/java" />
+	<property name="test-bin" value="${target}/test-classes" />
+	<property name="dist" value="${basedir}/dist" />
+
+	<property name="tycocommon.jar" value="${basedir}/lib/tycocommon-1.0.jar" />
+
+	<target name="eclipse" description="Inititialize this project as an Eclipse project.">
+		<copy todir="${basedir}/" overwrite="true">
+			<fileset dir="${basedir}/eclipse/" />
+		</copy>
+	</target>
+
+	<target name="-init">
+		<mkdir dir="${target}" />
+		<mkdir dir="${main-bin}" />
+		<mkdir dir="${test-bin}" />
+		<!-- make sure that java-cup and jflex are compiled -->
+<!--		<ant antfile="${tycocommon.path}/tycocommon.xml" inheritall="false" dir="${tycocommon.path}" />-->
+	    <property name="libcvm.jar" value="${basedir}/lib/libcvm-1.0.jar" />
+        <property name="libcvm-app.jar" value="${basedir}/lib/libcvm-app-1.0.jar" />
+        <property name="commons-cli.jar" value="${basedir}/lib/commons-cli-1.2.jar" />
+        <checkJar description="CVM-main" property="libcvm.jar" />
+        <checkJar description="CVM-main" property="libcvm-app.jar" />
+        <checkJar description="CVM-main" property="commons-cli.jar" />
+	    <path id="project.class.path">
+	        <pathelement location="${tycocommon.jar}" />
+	        <pathelement location="${libcvm.jar}" />
+            <pathelement location="${libcvm-app.jar}" />
+            <pathelement location="${commons-cli.jar}" />
+	    </path>
+	</target>
+
+	<target name="compile" description="Compiles the source code." depends="-init,-compile" />
+
+	<target name="-compile">
+		<javac destdir="${main-bin}" classpathref="project.class.path" fork="true" srcdir="${main-src}" debug="true" includeantruntime="false">
+			<include name="**/*.java" />
+		</javac>
+	</target>
+
+	<!--
+    Generates a binary distribution of this project, which is a Java executable
+    that holds the CVM that runs with TCP/IP network stack.
+     -->
+	<target name="bdist" description="Generates 'cvm-udp.jar'." depends="-init,-compile">
+		<jar destfile="${cvm-udp.jar}">
+			<zipfileset src="${tycocommon.jar}" />
+            <zipfileset src="${libcvm.jar}" />
+            <zipfileset src="${libcvm-app.jar}" />
+            <zipfileset src="${commons-cli.jar}" />
+			<fileset dir="${main-bin}">
+				<exclude name="**/package.html" />
+			</fileset>
+			<manifest>
+				<attribute name="Main-Class" value="org.callas.vm.udp.Main" />
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="dist" description="Shorthand for target 'bdist'." depends="bdist" />
+
+	<target name="clean" description="Deletes the generated files.">
+		<delete dir="${target}" />
+	</target>
+
+	<!-- Utility macros -->
+    <macrodef name="checkJar">
+        <attribute name="property" />
+        <attribute name="description" />
+        <sequential>
+            <fail message="JAR for @{description} is missing, via property '@{property}' (${@{property}}).">
+                <condition>
+                    <not>
+                        <and>
+                            <available file="${@{property}}" />
+                        </and>
+                    </not>
+                </condition>
+            </fail>
+        </sequential>
+    </macrodef>
+</project>

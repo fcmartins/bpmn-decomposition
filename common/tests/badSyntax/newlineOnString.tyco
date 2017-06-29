@@ -1,0 +1,7 @@
+-- Syntax Error
+
+-- A newline within a string
+
+new x
+x ! lala["A string so long that 
+a new line comes by"

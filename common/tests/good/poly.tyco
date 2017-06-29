@@ -1,0 +1,82 @@
+{-
+ - Testing polymorphism
+ -
+ - Vasco T. Vasconcelos
+ - $Id: poly.tyco,v 1.1 2004/02/12 17:44:20 tyco Exp $
+ -}
+
+{
+def A {- <val: Integer> -} (x) =
+  def B {- Integer -} (y) =
+    x ! [y]
+  in
+    B [1]
+in
+  inaction
+} |
+
+{
+def C {- forall a. a -} (z) =
+  new b
+  b ! [z]
+in
+  C [1] |
+  C [true]
+} |
+
+{
+def
+  D {- forall a. <val: a> -} (x) =
+    def E {- a -} (y) =
+      x ! [y]
+    in
+      inaction
+in
+  inaction
+} |
+
+{
+new a, b
+def F {- forall a. <val: a> a -} (x, i) =
+  def G {- a -} (y) =
+     x ! [y]
+  in
+    G [i]
+in 
+  F [a, 5] |
+  F [b, false]
+} |
+
+{- The following cannot be typed
+{
+def H {- forall a. a -} (x) =
+  def I {- a -} (y) =
+    if x == y then inaction
+  in
+    inaction
+in
+  inaction
+} |
+-}
+
+{
+def J {- forall a. a -} (x) =
+  new y
+  y ? (b) = b ! [x]
+in
+  inaction
+} |
+
+{
+new a
+a ? (z) =
+  def L {- <val: a> -}(x) =
+    def I () =
+      x ! [z]
+    in
+      inaction
+  in
+    inaction
+}  |
+
+io ! prints ["done!\n"]

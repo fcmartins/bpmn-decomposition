@@ -1,0 +1,8 @@
+<ivy-module version="2.0">
+    <info organisation="lasige.gloss" module="javacup" revision="0.10k" />
+    <publications>
+        <artifact name="javacup" type="jar" ext="jar"/>
+        <artifact name="javacup-runtime" type="jar" ext="jar"/>
+        <artifact name="javacup" type="xml" ext="xml" />
+    </publications>
+</ivy-module>

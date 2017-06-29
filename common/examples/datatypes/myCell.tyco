@@ -1,0 +1,23 @@
+{-
+ - Example: Using the cell object manipulate Integer and a Boolean cells. 
+ -
+ - Vasco T. Vasconcelos
+ - $Id: myCell.tyco,v 1.1 2004/02/12 17:44:20 tyco Exp $
+ -}
+
+include "cell.tyc"
+
+let
+  -- an integer cell
+  i = NewIntegerCell []
+  -- a boolean cell
+  b = NewBooleanCell [] 
+in
+io ! puti [i ! read []] ; io ! prints ["\n"] |
+i ! write [5132] |
+io ! puti [i ! read []] ; io ! prints ["\n"] |
+i ! write [-43] |
+io ! putb [b ! read []] ; io ! prints ["\n"] |
+b ! write [true] |
+io ! putb [b ! read []] ; io ! prints ["\n"] |
+b ! write [false]

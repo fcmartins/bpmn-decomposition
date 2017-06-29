@@ -1,0 +1,148 @@
+{--
+ - The program interface.
+ -
+ - @author Andre Goncalves
+ - $Id: subway.tyco,v 1.1 2004/04/07 13:35:34 tyco Exp $
+ -}
+include "convert.tyc"
+include "list.tyc"
+include "station.tyc"
+
+new allStations List[allStations] |
+
+include "lisbonStations.tyc"
+include "lisbonLinks.tyc"
+
+def Interface (allStations) = 
+	def			
+		menu() =
+			io ! puts["\n\nSubway Menu\n"];
+			io ! puts["\n"];
+			io ! puts["1 - All paths\n"];
+			io ! puts["2 - Less Stations\n"];
+			io ! puts["3 - Less Train Changes\n"];
+			io ! puts["4 - Less Time\n"];
+			io ! puts["0 - exit\n"];
+			io ! puts["\n"];
+			let x = io ! geti[] in
+			if x < 0 or x > 4 then
+				io ! puts["Invalid Option: try again\n"];
+				menu []
+			else
+				if x == 1 then 
+					option1[]
+				else if x == 2 then
+					option2[]
+				else if x == 3 then
+					option3[]
+				else if x == 4 then
+					option4[]
+		
+		printAllStations(replyTo)=
+			def loop(pos) =
+				if pos == allStations ! size[]+1 then
+					replyTo ! done[]
+				else
+					io ! puts [ToString[pos] ^" - "^ allStations ! element [pos] ! toString[]^"\n"];
+					loop[pos+1]				
+			in
+				loop[1]
+
+		printPath (path, replyTo) =
+			io ! puts ["The path is: \n"];
+			def loop (pos, replyTo) =
+				if pos == path ! size[] then
+					io ! puts [path ! element [pos] ! toString []^"\n"] ;
+					replyTo ! done[]			
+				else 
+					io ! puts [path ! element [pos] ! toString []^" --> "] ;
+					loop [pos + 1, replyTo]
+			in loop [1, replyTo]
+
+
+		printPaths (paths, replyTo) =
+			def loop (pos, replyTo) =
+				if pos == 0 then
+					replyTo ! done[]
+				else
+					let path = paths ! element [pos] in
+					printPath [path];
+					loop [pos - 1, replyTo]
+			in
+				loop [paths ! size[], replyTo]
+		
+		choseDepartureArrival (replyTo) =
+			def choseDeparture (replyTo)=
+				io ! puts["Chose the departure station\n"];
+				printAllStations [] ;
+				let departureStation = io ! geti[] in
+				if departureStation < 1 or departureStation > allStations ! size[] then
+					io ! puts["Invalid Option: try again\n"];
+					choseDeparture[replyTo]
+				else
+					replyTo ! [departureStation]
+
+				choseArrival(replyTo) =
+					io ! puts["Chose the arrival station\n"];
+					printAllStations [] ;
+					let arrivalStation = io ! geti[] in
+					if arrivalStation < 1 or arrivalStation > allStations ! size[] then
+						io ! puts["Invalid Option: try again\n"];
+						choseArrival[replyTo]
+					else
+						replyTo ! [arrivalStation]
+			in
+				replyTo ! [choseDeparture[],choseArrival[]]
+		
+		option1() =
+			let departureStation, arrivalStation = choseDepartureArrival[] in
+			if arrivalStation == departureStation then
+				io ! puts["The departure station is the same of the arrival station\n"];
+				menu []
+			else
+				case allStations ! element [departureStation] ! 
+						paths [allStations ! element [arrivalStation]] of {
+					err () = inaction
+					ok (paths) = 							
+						printPaths [paths];
+						menu []
+				}
+		
+		option2() =
+			let departureStation, arrivalStation = choseDepartureArrival[] in
+			if arrivalStation == departureStation then
+				io ! puts["The departure station is the same of the arrival station\n"];
+				menu []
+			else
+				printPath [allStations ! element [departureStation] ! 
+							lessStations [allStations ! element [arrivalStation]]];
+				menu []
+
+		option3() =
+			let departureStation, arrivalStation = choseDepartureArrival[] in
+			if arrivalStation == departureStation then
+				io ! puts["The departure station is the same of the arrival station\n"];
+				menu []
+			else
+				let changes,path = allStations ! element [departureStation] ! 
+							lessChanges [allStations ! element [arrivalStation]] in							
+				io ! puts ["The number of train changes is "^ToString [changes]^"\n"];
+				printPath [path];
+				menu []
+
+		option4() =
+			let departureStation, arrivalStation = choseDepartureArrival[] in
+			if arrivalStation == departureStation then
+				io ! puts["The departure station is the same of the arrival station\n"];
+				menu []
+			else
+				let time,path = allStations ! element [departureStation] ! 
+							lessTime [allStations ! element [arrivalStation]] in							
+				io ! puts ["The time is "^ToString [time]^" minutes\n"];
+				printPath [path];
+				menu []
+							
+	in
+		menu[]
+in
+	Interface[allStations]

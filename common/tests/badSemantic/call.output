@@ -1,0 +1,37 @@
+call.tyco:11.4: 
+  [Unification Error] 
+  For the X procedure call, I was expecting the type:
+	
+  but found the following type:
+	Integer
+  (I have found type sequences with different lengths.)
+  This is the point in the program where unification failed.
+  The source of the problem can be at a distant point in the source code.
+call.tyco:14.4: 
+  [Unification Error] 
+  For the X procedure call, I was expecting the type:
+	a5 a6
+  but found the following type:
+	
+  (I have found type sequences with different lengths.)
+  This is the point in the program where unification failed.
+  The source of the problem can be at a distant point in the source code.
+call.tyco:14.11: 
+  [Unification Error] 
+  For the X procedure call, I was expecting the type:
+	a12 a13
+  but found the following type:
+	Integer Boolean String
+  (I have found type sequences with different lengths.)
+  This is the point in the program where unification failed.
+  The source of the problem can be at a distant point in the source code.
+call.tyco:21.1: 
+  [Unification Error] 
+  For the X procedure call, I was expecting the type:
+	<>
+  but found the following type:
+	Integer
+  (I have found a non record type.)
+  This is the point in the program where unification failed.
+  The source of the problem can be at a distant point in the source code.
+4 errors

@@ -1,0 +1,8 @@
+newInt.tyco:11.6: 
+  [Unification Error] 
+  I was expecting an Integer expression in the left operand of an arithmetic expression,
+  but was confronted with the following type:
+	<>
+  This is the point in the program where unification failed.
+  The source of the problem can be at a distant point in the source code.
+1 errors

@@ -1,0 +1,126 @@
+\begin{myfigure}
+  \begin{gather*}
+    \tag{\RmethodTop}
+    \frac{
+       O(l) = (\vec x) P
+       \qquad
+       e \geq \energyIn
+    }{
+       \sensor {\context {\lock.l[\vec v]}, \vec P}{O}{p}{r}{e}
+       \reduces
+       \sensor{\context {P \subs {\vec v} {\vec x}}, \vec P}{O}{p}{r}{e}
+    }
+    \\[\rulespace]
+    \tag{\RnoMethodTop}
+    \frac{
+      l \not \in \dom(O)
+    }
+    {
+      \sensor {\context {\lock.l[\vec v]}, \vec P} O p r e 
+      \reduces
+      \sensor {\context {\lock.l[\vec v]}, \vec P} O p r e
+    }
+    \\[\rulespace]
+    \tag{\Rmethod}
+    \frac{
+      O' (l) = (\vec x) P
+      \qquad
+      e \geq \energyIn
+    }{
+      \sensor {\context{O'.l[\vec v]}, \vec P} O p r e 
+      \reduces
+      \sensor {\context{P \subs {\vec v} {\vec x}}, \vec P} O p r e 
+    }
+    \\[\rulespace]
+    \disprule{\RnetCall}
+    {
+      \frac{
+        \dist (p, p') < r 
+        \qquad
+        e \geq \energyOut
+      }
+      {
+        \begin{array}{l}
+        \!\!\!
+        \tagsensor{\context{\invk \netk {l_i} {\vec v}}, \vec P} O p r e S \parn
+        \sensor{\vec P'}{O'}{p'}{r'}{e'}  
+        \reduces\\
+        \hspace{1.7cm}
+        \tagsensor {\context{\invk \netk {l_i}{\vec v}}, \vec P}  {O} {p} {r} {e} 
+        {S \parn \sensor{\vec P', \invk {\lock} {l_i} {\vec v}}{O'}{p'}{r'}{e'}}
+        \!\!\!
+        \end{array}
+      }
+    }
+    \\[\rulespace]
+    \disprule{\Rrelease}
+     {
+        \tagsensor {\context{\invk \netk {l_i} {\vec v}}, \vec{P}} O p r e S
+        \reduces
+        \sensor {\context{\obj{}},\vec P} O p r e \parn S
+    }
+    \\[\rulespace]
+    \tag{\RinstallTop}
+    \frac{
+      e \geq \energyIn
+    }
+    {
+      \sensor {\context{\install \lock {O'}}, \vec P} O p r e
+      \reduces
+      \sensor {\context{O \methJoin O'}, \vec P} {O \methJoin O'} p r e
+    }
+    \\[\rulespace]
+    \tag{\Rinstall}
+    \frac{
+      e \geq \energyIn
+    }
+    {
+      \sensor {\context{\install {O'} {O''}}, \vec P} O p r e
+      \reduces
+      \sensor {\context{O' \methJoin O''}, \vec P} O p r e
+    }
+    \\[\rulespace]
+    \tag{\Rlet}
+    \frac{
+      e \geq \energyIn
+    }
+    {
+      \sensor {\context{\Let x v P}, \vec P} O p r e 
+      \reduces
+      \sensor {\context{P \subs v x}, \vec P} O p r e
+    }
+    \\[\rulespace]
+    \tag{\Rswitch, \Rnetwork}
+    \sensor {P, \vec P} O p r e
+    \reduces
+    \sensor {\vec P, P} O p r e
+    \qquad
+    \frac{
+      S \reduces S'
+    }
+    {
+      S \parn S''
+      \reduces
+      S' \parn S''
+    }
+    \\[\rulespace]
+    \tag{\Rcongr}
+    \frac{
+      S_1 \congr S_2 
+      \qquad
+      S_2 \reduces S_3
+      \qquad
+      S_3 \congr S_4
+    }{
+      S_1 \reduces S_4
+    }
+\end{gather*}
+\\[-0.4cm]
+\caption{Reduction semantics for sensors.}
+\label{fig:reduction-semantics}
+\end{myfigure}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End: 

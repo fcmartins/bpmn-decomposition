@@ -1,0 +1,55 @@
+{-
+ - Sieve of Eratosthenes
+ -
+ - Vasco T. Vasconcelos
+ - $Id: sieve.tyco,v 1.1 2004/02/12 17:44:20 tyco Exp $
+ -}
+
+include "streamOps.tyc"
+
+def
+
+{-
+ - A sieve that gets integers on a stream, and forwards all those
+ - that are not multiple of a given integer (the grain of the sieve)
+ - on a given stream.
+ -}
+
+Sieve (inStream, grain, outStream) =
+  inStream ? (n) :
+    if n % grain /= 0
+    then
+      outStream ! [n] ;
+      Sieve [inStream, grain, outStream]
+    else
+      Sieve [inStream, grain, outStream]
+
+{-
+ - The last sieve in this chain is special.  If a number
+ - (call it n) ever arrives the last chain, it must be a
+ - prime.  The Sink then outputs the number on a given stream,
+ - creates a new sink, and becomes a regular Sieve of grain n,
+ - reading from wherever the Sink used to read, and writing into 
+ - the newly created sink.
+ -}
+
+Sink (inStream, outStream) =
+  inStream ? (n) :
+    outStream ! [n] ;
+    new newSink
+    Sink [newSink, outStream] |
+    Sieve [inStream, n, newSink]
+
+{-
+ - To put all this code into work we pipe three processes: one that
+ - produces the integers, another that filters those that are
+ - not primes, and a third that prints its elements.
+ -}
+
+Primes (n) =
+  new intStream, primeStream
+  IntsUpTo [2, n, intStream] |
+  Sink [intStream, primeStream] |
+  PrintIntegerStream [primeStream]
+in
+Primes [10000]

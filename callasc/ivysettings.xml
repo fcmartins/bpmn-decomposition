@@ -1,0 +1,10 @@
+<ivysettings>
+    <settings defaultResolver="public"/>
+    <include url="http://homepages.lasige.di.fc.ul.pt/~cogumbreiro/repo/ivysettings.xml"/>
+    <include file="local-ivysettings.xml"/>
+    
+    <modules>
+        <module organisation="lasige.gloss" name="*" resolver="gloss"/>
+        <module organisation="org.callas" name="*" resolver="gloss"/>
+    </modules>
+</ivysettings>

@@ -1,0 +1,11 @@
+{-
+ - Semantic Error - Type Inference
+ -
+ - Vasco T. Vasconcelos
+ - March 2001
+ -}
+
+-- A variable introduced with new is used as an integer
+
+new a, anInt
+a ! [anInt + 1]

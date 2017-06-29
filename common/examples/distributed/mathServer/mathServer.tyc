@@ -1,0 +1,30 @@
+{--
+ - The mathematical server.
+ - Notice that the functions are global to the server.
+ - @param self Reference to the object.
+ - 
+ - @author Vasco T. Vasconcelos, Herve' Paulino
+ - $Id$
+ -}
+ 
+ include "functions.tyc"
+
+let 
+	inverse = NewInverseFunction [] 
+	double = NewDoubleFunction [] 
+in	
+def 
+	MathServer (self) =
+    	self ? {
+    		getFunction(functionName, replyTo) =
+	    		MathServer [self] |
+	  			 if functionName == "double" then
+  				 	replyTo ! [double]
+			    else if functionName == "inverse" then
+					replyTo ! [inverse]
+
+			list(replyTo) =
+				MathServer [self] |
+				replyTo ! ["double, inverse"]
+    	}
+in

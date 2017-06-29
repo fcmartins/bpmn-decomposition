@@ -1,0 +1,9 @@
+{--
+ - A simple test with exchangement of non-labelled messages and objects.
+ - 
+ - @author Herve' Paulino
+ -}
+export new c, k, a, d
+new l
+{ c ? (x) = x ! ["Message of c\n"] } |
+{ k ! ["Message of k\n"] }

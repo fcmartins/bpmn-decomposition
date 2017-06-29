@@ -1,0 +1,54 @@
+{-
+ - A wrapper class for integers.
+ - Implement the toString and equals method,
+ - allowing Integers to be placed in Lists.
+ -
+ - Author: Vasco T. Vasconcelos
+ - $Id:$
+ -}
+def
+
+-- The class
+Integer (self, value) = self ? {
+
+  intValue (replyTo) =
+    Integer [self, value] |
+    replyTo ! [value]
+
+  toString (replyTo) =
+    Integer [self, value] |
+    replyTo ! [ToString [value]]
+	
+  equals (other, replyTo) =
+    Integer [self, value] |
+    replyTo ! [value == other ! intValue []]
+}
+
+-- A constructor
+NewInteger (value, replyTo) =
+  new result
+  replyTo ! [result] |
+  Integer [result, value]
+
+-- Converting an integer into a string
+ToString (n, replyto) =
+  if n < 10
+  then
+    Digit [n, replyto]
+  else
+    replyto ! [ToString [n / 10] ^ Digit [n % 10]]
+
+-- Converting a digit into a string
+Digit (n, replyto) =
+       if n == 0 then replyto ! ["0"]
+  else if n == 1 then replyto ! ["1"]
+  else if n == 2 then replyto ! ["2"]
+  else if n == 3 then replyto ! ["3"]
+  else if n == 4 then replyto ! ["4"]
+  else if n == 5 then replyto ! ["5"]
+  else if n == 6 then replyto ! ["6"]
+  else if n == 7 then replyto ! ["7"]
+  else if n == 8 then replyto ! ["8"]
+  else if n == 9 then replyto ! ["9"]
+
+in

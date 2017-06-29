@@ -1,0 +1,92 @@
+messageObject.tyco:13.1: 
+  I have come across a message targeted at an undeclared channel x
+messageObject.tyco:17.3: 
+  [Unification Error] 
+  I could not find label aNiceLabel in the following type for the location x of an object:
+	{pop: , push: }
+  This is the point in the program where unification failed.
+  The source of the problem can be at a distant point in the source code.
+messageObject.tyco:23.1: 
+  [Unification Error] 
+  For the message targeted at x, I was expecting the type:
+	Integer
+  but found the following type:
+	Boolean
+  (or possibly the other way round.)
+  (I was trying to unify the val-labelled component of an open record with
+  a closed record.)
+  This is the point in the program where unification failed.
+  The source of the problem can be at a distant point in the source code.
+messageObject.tyco:29.1: 
+  [Unification Error] 
+  For the message targeted at x, I was expecting the type:
+	Boolean
+  but found the following type:
+	a3 a4
+  (or possibly the other way round.)
+  (I was trying to unify the val-labelled component of an open record with
+  a closed record, when I found type sequences with different lengths.)
+  This is the point in the program where unification failed.
+  The source of the problem can be at a distant point in the source code.
+messageObject.tyco:35.1: 
+  [Unification Error] 
+  I could not find label push in the following type for the target x:
+	{val: a6 a7}
+  This is the point in the program where unification failed.
+  The source of the problem can be at a distant point in the source code.
+messageObject.tyco:41.1: 
+  [Unification Error] 
+  For the message targeted at x, I was expecting the type:
+	{getb: {val: Boolean}, geti: {val: Integer}, gets: {val: String}, printb: Boolean, printi: Integer, prints: String, putb: Boolean {done: }, puti: Integer {done: }, puts: String {done: }}
+  but found the following type:
+	Boolean
+  (I was trying to unify the val-labelled component of an open record with
+  an open record, when I found a non record type.)
+  This is the point in the program where unification failed.
+  The source of the problem can be at a distant point in the source code.
+messageObject.tyco:47.1: 
+  [Unification Error] 
+  For the message targeted at x, I was expecting the type:
+	Integer String
+  but found the following type:
+	Boolean
+  (I was trying to unify the val-labelled component of an open record with
+  an open record, when I found type sequences with different lengths.)
+  This is the point in the program where unification failed.
+  The source of the problem can be at a distant point in the source code.
+messageObject.tyco:59.5: 
+  [Unification Error] 
+  For the object located at x, I was expecting the type:
+	Integer
+  but found the following type:
+	Boolean
+  (I was trying to unify the val-labelled component of a closed record with
+  a closed record.)
+  This is the point in the program where unification failed.
+  The source of the problem can be at a distant point in the source code.
+messageObject.tyco:65.5: 
+  [Unification Error] 
+  For the object located at x, I was expecting the type:
+	
+  but found the following type:
+	a21 a22
+  (I was trying to unify the val-labelled component of a closed record with
+  a closed record, when I found type sequences with different lengths.)
+  This is the point in the program where unification failed.
+  The source of the problem can be at a distant point in the source code.
+messageObject.tyco:71.3: 
+  [Unification Error] 
+  For the object located at x, I was expecting the type:
+	{pop: , push: }
+  but found the following type:
+	{val: a23 a24}
+  (I have found record types with different number of components.)
+  This is the point in the program where unification failed.
+  The source of the problem can be at a distant point in the source code.
+messageObject.tyco:77.3: 
+  [Unification Error] 
+  I could not find label pop in the following type for the location x of an object:
+	{push: , top: }
+  This is the point in the program where unification failed.
+  The source of the problem can be at a distant point in the source code.
+11 errors

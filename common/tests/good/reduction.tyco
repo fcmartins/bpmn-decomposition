@@ -1,0 +1,7 @@
+new a
+new b
+{a ? () = io!prints["ola"] } |
+{b ? () = a ! [] } |
+b ! []
+
+

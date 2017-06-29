@@ -1,0 +1,9 @@
+cell.tyco:34.3: 
+  [Unification Error] 
+  For the Cell procedure call, I was expecting the type:
+	Boolean
+  but found the following type:
+	Integer
+  This is the point in the program where unification failed.
+  The source of the problem can be at a distant point in the source code.
+1 errors

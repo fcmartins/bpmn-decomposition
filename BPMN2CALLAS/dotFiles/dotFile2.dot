@@ -1,0 +1,17 @@
+digraph G {
+rankdir=LR;
+splines=false;
+newrank=true;
+subgraph cluster_1{
+	StartEvent_4 -> Task_7;
+	Task_7 -> ExclusiveGateway_1;
+}
+subgraph cluster_2{
+	Task_8 -> IntermediateCatchEvent_1;
+	IntermediateCatchEvent_1 -> Task_2;
+	GeneratedTask_1 -> GeneratedEndEvent_2;
+	Task_2 -> GeneratedTask_1;
+}
+{ rank=same; StartEvent_4; Task_8; }
+ExclusiveGateway_1 -> Task_8;
+}

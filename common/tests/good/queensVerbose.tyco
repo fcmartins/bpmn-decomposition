@@ -1,0 +1,56 @@
+-- number of solutions to the "n queens" problem
+-- "n" - the number of queens is the parameter
+
+def Nil(self) = self ? (r) = r!nil[] | Nil[self]
+
+Cons(self, h, t) = self ? (r) = r!cons[h,t] | Cons[self,h,t]
+
+in  
+
+def Safe(x, d, l, r) = 
+    case l![] of {
+        nil()     =  r![true]
+        cons(h,t) =  if( x==h or x==h+d or x==h-d ) then
+                        r![false]
+                     else
+                        Safe[x,d+1,t,r]
+    }
+
+Gen(x, y, r) =
+    if x == 0 then 
+       new r0,r1,r2 
+       Nil[r0] | Nil[r1] | Cons[r2,r0,r1] | r![r2] 
+    else
+       new r0 Nil[r0] | 
+       let v = Gen[x-1,y] in Foldl[v,y,r0,r]
+
+Foldl(l, y, v, r) =
+    case l![] of {
+       nil()    = r![v]
+      cons(h,t) = let x = TryPos[y,h,v] in Foldl[t,y,x,r]
+    }
+
+TryPos(q,b,l,r) =
+    if( q == 0 ) then 
+       r![l]
+    else
+       let v = Safe[q,1,b] in 
+       if v then
+         new r0,r1 Cons[r0,q,b] | Cons[r1,r0,l] |
+         TryPos[q-1,b,r1,r]
+       else
+         TryPos[q-1,b,l,r]
+
+Sizel(l,r) =
+    case l![] of {
+       nil()      =  r![0]
+       cons(_, t) =  let x = Sizel[t] in r![x+1]
+    }
+
+Queens(size) = 
+    let x = Gen[size,size] in               -- solution list in r1
+    let y = Sizel[x] in                -- # solutions in r2
+    io!puts["#queens["] ; io!puti[size] ; 
+    io!puts["]="] ; io!printi[y]              -- print it
+
+in Queens[10]

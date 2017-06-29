@@ -1,0 +1,15 @@
+._.DS_Store
+.bzr
+.bzrignore
+.classpath
+.project
+user.properties
+bin
+dist
+callasc.jar
+callasi.jar
+callas-src.zip
+callasasm.jar
+target
+.settings
+build.properties

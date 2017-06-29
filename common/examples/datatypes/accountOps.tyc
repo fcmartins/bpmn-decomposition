@@ -1,0 +1,95 @@
+{-
+ - A bank account
+ - featuring deposit, withdraw, and balance operations.
+ - In addition provides for a statement operation.
+ -
+ - Vasco T. Vasconcelos, Francisco Martins
+ - $Id: accountBis.tyco,v 1.1.1.1 2002/11/30 14:37:29 tyco Exp $
+ -}
+
+include "Integer.tyc"
+include "List.tyc"
+
+def
+
+{-
+ - The list of operations.
+ - Deposit and Withdraw operations hold a reference
+ - to the next operation in the list; Empty terminates the list.
+ - Each operation provides for a single operation: toString.
+ - Others can be added, if needed.
+ -}
+DepositOperation (self, amount) =  self ? {
+    toString (replyTo) =
+      DepositOperation [self, amount] |
+      replyTo ! ["deposit " ^ amount ! toString []]
+
+	--defined because of List
+    equals (_,_) = inaction
+  }
+
+WithdrawOperation (self, amount) =  self ? {
+    toString (replyTo) = 
+      WithdrawOperation [self, amount] |
+      replyTo ! ["withdraw " ^ amount ! toString []]
+
+	--defined because of List
+    equals (_,_) = inaction
+  }
+
+EmptyOperation (self) =  self ? {
+    toString (replyTo) =
+      replyTo ! [""]
+
+	--defined because of List
+    equals (_,_) = inaction
+  }
+in
+def
+NewDeposit (amount, replyTo) =
+	new deposit
+	DepositOperation [deposit, NewInteger[amount]] |
+	replyTo ! [deposit]
+
+NewWithdraw (amount, replyTo) =
+	new withdraw
+	WithdrawOperation [withdraw, NewInteger[amount]] |
+	replyTo ! [withdraw]
+
+NewEmptyOperation (replyTo) =
+    new emptyOperation
+	EmptyOperation [emptyOperation] |
+	replyTo ! [emptyOperation]
+in
+
+{-
+ - A bank account
+ -}
+def NewAccount (balance, replyTo) =
+  def Account (self, balance, ops) = self ? {
+  
+    deposit (amount) =
+      Account [self, balance + amount, NewCons[NewDeposit [amount], ops]]
+  
+    balance (replyto) =
+      replyto ! [balance] |
+      Account [self, balance, ops]
+        
+    withdraw (amount, replyto) =
+      if amount >= balance
+      then
+        replyto ! overdraft [] |
+        Account [self, balance, ops]
+      else
+        replyto ! dispense [] |
+        Account [self, balance - amount, NewCons[NewWithdraw [amount], ops]]
+       
+	statement (replyto) =
+      ops ! toString [replyto] |
+	  Account [self, balance, ops]
+    }
+  in 
+    new account
+    Account [account, balance, NewCons[NewEmptyOperation[], NewEmptyList[]]] |
+    replyTo ! [account]
+in

@@ -1,0 +1,32 @@
+{-
+ - Synchronous messages/procedure calls;
+ - Synchronous abstractions
+ -
+ - Vasco T. Vasconcelos
+ - March 2001
+ -}
+
+-- calls
+
+new a
+a ! [5] ; inaction |
+
+new b, c 
+a ! [6] ; b ! push [true] ; c ! ["lala"] |
+
+def X (r) = inaction
+in
+X [] ; inaction |
+
+def Y (r) = inaction
+in
+X [] ; a ! [6] ; Y [] ; b ! push [true] ; inaction |
+
+-- abstractions
+
+a ? (x) : inaction |
+
+b ? {
+  push (x) : inaction
+  pop (r) = inaction
+}

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Version $Id: tycocommon.xml,v 1.9 2011/08/02 10:36:42 cogumbreiro Exp $ -->
+<project name="tycocommon" default="all" xmlns:ivy="antlib:org.apache.ivy.ant">
+	<property name="build" value="${basedir}/bin" />
+	<property name="dist" value="${basedir}/dist" />
+	<property name="src" value="${basedir}/src" />
+    <property name="tycocommon.jar" value="${dist}/tycocommon.jar" />
+	<property name="javacup-runtime.jar" value="${dist}/javacup-runtime.jar" />
+	<property name="javacup.jar" value="${dist}/javacup.jar" />
+    <property name="jflex.jar" value="${dist}/jflex.jar" />
+
+	<import file="bootstrap-ivy.xml" />
+	
+	<target name="init" depends="ivy-init">
+		<mkdir dir="${build}" />
+		<mkdir dir="${dist}" />
+		<ivy:retrieve file="tycocommon-ivy.xml" />
+	</target>
+
+	<!-- Ivy related -->
+
+	<!-- public publish -->
+	<macrodef name="publishpublic">
+		<attribute name="module" />
+		<sequential>
+			<ivy:resolve file="@{module}-ivy.xml" />
+			<ivy:publish artifactspattern="${dist}/[artifact].[ext]" resolver="gloss-publish" publishivy="true" overwrite="true" status="release" forcedeliver="true">
+				<artifacts pattern="${dist}/[artifact].[ext]" />
+			</ivy:publish>
+		</sequential>
+	</macrodef>
+	<target name="publish" depends="clean,bdist">
+		<copy file="${basedir}/gloss-ivysettings.xml"
+			  tofile="${user.home}/lasige-serv/home/cogumbreiro/public_html/repo/ivysettings.xml" />
+        <copy file="${basedir}/bootstrap-ivy.xml"
+              tofile="${user.home}/lasige-serv/home/cogumbreiro/public_html/repo/bootstrap-ivy.xml" />
+		<publishpublic module="javacup" />
+		<publishpublic module="jflex" />
+		<publishpublic module="tycocommon" />
+	</target>
+
+	<!-- End of Ivy related -->
+
+	<target name="all" depends="bdist" />
+
+	<target name="compile" description="Compiles all the source code." depends="init">
+		<javac destdir="${build}" fork="true" source="1.5" srcdir="${src}" includeantruntime="false">
+			<include name="**/*.java" />
+		</javac>
+	</target>
+
+	<!-- Generates a binary distribution of this project. -->
+	<target name="bdist" description="Generates an executable JAR." depends="compile">
+		<!-- the tyco common -->
+		<jar destfile="${tycocommon.jar}" basedir="${build}">
+			<fileset dir="${build}" includes="org/tyco/common/**/*.class" />
+		</jar>
+		<!-- JavaCUP runtime -->
+		<jar destfile="${javacup-runtime.jar}" basedir="${build}" includes="java_cup/runtime/**/*.class" />
+		<!-- JavaCUP -->
+		<jar destfile="${javacup.jar}" basedir="${build}" includes="java_cup/**/*.class">
+			<manifest>
+				<attribute name="Main-Class" value="java_cup.Main" />
+			</manifest>
+		</jar>
+		<!-- JFlex -->
+		<jar destfile="${jflex.jar}">
+			<!-- JFlex depends on the JavaCUP runtime. -->
+			<fileset dir="${build}" includes="java_cup/runtime/**/*.class" />
+			<fileset dir="${build}" includes="JFlex/**/*.class" />
+			<manifest>
+				<attribute name="Main-Class" value="JFlex.Main" />
+			</manifest>
+		</jar>
+		<copy file="javacup.xml" todir="${dist}" />
+        <copy file="jflex.xml" todir="${dist}" />
+	</target>
+
+	<target name="clean" description="Deletes the generated files.">
+		<delete dir="${build}" />
+		<delete dir="${dist}" />
+	</target>
+
+</project>

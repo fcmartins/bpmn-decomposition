@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pessoa>
+   <name titulo="Mr.">FCM</name>
+   <idade>87</idade>
+   <filhos>
+      <pessoa>
+         <name titulo="Mr.">FM</name>
+         <idade>39</idade>
+         <filhos>
+            <pessoa>
+               <name titulo="Mr.">R</name>
+               <idade>17</idade>
+            </pessoa>
+            <pessoa>
+               <name titulo="Inf.">G</name>
+               <idade>2</idade>
+            </pessoa>
+         </filhos>
+      </pessoa>
+      <pessoa>
+         <name titulo="Mr.">DM</name>
+         <idade>62</idade>
+         <filhos>
+            <pessoa>
+               <name titulo="Mrs.">LCM</name>
+               <idade>26</idade>
+            </pessoa>
+         </filhos>
+      </pessoa>
+   </filhos>
+</pessoa>

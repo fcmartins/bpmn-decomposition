@@ -1,0 +1,46 @@
+{--
+ - A class to simulate a chunk of space to be processed.
+ - 
+ - @param self A reference to the object.
+ - @param id The identifier of the chunk.
+ - 
+ - @author Herve' Paulino
+ - $Id:$
+ -}
+include "intToString.tyc"
+
+def
+	Chunk(self, id) = self ? {
+		toString(replyTo) = 
+			replyTo ! ["Chunk " ^ IntToString[id]] |
+			Chunk[self, id] 
+
+		process(r) =
+			def Process(n) = 
+ 				if n > 0  then 
+		        	Process[n - 1]
+ 				else {
+				 	io ! puts ["processed. \n"]  ;
+				 	r ! done[]
+ 				}
+ 			in 
+			Chunk[self, id] |
+		 	io ! puts["Processing " ^ self ! toString[] ^ "..."]  ;
+			Process[500000]  
+ 						
+		mig(client) = 
+			Chunk[client, id] 
+				
+		equals(_, _)  = 
+			Chunk[self, id]	
+	}
+	
+	{-
+	 - The constructor
+	 -}
+	NewChunk(id, replyTo) = 
+		new result
+		Chunk [result, id] |
+		replyTo ! [result]
+in		
+				

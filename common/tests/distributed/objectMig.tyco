@@ -1,0 +1,15 @@
+{--
+ - Test the sending of an object to a remote channel. The client.
+ - 
+ - @author Herve' Paulino
+ -}
+import c from obj 
+new s
+def X(self, v) = 
+ 	self ? { 
+ 		read(r) = r![v] | X[self, v]
+ 	}
+in 
+{ s ? (x) = io!prints[x] } |
+{ c ? (x) = new d d ? { read(r) = r!["World"] } | s ! [x ^" " ^ d!read[]] }	|
+c ! ["Hello"]

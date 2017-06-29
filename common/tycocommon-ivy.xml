@@ -1,0 +1,6 @@
+<ivy-module version="2.0">
+    <info organisation="lasige.gloss" module="tycocommon" revision="1.0" />
+    <publications>
+        <artifact name="tycocommon" type="jar" ext="jar"/>
+    </publications>
+</ivy-module>

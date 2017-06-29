@@ -1,0 +1,20 @@
+{-
+ - List elements must be equipped with a toString method.
+ - Primitive types must be wrapped into objects;
+ - See Integer.tyc and String.Tyc.
+ -
+ - Author: Vasco T. Vasconcelos
+ - $Id:$
+ -}
+
+def
+-- The empty list class
+include "listNil.tyc"
+
+-- The non-empty list class
+include "listCons.tyc"
+in
+
+-- The list interface
+include "listInterface.tyc"
+

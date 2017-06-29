@@ -1,0 +1,47 @@
+{--
+ -  The Seti database that stores chunks. 
+ - 
+ - @param self reference to the object
+ - @param data The data stored in the database
+ - @param size The maximum number of chunks in the database
+ - @param current The identifier of the next chunk to be fetched.
+ - 
+ - @author Herve' Paulino
+ - $Id:$
+ -}
+include "chunk.tyc"
+include "../../datatypes/List.tyc" 
+
+def 
+	Database(self, data, size, current) = 
+		self ? {					
+			newData() =
+				def BuildList(n, list, replyTo) =
+					if n > 0 then 
+						BuildList[n - 1, NewCons[NewChunk[current + n], list], replyTo]
+					else
+						replyTo ! [list]
+				in
+				let list = BuildList[size, data] in 	 
+					Database[self, list, size, current + size]	
+			
+			newChunk(client) = 
+				case data ! [] of {
+					nil() = 
+						self ! newData[] | 
+						self ! newChunk [client] |
+						Database[self, data, size, current]
+					cons(h, t) = 
+						h ! mig[client] |
+						Database[self, t, size, current] 
+				}
+		}
+
+	{-
+	 - The constructor
+	 -}
+	NewDatabase(replyTo) =
+			new result
+			Database[result, NewEmptyList[], 20, 0] |
+			replyTo ! [result]
+in

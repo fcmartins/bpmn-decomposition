@@ -1,0 +1,38 @@
+{-
+ - A stack supporting the usual push, and pop/top operations.
+ - Pop requests to empty stacks are stored.
+ - Such requests are then answered on push operations.
+ -
+ - (Use the option -print-types to see the type of channel "contents")
+ -
+ - Vasco T. Vasconcelos
+ - $Id: stackBis.tyco,v 1.2 2003/05/14 16:12:56 tyco Exp $
+ -}
+
+include "simpleList.tyc"
+
+def NewStack (replyTo) =
+  def Stack (self, contents, waiting) =
+    self ? {
+      push (element) :
+        case waiting ! [] of {
+          nil () =
+            Stack [self, NewCons[element, contents], waiting]
+          cons (head, tail) =
+            head ! [element] |
+            Stack [self, contents, tail]
+        }
+      pop (replyTo) =
+        case contents ! [] of {
+          nil () =  
+            Stack [self, contents, NewCons[replyTo, waiting]]
+          cons (head, tail) =
+            replyTo ! [head] |            
+            Stack [self, tail, waiting]
+        }
+    }
+  in
+  new stack
+  Stack [stack, NewEmptyList[], NewEmptyList[]] |
+  replyTo ! [stack]
+in

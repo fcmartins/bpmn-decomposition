@@ -1,0 +1,17 @@
+<ivy-module version="1.0">
+    <info organisation="org.callas" module="callasc"/>
+    <configurations>
+        <conf name="main"  description="The Callas compiler (generates CVM bytecode)."/>
+        <conf name="test" extends="main" description="Test cases."/>
+    </configurations>
+    <publications>
+        <artifact name="callasc" type="jar"  conf="main" ext="jar"/>
+    </publications>
+    <dependencies>
+        <dependency org="lasige.gloss" name="tycocommon" rev="1.0" conf="main->default"/>
+        <dependency org="lasige.gloss" name="javacup" conf="main->default" rev="0.10k"/>
+        <dependency org="lasige.gloss" name="jflex" conf="main->default" rev="1.3.5"/>
+        <dependency org="org.callas" name="cvm-java" conf="*->*" rev="1.0"/>
+        <dependency org="junit" name="junit" rev="4.0" conf="test->default"/>
+    </dependencies>
+</ivy-module>

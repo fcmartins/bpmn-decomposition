@@ -1,0 +1,32 @@
+{-
+ - A wrapper class for strings.
+ - Implement the toString and equals method,
+ - allowing Strings to be placed in Lists.
+ -
+ - Author: Vasco T. Vasconcelos
+ - $Id:$
+ -}
+def
+-- The class
+String (self, value) = self ? {
+
+  toString (replyTo) =
+    String [self, value] |
+    replyTo ! [value]
+
+  equals (other, replyTo) =
+    String [self, value] |
+    replyTo ! [value == other ! toString []]
+}
+
+-- Constructors
+NewString (value, replyTo) =
+  new result
+  replyTo ! [result] |
+  String [result, value]
+
+NewEmptyString (replyTo) =
+  new result
+  replyTo ! [result] |
+  String [result, ""]
+in

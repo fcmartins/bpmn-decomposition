@@ -1,0 +1,9 @@
+{--
+ - Test the sintaxe of imports and exports.
+ - 
+ - @author Herve' Paulino
+ -}
+import c1, c2 from s1
+import c4, c5, c6 from s2
+export new c10, c20, c30
+inaction

@@ -1,0 +1,63 @@
+\begin{myfigure}
+  \begin{gather*}
+    \tag{\Tcall}
+    \frac{
+      \Gamma \type v \colon \anyObjd
+      % {l_i \colon \_ \rightarrow \_} 
+      \qquad
+      % \Gamma \type l \colon \vec T \rightarrow T
+      % \qquad
+      \Gamma \type \vec v \colon \vec T_j
+      \qquad
+      j \in I
+    }
+    {
+      \Gamma \type \invk v {l_j} {\vec v} \colon T_j
+    }
+    \\[\rulespace]
+    \tag{\Tbcast}
+    \frac{
+      \Gamma \type v \colon \netTypek
+      \qquad
+%      \Gamma \type l \colon \vec B \rightarrow \_
+      \Gamma \type \invk \lock l {\vec v} \colon \_
+%      \qquad
+%      \Gamma \type \vec v \colon \vec B
+    }
+    {
+      \Gamma \type \invkd \colon \obj {}
+    }
+    \\[\rulespace]
+    \tag{\Tinst}
+    \frac{
+      \Gamma \type v_1 \colon T_1
+      \qquad
+      \Gamma \type v_2 \colon T_2
+      \qquad
+      T_1 \oplus T_2 \text{ defined}
+    }
+    {
+      \Gamma \type \install {v_1} {v_2} \colon T_1 \oplus T_2
+    }
+    \\[\rulespace]
+    \tag{\Tlet}
+    \frac{
+      \Gamma \type P_1 \colon T_1
+      \qquad
+      \Gamma
+      % \update \lock {T_1} 
+      \disj x \colon T_1 \type P_2 \colon T_2
+    }
+    {
+      \Gamma \type \Let x {P_1} {P_2} \colon T_2
+    }
+  \end{gather*}
+  \\[-0.4cm]
+\caption{Typing rules for programs.}
+\label{fig:type-system-programs}
+\end{myfigure}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End: 

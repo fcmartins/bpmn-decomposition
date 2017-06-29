@@ -1,0 +1,10 @@
+-- Nested comments
+
+io {- outermost comment starts here
+{- level 2 -}
+back in the outermost
+{- level 2 {- level 3 -} -}
+outermost once more -}
+
+! puti [437] ;
+inaction

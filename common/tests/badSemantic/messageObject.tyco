@@ -1,0 +1,77 @@
+{-
+ - Semantic Error - Type Inference
+ - Semantic Error - Identifier analysis
+ -
+ - 11 errors expected
+ -
+ - Vasco T. Vasconcelos
+ - March 2001
+ -}
+
+-- Undeclared target of message
+
+x ! aNiceLabel [] |
+
+-- Undeclared location of object
+
+x ? { push () = inaction pop () = inaction } |
+
+-- Unification failure for message-object - type
+
+new x
+{ x ? (z) = new r r ! [z + 1] } |
+x ! [true] |
+
+-- Unification failure for message-object - length
+
+new x
+{ x ? (a, b) = inaction } |
+x ! [ false] |
+
+-- Unification failure for message-object - label
+
+new x
+{ x ? (a, b) = inaction } |
+x ! push [false] |
+
+-- Unification failure for message-message - type
+
+new x
+x ! [io] |
+x ! [true] |
+
+-- Unification failure for message-message - length
+
+new x
+x ! [false] |
+x ! [543, "lala"] |
+
+-- Unification failure for message-message - label
+
+new x
+x ! push [false] |
+x ! pop [543, "lala"] |
+
+-- Unification failure for object-object - type
+
+new x
+{ x ? (z) = new r r ! [z + 1]} |
+{ x ? (z) = new r r ! [z or true] } |
+
+-- Unification failure for object-object - length
+
+new x
+{ x ? (a, b) = inaction } |
+{ x ? () = inaction } |
+
+-- Unification failure for object-object - records of different lengths
+
+new x
+{ x ? (a, b) = inaction } |
+x ? { push () = inaction pop () = inaction } |
+
+-- Unification failure for object-object - labels
+
+new x
+{ x ? { push () = inaction top () = inaction } } |
+x ? { push () = inaction pop () = inaction }

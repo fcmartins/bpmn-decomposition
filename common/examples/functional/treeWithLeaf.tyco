@@ -1,0 +1,45 @@
+{-
+ - A tree whose values are to be found only at the leaves.
+ -
+ - Uses the Cons cell usually associated with lists, plus a
+ - Leaf cell defined for the effect.
+ -
+ - Exemplifies record polymorphism, where the replyto name
+ - of a Cons node is used with type
+ -   { cons: ..., nil: }	in the case of a List
+ -   { cons: ..., leaf: ...}	in the case of a Tree
+ -
+ - Vasco T. Vasconcelos
+ - $Id: treeWithLeaf.tyco,v 1.1 2004/02/12 17:44:20 tyco Exp $
+ -}
+
+include "../datatypes/simpleList.tyc"
+
+def
+
+Leaf (l, x) = l ? {
+     
+     val(r) = r ! leaf [x] | Leaf [l, x]
+     length (r) = r ! [1]
+     } 
+
+in def
+
+Sum (t, r) =
+ case t ! [] of {
+    leaf (x) =
+      r ! [x + 0]
+    cons (t1, t2) =
+      r ! [Sum [t1] + Sum [t2]]
+  }
+
+ATree (t) =
+  new a, b, c, d
+  Leaf [a, 11] | Leaf [b, -12] | Leaf [c, 3] | Leaf [d, -23] |
+  new u, v
+  Cons [u, a, b] | Cons [v, u, c] | Cons [t, d, v]
+
+in
+
+new t ATree [t]  |
+io ! puti [Sum [t]] ; io ! prints ["\n"]

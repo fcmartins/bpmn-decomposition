@@ -1,0 +1,20 @@
+{-
+ - The Ackermann function
+ -
+ - Luis Lopes
+ - April 2001
+ - $Id: ackermann.tyco,v 1.1 2004/02/12 17:44:20 tyco Exp $
+ -}
+
+def
+Ack (m, n, replyTo) = 
+  if n == 0 then
+    replyTo ! [0]
+  else if m == 0 then
+    replyTo ! [2 * n]
+  else if n == 1 then 
+    replyTo ! [2]
+  else
+    Ack [m - 1, Ack [m, n - 1], replyTo]
+in
+  io ! puts["Ack (3, 3) = "]; io ! puti [Ack [3, 3]] ; io ! prints ["\n"]

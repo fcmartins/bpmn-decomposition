@@ -1,0 +1,94 @@
+<!-- Version $Id: build.xml,v 1.10 2011/10/19 09:54:47 cogumbreiro Exp $ -->
+
+<project name="cvm" default="dist" xmlns:ivy="antlib:org.apache.ivy.ant">
+	<!-- Load user properties in the project directory, file 'user.properties'. -->
+	<property file="${basedir}/build.properties" />
+
+	<!-- Bootstrap Ivy -->
+	<get usetimestamp="true" src="http://homepages.lasige.di.fc.ul.pt/~cogumbreiro/repo/bootstrap-ivy.xml" dest="bootstrap-ivy.xml" />
+	<import file="bootstrap-ivy.xml" />
+
+	<!-- internal properties -->
+	<property name="lib.dir" value="${basedir}/lib" />
+	<property name="target" value="${basedir}/target" />
+    <property name="repository.dir" value="${target}/repo" />
+	<property name="src" value="${basedir}/src" />
+	<property name="test-src" value="${basedir}/src/test/java" />
+	<property name="test-bin" value="${target}/test-classes" />
+	<property name="main-bin" value="${target}/classes" />
+
+	<!-- shared dependencies -->
+	<property name="commons-cli.jar" value="${lib.dir}/commons-cli.jar" />
+
+	<import file="build-main.xml" />
+	<import file="build-app.xml" />
+<!--	<import file="build-rmi.xml" />  -->
+	<import file="build-lang.xml" />
+	<import file="build-test.xml" />
+
+	<!-- TARGETS: -->
+	<target name="compile-main" depends="-init,-init-main,-compile-main" description="Compiles the source code in 'main'." />
+	<target name="jar-main" depends="compile-main,-jar-main" description="Generates the JAR for 'main'." />
+	<target name="generate-parsers" depends="-init-lang,-generate-lang" />
+	<target name="compile-lang" depends="-init,generate-parsers,compile-main,-compile-lang" description="Compiles the source code in 'lang'." />
+	<target name="jar-lang" depends="compile-lang,-jar-lang" description="Generates the JAR for 'lang'." />
+	<target name="compile-app" depends="-init,-init-main,-compile-main,-init-app,-compile-app" description="Compiles the source code in 'app'." />
+	<target name="jar-app" depends="compile-app,-jar-app" description="Generates the JAR for 'app'." />
+<!--	<target name="compile-rmi"
+    depends="-init,-init-rmi,compile-app,-compile-rmi"     description="Compiles the source code in 'rmi'." /> -->
+<!--	<target name="jar-rmi"
+    depends="compile-main,compile-rmi,-jar-rmi" description="Generates
+    the JAR for 'rmi'." /> -->
+	<target name="compile" description="Compiles all source code."
+		depends="-init,-init-main,-init-app,-init-lang,-generate-lang,-compile-main,-compile-app,-compile-lang" />
+	<target name="compile-test" depends="compile,-init-test,-compile-test" description="Compiles the source code in 'test'." />
+	<target name="test" depends="compile-test,-test" description="Run the tests." />
+
+	<!-- every thing else -->
+
+	<target name="eclipse" description="Inititialize this project as an Eclipse project.">
+		<copy todir="${basedir}/" overwrite="true">
+			<fileset dir="${basedir}/eclipse/" />
+		</copy>
+	</target>
+
+	<!-- Resolve dependencies -->
+	<target name="-init" depends="ivy-init">
+		<mkdir dir="${target}" />
+		<mkdir dir="${test-bin}" />
+
+		<ivy:resolve />
+		<ivy:retrieve pattern="${lib.dir}/[artifact].[ext]" />
+	</target>
+	<target name="resolve" depends="-init" description="Downloads the dependencies." />
+
+	<target name="-jar-all">
+
+	</target>
+
+
+	<target name="jar" description="Generates all JAR files." depends="compile,-jar-main,-jar-app,-jar-lang" />
+
+	<target name="bdist" description="Alias for target 'jar'" depends="jar" />
+
+	<target name="dist" description="Alias for targets 'bdist' and 'sdist'." depends="bdist" />
+
+	<target name="publish">
+		<ivy:resolve file="ivy.xml" />
+		<!-- generate a local repository -->
+		<ivy:publish artifactspattern="${target}/[artifact].[ext]"
+			  resolver="gloss-publish" publishivy="true"
+			  overwrite="true" status="release"
+			  forcedeliver="true" />
+		<!-- rsync the local repository with the server -->
+		<exec executable="rsync">
+			<arg value="-arhzv" />
+			<arg value="${repository.dir}/" />
+			<arg value="lasige-serv.di.fc.ul.pt:/home/cogumbreiro/public_html/repo/" />
+		</exec>
+	</target>
+
+	<target name="clean" description="Deletes the generated files.">
+		<delete dir="${target}" />
+	</target>
+</project>

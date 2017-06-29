@@ -1,0 +1,21 @@
+{-
+ - Semantic Error - Type Inference
+ -
+ - Vasco T. Vasconcelos
+ - March 2001
+ -}
+
+-- Calling a procedure with the wrong number of parameters
+
+def X () = inaction
+in X [3] |
+
+def X (a, b) = inaction
+in X [] | X [3, true, "lala"] |
+
+-- Calling a procedure with the wrong type
+
+def X (x, r) = r ! [x + 1]
+in
+new y
+X [y, 132]

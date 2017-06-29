@@ -1,0 +1,15 @@
+{--
+ -  The server for a SETI@home inspired program.
+ -  Creates a database and initiates the program by calling
+ -  the Install definition.
+ - 
+ - @author Herve' Paulino
+ - $Id: server.tyco,v 1.2 2004/03/05 19:18:14 tyco Exp $
+ -}
+
+export new server
+include "database.tyc"
+include "seti.tyc"
+Install[server, NewDatabase[]] 
+
+ 

@@ -1,0 +1,29 @@
+{-
+ - Example:  A client that concurrently withdraws and deposits
+ -
+ - Vasco T. Vasconcelos
+ - $Id: myAccount.tyco,v 1.1 2004/02/12 17:44:20 tyco Exp $
+ -}
+
+include "accountOps.tyc"
+
+let b = NewAccount [5670] 
+in
+b ! deposit [2320] |
+case b ! withdraw [37650] of {
+  overdraft () = io ! prints ["Overdraft, says Jack\n"]
+  dispense () = io ! prints ["Got my 10, says Jack\n"]
+} |
+b ! deposit [31320] |
+b ! deposit [4230] |
+case b ! withdraw [232] of {
+  overdraft () = io ! prints ["Overdraft, says Jill\n"]
+  dispense () = io ! prints ["Got my 20, says Jill\n"]
+} |
+case b ! withdraw [30] of {
+  overdraft () = inaction
+  dispense () = inaction
+} |
+  io ! puts ["Here's the operations:"] ;
+  io ! puts [b ! statement []] ;
+  io ! prints ["\n"]

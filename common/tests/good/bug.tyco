@@ -1,0 +1,31 @@
+{-
+ - Operations on integers
+ -
+ - Vasco T. Vasconcelos
+ - $Id: bug.tyco,v 1.1 2004/02/12 17:44:20 tyco Exp $
+ -}
+
+-- Converting an integer into a string
+
+def
+ToString (n) =
+  if n < 10
+  then
+    Digit [n] 
+  else
+    Digit [n % 10] | ToString [n / 10] 
+
+Digit (n) =
+       if n == 0 then io!prints ["0"]
+  else if n == 1 then io!prints ["1"]
+  else if n == 2 then io!prints ["2"]
+  else if n == 3 then io!prints ["3"]
+  else if n == 4 then io!prints ["4"]
+  else if n == 5 then io!prints ["5"]
+  else if n == 6 then io!prints ["6"]
+  else if n == 7 then io!prints ["7"]
+  else if n == 8 then io!prints ["8"]
+  else if n == 9 then io!prints ["9"] 
+in
+
+ToString [123456789]

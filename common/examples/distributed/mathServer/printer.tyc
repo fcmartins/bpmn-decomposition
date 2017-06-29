@@ -1,0 +1,22 @@
+{--
+ - A printer that prints integers preceeded by its identification.
+ - @param self A reference to the object.
+ - @param myId The id of the printer.
+ - 
+ - @author Vasco T. Vasconcelos
+ - $Id$
+ - 
+ -}
+def Printer (self, myId) =
+  self ? (anInt, r) =  
+    io ! puts [myId ^ ": "];
+    io ! puti [anInt];
+    io ! puts ["\n"];
+    r ! done [] |
+    Printer [self, myId] 
+in
+def NewPrinter(myId, replyTo) =
+	new result 
+	Printer[result, myId] |
+	replyTo ! [result]
+in	

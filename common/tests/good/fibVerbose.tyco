@@ -1,0 +1,23 @@
+{-
+ - The Fibonnaci function in core-TyCO
+ -
+ - Vasco T. Vasconcelos
+ - $Id: fibVerbose.tyco,v 1.1 2004/02/12 17:44:20 tyco Exp $
+ -}
+
+def Fib (n, r) =
+  if n <= 2
+  then r ! [1]
+  else
+    new r1
+    Fib [n-1, r1] |
+    r1 ? (x1) =
+      new r2
+      Fib [n-2, r2] |
+      r2 ? (x2) = r ! [x1+x2]
+in
+new t
+Fib [10, t] |
+t ? (x) = io ! printi [x]
+
+| def X()=inaction in inaction

@@ -1,0 +1,58 @@
+{-
+ - A class describing an empty list.
+ - See "List.tyc" for details.
+ -
+ - Author: Vasco T. Vasconcelos
+ - $Id:$
+ -}
+Nil (self) = self ? {
+
+  add(newHead, replyTo) = 
+    Nil [self] |
+    new newList Cons[newList, newHead, self] |
+    replyTo![newList]
+
+  foldp (_, gather) = 
+    Nil [self] |
+    gather ! nil []
+
+  foldr (_, neutral, replyTo) = 
+    Nil [self] |
+    replyTo ! [neutral]
+
+  length (replyTo) = 
+    Nil [self] |
+    replyTo ! [0]   
+
+  toString (replyTo) = 
+    Nil [self] |
+    replyTo ! ["[]"]
+
+  equals (other, replyTo) = 
+    Nil [self] |
+    case other ! val [] of
+    {
+      cons (_, _) = replyTo ! [false]
+      nil () = replyTo ! [true]
+    }
+
+  elem (e, replyTo) = 
+    Nil [self] |
+    replyTo ! [false]
+
+  val (replyTo) = 
+    Nil [self] |
+    replyTo ! nil []
+
+  null (replyTo) = 
+    Nil [self] |
+    replyTo ! [true]
+
+  remove(value, replyTo) = 
+    Nil[self] |
+    replyTo ! [self]
+
+  get(value, replyTo) =
+    Nil[self] |
+    replyTo ! [self]    
+}

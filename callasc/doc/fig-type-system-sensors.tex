@@ -1,0 +1,66 @@
+\begin{myfigure}
+  \begin{gather*}
+   \frac{
+     \begin{array}{c}
+     \Gamma
+     % \disj \lock \colon T 
+     \type O \colon \objd
+     \qquad
+     \Gamma
+     % \disj \lock \colon T 
+     \type \vec P \colon \_
+     \qquad
+     \Gamma \type p r e \colon \vec B
+     \\
+     \Gamma \type \lock \colon \senObj {l_j \colon \vec T_j \rightarrow T_j}_{j \in J}
+     \qquad
+     I \subseteq J
+   \end{array}
+   }
+   {
+     \Gamma \type \sensord
+   }
+   \tag{\TSsensor}
+   \\[\rulespace]
+   \Gamma \type \inactionn
+   \qquad
+   \frac{
+     \Gamma \type \sensord
+     \qquad
+     \Gamma \type S
+   }
+   {
+     \Gamma \type \tagsensord 
+   }
+   \tag{\TSinaction, \TSbSensor}
+   \\[\rulespace]
+   \frac{
+     \Gamma \type S_1 
+     \qquad
+     \Gamma \type S_2
+   }
+   {
+     \Gamma \type S_1 \parn S_2
+   }
+   \qquad
+   \frac{
+     \Gamma \type P \colon \_
+     \qquad
+     \Gamma 
+     % \update \lock T 
+     \type \vec P \colon \_
+   }
+   {
+     \Gamma \type P, \vec P \colon \_
+   }
+   \tag{\Tparallel, \TseqP}
+ \end{gather*}
+ \\[-0.4cm]
+\caption{Typing rules for sensor networks and for program sequences.}
+\label{fig:type-system-sensors}
+\end{myfigure}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End: 

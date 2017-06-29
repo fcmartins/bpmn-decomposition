@@ -1,0 +1,41 @@
+float.tyco:9.30: 
+Floats no longer supported
+float.tyco:9.38: 
+Syntax error at +
+float.tyco:9.40: 
+Floats no longer supported
+float.tyco:13.42: 
+Floats no longer supported
+float.tyco:13.46: 
+Syntax error at *
+float.tyco:13.62: 
+Floats no longer supported
+float.tyco:14.10: 
+Floats no longer supported
+float.tyco:14.14: 
+Syntax error at ,
+float.tyco:14.16: 
+Floats no longer supported
+float.tyco:18.10: 
+Floats no longer supported
+float.tyco:18.19: 
+Syntax error at ,
+float.tyco:18.21: 
+Floats no longer supported
+float.tyco:22.10: 
+Floats no longer supported
+float.tyco:22.16: 
+Syntax error at ,
+float.tyco:22.18: 
+Floats no longer supported
+float.tyco:23.10: 
+Floats no longer supported
+float.tyco:23.17: 
+Syntax error at ,
+float.tyco:23.19: 
+Floats no longer supported
+float.tyco:25.14: 
+Floats no longer supported
+float.tyco:25.25: 
+Syntax error at +
+20 errors

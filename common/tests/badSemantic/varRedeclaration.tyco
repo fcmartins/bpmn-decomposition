@@ -1,0 +1,20 @@
+{-
+ - Semantic Error - Identifier analysis
+ -
+ - Vasco T. Vasconcelos
+ - March 2001
+ -}
+
+-- Redeclaration of a variable introduced by a new
+
+new x, y, z, x, w
+
+-- Redeclaration of a variable introduced by a method abstraction
+
+x ? (x, y, z, x, w) = inaction |
+
+-- Redeclaration of a variable introduced by a procedure
+
+def X (x, y, z, x, w) = inaction
+in
+inaction

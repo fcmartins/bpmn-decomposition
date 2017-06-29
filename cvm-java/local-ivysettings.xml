@@ -1,0 +1,7 @@
+<ivysettings>
+    <settings defaultResolver="public" defaultConflictManager="all"/>
+    <!-- in order to get all revisions without any eviction -->
+    <resolvers>
+        <ibiblio name="public" m2compatible="true"/>
+    </resolvers>
+</ivysettings>

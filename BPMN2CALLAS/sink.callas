@@ -1,0 +1,65 @@
+
+from iface import *
+
+module sink of Sensor:
+   def init(self):
+      c1 = "192.168.1.255:8912";
+      c2 = "8911";
+      open c1
+      open c2
+      extern logString("Start\n")
+      c3 = self.gatewayChannel();
+      open c3
+      receiver(c2) every 1000
+      pass
+
+   def receiver(self, c2):
+      select c2 receive
+
+   def gatewayChannel(self):
+      "192.168.1.80:8910";
+
+   def setVariable_bool(self, key, value):
+      extern logString("Received variable: ")
+      extern logString(key)
+      extern logString("\n")
+      c3 = self.gatewayChannel()
+      select c3 send setVariable_bool(key, value)
+      pass
+
+   def setVariable_double(self, key, value):
+      extern logString("Received variable: ")
+      extern logString(key)
+      extern logString("\n")
+      extern logDouble(value)
+      extern logString("\n")
+      c3 = self.gatewayChannel()
+      select c3 send setVariable_double(key, value)
+      pass
+
+   def setVariable_long(self, key, value):
+      extern logString("Received variable: ")
+      extern logString(key)
+      extern logString("\n")
+      extern logLong(value)
+      extern logString("\n")
+      c3 = self.gatewayChannel()
+      select c3 send setVariable_long(key, value)
+      pass
+
+   def setVariable_string(self, key, value):
+      extern logString("Received variable: ")
+      extern logString(key)
+      extern logString("\n")
+      extern logString(value)
+      extern logString("\n")
+      c3 = self.gatewayChannel()
+      select c3 send setVariable_string(key, value)
+      pass
+
+   def wsn_function1(self, c1):
+      pass
+
+   def wsn_function2(self, c1, option):
+      pass
+

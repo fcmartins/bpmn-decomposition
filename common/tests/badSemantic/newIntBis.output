@@ -1,0 +1,22 @@
+newIntBis.tyco:17.11: 
+  [Unification Error] 
+  For the message targeted at a, I was expecting the type:
+	<>
+  but found the following type:
+	Integer
+  (I was trying to unify the val-labelled component of an open record with
+  an open record, when I found a non record type.)
+  This is the point in the program where unification failed.
+  The source of the problem can be at a distant point in the source code.
+newIntBis.tyco:17.3: 
+  [Unification Error] 
+  For the object located at a, I was expecting the type:
+	Integer
+  but found the following type:
+	<>
+  (or possibly the other way round.)
+  (I was trying to unify the val-labelled component of an open record with
+  a closed record.)
+  This is the point in the program where unification failed.
+  The source of the problem can be at a distant point in the source code.
+2 errors

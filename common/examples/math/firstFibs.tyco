@@ -1,0 +1,27 @@
+{-
+ - Print the first n Fibonnaci numbers.
+ -
+ - Vasco T. Vasconcelos
+ - $Id: firstFibs.tyco,v 1.1 2004/02/12 17:44:20 tyco Exp $
+ -}
+
+include "fibs.tyc"
+
+def
+
+{-
+ - Produce a stream with the first n Fibonnaci numbers
+ -}
+FirstFibs (n, firstFibs) =
+  new fibs
+  Fibs [fibs] |
+  TakeUpTo [n, fibs, firstFibs]
+
+in
+
+{-
+ -Print the first 45 Fibonnaci numbers.
+ -} 
+new s
+FirstFibs [45, s] |
+PrintIntegerStream [s]

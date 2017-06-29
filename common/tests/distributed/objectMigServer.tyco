@@ -1,0 +1,7 @@
+{--
+ - Test the sending of an object to a remote channel. The server.
+ - 
+ - @author Herve' Paulino
+ -}
+export new c 
+inaction

@@ -1,0 +1,20 @@
+{--
+ - The problem:
+ - Apply a mathematical function to some value;
+ - print the result on some printer.
+ -
+ - The solution:
+ - The mathematical server answers a reference to a function
+ - when invoked with a string containing the name of the function.
+ - The printer server answers a reference to an available printer
+ - when asked.
+ -
+ - @author T. Vasconcelos
+ - $Id: mathServer.tyco,v 1.2 2004/03/30 15:11:15 tyco Exp $
+ -}
+export new aMathServer
+include "mathServer.tyc"
+
+-- Setup a mathematical server
+MathServer [aMathServer] 
+

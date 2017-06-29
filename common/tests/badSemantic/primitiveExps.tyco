@@ -1,0 +1,69 @@
+{-
+ - Check the primitive operators.
+ -
+ - Novelties include:
+ -   Equality extensible to all types.
+ -   Four arithmetic operators good for Integer and Float
+ - Vasco T. Vasconcelos
+ - March 2001
+ -}
+
+if "lala" == 143214
+then
+
+if true < "lala"
+then
+
+new a
+a ? { push (e) = inaction pop (r) = inaction } |
+
+if a >= 435
+then
+
+new b
+b ? { push (e) = inaction pop (r) = inaction top (r) = inaction } |
+
+if a /= b
+then
+
+-- mod only for integers
+
+new c
+c ! [45.54 % 0.342] |
+
+-- mixing integer and floats
+
+new d
+d ! [4321 + 432.432] |
+d ! [4.3241 - 432] |
+d ! [0.0 / 432] |
+d ! [4321 * 432.432] |
+
+-- Float <-> Integer Conversion 
+
+d ! [toFloat 432.32] |
+d ! [toFloat "lala"] |
+
+{-
+new e
+e ! [toInteger 4321] |
+e ! [toInteger true]
+-}
+
+-- String operations
+
+new f
+f ! [true ^ "lala"] |
+f ! [hd "lala" ^ 432] |
+
+-- Polymorphic equalities cannot be resolved at compile time
+
+def
+X (a, b, r) =
+  r ! [a == b]
+
+Y (a, r) =
+  r ! [-a]
+in
+
+inaction

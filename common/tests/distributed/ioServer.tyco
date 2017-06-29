@@ -1,0 +1,10 @@
+{--
+ - Server that receives a message and prints it to the screen
+ - 
+ - @author Herve' Paulino
+-}
+export new s 
+io ! puts["Waiting for message..."] ;
+s ? (x) = io!prints[x^"\nReceived.\n"]  
+
+

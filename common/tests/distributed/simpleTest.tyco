@@ -1,0 +1,10 @@
+{--
+ - A client to the simple test.
+ - 
+ - @author Herve' Paulino
+ -}
+import c, k from simple
+new a
+{ k ? (x) = io!prints[x] } |
+{ k ? (x) = io!prints[x] } |
+c ! [k]

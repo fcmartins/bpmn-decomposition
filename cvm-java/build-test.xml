@@ -1,0 +1,45 @@
+<!-- Version $Id: build-test.xml,v 1.2 2011/07/22 20:56:28 cogumbreiro Exp $ -->
+
+<project name="cvm-test">
+    <!-- dependencies -->
+    <fail unless="src" />
+    <fail unless="target" />
+    <fail unless="main-bin" />
+    <fail unless="lang-bin" />
+    	
+    <property name="junit.jar" value="${lib.dir}/junit.jar" />
+	<property name="test-src" value="${src}/test/java" />
+	<property name="test-bin" value="${target}/classes-test" />
+    <property name="test-report" value="${target}/test-reports" />
+
+	<path id="test.class.path">
+        <pathelement location="${junit.jar}" />
+        <pathelement location="${tycocommon.jar}" />
+        <pathelement location="${main-bin}" />
+        <pathelement location="${lang-bin}" />
+	</path>
+
+	<target name="-init-test">
+        <mkdir dir="${test-bin}" />
+		<mkdir dir="${test-report}" />
+	</target>
+
+    <target name="-compile-test">
+        <javac destdir="${test-bin}" classpathref="test.class.path" fork="true" source="1.5" srcdir="${test-src}" debug="true" includeantruntime="false">
+            <include name="**/*.java" />
+        </javac>
+	</target>
+	
+    <target name="-test">
+        <junit printsummary="true" haltonfailure="true">
+            <classpath refid="test.class.path" />
+
+            <formatter type="brief" usefile="false" />
+            <formatter type="xml" />
+
+            <batchtest todir="${test-report}">
+                <fileset dir="${test-bin}" includes="**/*Test.class" />
+            </batchtest>
+        </junit>
+    </target>
+</project>

@@ -1,0 +1,18 @@
+{-
+ - A client that concurrently withdraws and deposits money from a bank account
+ -
+ - Vasco T. Vasconcelos
+ - $Id: myAccount.tyco,v 1.1 2004/02/12 17:44:20 tyco Exp $
+ -}
+
+include "bankAccount.tyc"
+
+new a
+Account [a, 50] |
+a ! deposit [20] |
+case a ! withdraw [60] of {
+  overdraft () =
+    io ! prints ["Did not make it!\n"]
+  dispense () =
+    io ! prints ["Got it!\n"]
+}

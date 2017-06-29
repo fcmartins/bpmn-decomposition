@@ -1,0 +1,954 @@
+package org.callas.parse;
+
+import java.util.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.Random; 
+import java_cup.runtime.Symbol;
+
+import org.callas.absyn.*;
+import org.callas.absyn.processes.*;
+import org.callas.absyn.processes.Timer;
+import org.callas.absyn.types.*;
+import org.callas.util.TypeEquality;
+import org.callas.core.IFileLoader;
+import org.tyco.common.errorMsg.ErrorMessage;
+import org.tyco.common.errorMsg.SourceLocation;
+import org.tyco.common.errorMsg.msgs.SyntacticError;
+import org.tyco.common.util.Pair;
+
+/**
+ * The grammar of Callas
+ *
+ * @author Tiago Cogumbreiro
+ * @version $Id: callas-proc.cup,v 1.16 2012/04/23 03:19:35 ruimendes Exp $
+ */
+ 
+parser code {:
+ 
+    ProcessGrmUtil util;
+    
+    public static final Variable DUMMY_VAR = new Variable("?");
+ 
+	public List<ErrorMessage> errors;
+	
+	public String filename;
+	
+	public TypeEquality typeEq = new TypeEquality();
+	
+	ProcessGrm(List<ErrorMessage> errors, String filename, java.io.InputStream in, IFileLoader fileLoader){
+		this(new ProcessLexer(in));
+		this.errors = errors;
+		((ProcessLexer)getScanner()).errors = errors;
+        this.filename = filename;
+        this.util = new ProcessGrmUtil(errors, fileLoader);
+	}
+	
+	SourceLocation getLocation(int line, int col) {
+	   return new SourceLocation(filename, line + 1, col + 1);
+	}
+		
+    /**
+     * Print the error message.
+     * @param msg The message
+     * @param current The token where the error was detected
+     */
+    public void report_error (String msg, java_cup.runtime.Symbol info) {
+        SourceLocation loc = info.left != -1 ? getLocation(info.left, info.right) : null;
+        errors.add(new SyntacticError(loc, msg));
+    }
+    
+    public void syntax_error(Symbol cur_token) {
+        SourceLocation loc = cur_token.left != -1 ? getLocation(cur_token.left, cur_token.right) : null;
+        String result = cur_token.value == null ? "." : " at '" + cur_token.value + "'";
+        errors.add(new SyntacticError(loc, "Syntax error" + result));
+    }
+    
+    public void unrecovered_syntax_error(Symbol cur_token) {
+      report_fatal_error("Couldn't repair and continue parse!", cur_token);
+    }
+
+    public void report_fatal_error(
+    String   message, 
+    Object   info)
+    {
+      /* stop parsing (not really necessary since we throw an exception, but) */
+      done_parsing();
+
+      /* use the normal error message reporting to put out the message */
+      report_error(message, info);
+    }
+    
+    public CallasType getType(SourceLocation loc, org.tyco.common.symbol.Symbol name) {
+        return util.getType(loc, name);
+    }
+    
+    public void setType(RecursiveType t) {
+        util.setType(t);
+    }
+    
+    public Map<org.tyco.common.symbol.Symbol, RecursiveType> importTypes(SourceLocation loc, String resource) {
+        return util.importTypes(loc, resource);
+    }
+
+    public Map<org.tyco.common.symbol.Symbol, RecursiveType> importTypes(SourceLocation loc, String resource, List<Pair<org.tyco.common.symbol.Symbol,org.tyco.common.symbol.Symbol>> imports) {
+        return util.importTypes(loc, resource, imports);
+    }
+    
+    public void assemble(SourceLocation loc, org.tyco.common.symbol.Symbol selfType, Map<org.tyco.common.symbol.Symbol, FunctionType> body, List<CallasType> extended) {
+        util.assemble(loc, selfType, body, extended);
+    }
+    
+    public void updateImported(Map<org.tyco.common.symbol.Symbol, RecursiveType> importedTypes) {
+        util.updateImported(importedTypes);
+    }
+    
+    public Map<org.tyco.common.symbol.Symbol, RecursiveType> getTypes() {
+        return util.getTypes();
+    }
+    
+    public CallasProcess composeBody(List<CallasProcess> processes) {
+        return util.composeBody(processes);
+    }
+    
+    //Generates a new name for a variable (used in install)
+    public String newVariableName(){
+    	Random rand1 = new Random();
+    	String str1 = Long.toString(rand1.nextLong());  
+    	return "__var" + str1;
+    }
+:}
+
+terminal
+    IF,
+    ELSE,
+    ELIF,
+	DOT,
+	INDENT,
+	DEDENT,
+	DEF,
+	AS,
+	FROM,
+	IMPORT,
+	NL,
+    TRUE,
+    FALSE,
+    EQUAL,
+    LOAD,
+    STORE,
+    INSTALL,
+    COMMA,
+	LPAREN, RPAREN,
+	SEND,
+    COLON,
+    SEMICOLON,
+    MODULE,
+    OF,
+    LONG_TYPE,
+    STRING_TYPE,
+    DOUBLE_TYPE,
+    BOOL_TYPE,
+    EXTERN,
+    EVERY,
+    RECEIVE,
+    DEFMOD,
+    PASSKW,
+    MERGE,
+    MERGE_ASSIGN,
+    SELECT,
+    KILL,
+    OPEN,
+    CLOSE;
+        
+
+terminal java.lang.String STRING;
+terminal java.lang.Long LONG;
+terminal java.lang.Double DOUBLE;
+terminal org.tyco.common.symbol.Symbol ID, TYPE_NAME;
+
+terminal BinaryOperator
+    DOUBLE_MULTIPLICATION,
+    DOUBLE_SUBTRACTION,
+    DOUBLE_DIVISION,
+    DOUBLE_ADDITION,
+    DOUBLE_LESS_THAN,
+    DOUBLE_GREATER_THAN,
+    LONG_MULTIPLICATION,
+    LONG_SUBTRACTION,
+    LONG_DIVISION,
+	LONG_SHIFT_RIGHT,
+	LONG_SHIFT_LEFT,
+    LONG_AND,
+    LONG_OR,
+    LONG_EXCLUSIVE_OR,
+    LONG_MODULUS,
+    LONG_ADDITION,
+    LONG_LESS_THAN,
+    LONG_GREATER_THAN,
+	LONG_EQUALS,
+	LONG_DIFFERENT,
+	LONG_LESS_THAN_EQUALS,
+	LONG_GREATER_THAN_EQUALS,
+    BOOL_AND,
+	BOOL_OR,
+    BOOL_EXCLUSIVE_OR;
+
+terminal UnaryOperator
+    LONG_NOT,
+    BOOL_NOT;
+
+non terminal Map module_body;
+non terminal Map proc_abs_map;
+non terminal CallasProcess top_level;
+non terminal CallasProcess elif;
+non terminal CallasType type;
+non terminal CallasType type_name;
+non terminal CallasValue value;
+non terminal CallasValue builtin;
+non terminal List value_list;
+non terminal List arguments;
+non terminal List id_list;
+non terminal ProcessAbstraction process_abstraction;
+non terminal Variable var;
+non terminal Map typedef_map;
+non terminal Map typedef_body;
+non terminal RecursiveType typedef;
+non terminal List typed_id_list;
+non terminal List typedef_args;
+non terminal typereg;
+non terminal typeregs;
+non terminal CallasProcess program;
+non terminal List typedef_extends;
+non terminal List typename_list;
+non terminal List typename_list_rest;
+non terminal String dotted_name;
+non terminal String dots;
+non terminal String dot_dotted_name;
+non terminal List import_as_names_list;
+non terminal List import_as_names;
+non terminal Pair import_as_name;
+non terminal Map import_from;
+non terminal CallasProcess suite;
+non terminal List stmts;
+non terminal List stmt;
+non terminal List simple_stmt;
+non terminal CallasProcess small_stmt;
+non terminal List small_stmts;
+non terminal CallasProcess compound_stmt;
+non terminal CallasProcess expr_stmt;
+non terminal CallasProcess pass_stmt;
+non terminal CallasProcess proc_stmt;
+non terminal CallasProcess if_stmt;
+non terminal CallasProcess moduledef;
+non terminal CallasValue or_test;
+non terminal CallasValue xor_test;
+non terminal CallasValue and_test;
+non terminal CallasValue not_test;
+non terminal CallasValue comparison;
+non terminal CallasValue expr;
+non terminal BinaryOperator comp_op;
+non terminal CallasValue xor_expr;
+non terminal CallasValue and_expr;
+non terminal CallasValue shift_expr;
+non terminal CallasValue arith_expr;
+non terminal CallasValue term;
+non terminal CallasValue factor;
+non terminal CallasValue power;
+non terminal CallasValue atom;
+
+start with top_level;
+
+top_level ::= 
+      INDENT program:p DEDENT
+        {: RESULT = p; :}
+    | program:p
+        {: RESULT = p; :}
+    | error:x
+        {: RESULT = new Code(parser.getLocation(xleft, xright)); :}
+    ;
+
+program ::=
+      typeregs moduledef:m
+        {: 
+        LinkedList ll = new LinkedList();
+        ll.add(m);
+        RESULT = parser.composeBody(ll); :}
+    | typeregs
+        {: RESULT = new Code(parser.getLocation(0, 0)); :}
+    | /* empty */
+        {: RESULT = new Code(parser.getLocation(0, 0)); :}
+    ;
+
+typeregs ::=
+      typereg typeregs
+    | typereg
+    ;
+
+/* ===============================================
+ * Types
+ * =============================================== */
+
+type_name ::= 
+        TYPE_NAME:n
+          {: RESULT = parser.getType(parser.getLocation(nleft, nright), n); :}
+      ;
+
+type ::=
+      STRING_TYPE:x
+        {: RESULT = new BStringType(parser.getLocation(xleft, xright)); :}
+    | LONG_TYPE:x
+        {: RESULT = new BLongType(parser.getLocation(xleft, xright)); :}
+    | DOUBLE_TYPE:x
+        {: RESULT = new BDoubleType(parser.getLocation(xleft, xright)); :}
+    | BOOL_TYPE:x
+        {: RESULT = new BBoolType(parser.getLocation(xleft, xright)); :}
+    | type_name:n
+        {: RESULT = n; :}
+    ;
+
+typereg ::=
+      import_from:f NL
+        {: parser.updateImported(f); :}
+    | typedef:t
+        {: parser.setType(t); :}
+    ;
+    
+import_from ::= 
+      FROM:x dot_dotted_name:n IMPORT LONG_MULTIPLICATION
+        {:
+        SourceLocation loc = parser.getLocation(xleft, xright);
+        RESULT = parser.importTypes(loc, n);
+        :}
+    | FROM:x dot_dotted_name:n IMPORT LPAREN import_as_names:l RPAREN
+        {:
+        SourceLocation loc = parser.getLocation(xleft, xright);
+        RESULT = parser.importTypes(loc, n, l);
+        :}
+    | FROM:x dot_dotted_name:n IMPORT import_as_names:l
+        {:
+        SourceLocation loc = parser.getLocation(xleft, xright);
+        RESULT = parser.importTypes(loc, n, l);
+        :}
+    ;
+
+dot_dotted_name ::=
+      dots:d
+        {: RESULT = d; :}
+    | dots:ds dotted_name:n
+        {: RESULT = ds + n; :}
+    | dotted_name:n
+        {: RESULT = n; :}
+    ; 
+
+dots ::=
+      dots:ds DOT
+        {: RESULT = ds + "."; :}
+    | DOT
+        {: RESULT = "."; :}
+    ;
+
+import_as_name ::=
+      TYPE_NAME:n
+        {: RESULT = new Pair(n, n); :}
+    | TYPE_NAME:n AS TYPE_NAME:m
+        {: RESULT = new Pair(n, m); :}
+    ;
+    
+import_as_names::=
+      import_as_names_list:l
+        {: RESULT = l; :}
+    | import_as_names_list:l COMMA
+        {: RESULT = l; :}
+    ;
+
+import_as_names_list ::=
+      import_as_names_list:l COMMA import_as_name:n
+        {:
+        RESULT = l;
+        RESULT.add(n);
+        :}
+    | import_as_name:n
+        {:
+        RESULT = new LinkedList();
+        RESULT.add(n);
+        :}
+    ;
+
+dotted_name ::=
+      ID:n
+        {: RESULT = n.toString(); :}
+    | dotted_name:n DOT ID:m
+        {: RESULT = n + "." + m; :}
+    ;
+
+typedef ::=
+      DEFMOD:x TYPE_NAME:n typedef_extends:l COLON typedef_body:b
+        {:
+        SourceLocation loc = parser.getLocation(xleft, xright);
+        parser.assemble(loc, n, b, l);
+        CodeType ct = new CodeType(loc, b);
+        RESULT = new RecursiveType(loc, new TypeVariable(n), ct);
+        :}
+    ;
+
+typedef_extends ::=
+      LPAREN typename_list:l RPAREN
+        {: RESULT = l; :}
+    | /* empty */
+        {: RESULT = new LinkedList(); :}
+    ;
+
+typename_list ::=
+      typename_list_rest:l
+        {: RESULT = l; :}
+    | typename_list_rest:l COMMA
+        {: RESULT = l; :}
+    ;
+
+typename_list_rest ::=
+      typename_list_rest:l COMMA type_name:n
+        {:
+        RESULT = l;
+        RESULT.add(n);
+        :}
+    | type_name:n
+        {:
+        RESULT = new LinkedList();
+        RESULT.add(n);
+        :}
+    ;
+    
+typedef_body ::=
+      NL INDENT typedef_map:m DEDENT
+        {: RESULT = m; :}
+    | type:t ID:l typedef_args:args NL
+        {:
+        RESULT = new HashMap();
+        SourceLocation loc = parser.getLocation(tleft, tright);
+        FunctionType ft = new FunctionType(loc, args, t);
+        RESULT.put(l, ft);
+        :}
+    | PASSKW NL
+        {: RESULT = new HashMap(); :}
+    | NL INDENT PASSKW NL DEDENT
+        {: RESULT = new HashMap(); :}
+    ;
+
+typedef_map ::= 
+      type:t ID:l typedef_args:args NL
+        {:
+        RESULT = new HashMap();
+        SourceLocation loc = parser.getLocation(tleft, tright);
+        FunctionType ft = new FunctionType(loc, args, t);
+        RESULT.put(l, ft);
+        :}
+    | typedef_map:ts type:t ID:l typedef_args:args NL
+        {:
+        RESULT = ts;
+        SourceLocation loc = parser.getLocation(tleft, tright);
+        FunctionType ft = new FunctionType(loc, args, t);
+        RESULT.put(l, ft);
+        :}
+    ;
+
+typedef_args ::=
+      LPAREN RPAREN
+        {: RESULT = new LinkedList(); :}
+    | LPAREN typed_id_list:l RPAREN
+        {: RESULT = l; :}
+    ;
+
+typed_id_list ::=
+      type:t ID
+        {: RESULT = new LinkedList(); RESULT.add(t); :}
+    | type:t ID COMMA
+        {: RESULT = new LinkedList(); RESULT.add(t); :}
+    | type:t ID COMMA typed_id_list:vl
+        {: RESULT = vl; RESULT.add(0, t); :}
+    ;
+
+
+/* ===============================================
+ * Processes
+ * =============================================== */
+
+suite ::=
+      simple_stmt:s
+        {: RESULT = parser.composeBody(s); :}
+    | NL INDENT stmts:s DEDENT
+        {: RESULT = parser.composeBody(s); :}
+    ;
+
+stmts ::=
+      stmts:r stmt:s
+        {:
+            RESULT = r;
+            RESULT.addAll(s);
+        :}
+    | stmt:s
+        {:
+            RESULT = s;
+        :}
+    ;
+
+stmt ::=
+      simple_stmt:p
+        {: RESULT = p; :}
+    | compound_stmt:p
+        {:
+            RESULT = new LinkedList();
+            RESULT.add(p);
+        :}
+    | typereg stmt:p
+        {:
+            RESULT = p;
+        :}
+    ;
+
+/*
+ * We do not allow simple statements because we don't know how
+ * to propagate the scope of the assignments in the small statements to
+ * the statements.
+ */
+simple_stmt ::=
+      small_stmts:s SEMICOLON NL
+        {: RESULT = s; :}
+    | small_stmts:s NL
+        {: RESULT = s; :}
+    ;
+
+small_stmts ::=
+      small_stmt:s
+        {:
+            RESULT = new LinkedList();
+            RESULT.add(s);
+        :}
+    | small_stmts:r SEMICOLON  small_stmt:s
+        {:
+            RESULT = r;
+            RESULT.add(s);
+        :}
+    ;
+      
+small_stmt ::=
+      expr_stmt:p
+        {: RESULT = p; :}
+    | pass_stmt:p
+        {: RESULT = p; :}
+    | proc_stmt:p
+        {: RESULT = p; :}
+    ;
+
+/*
+ * Not as powerful as the original, since the original accepts lists on the
+ * lhs and on the rhs.
+ * 
+ * Originally: expr_stmt: testlist AUGASSIGN testlist
+ *                        | testlist ('=' testlist)*
+ */
+expr_stmt ::=
+/*      ID AUGASSIGN proc_stmt
+    |*/ ID:n EQUAL proc_stmt:p
+        {:
+            SourceLocation loc = parser.getLocation(nleft, nright);
+            Variable name = new Variable(loc, n); 
+            RESULT = new Assignment(name, p);
+        :}
+    ;
+                     
+pass_stmt ::=
+      PASSKW:x
+    {:
+        SourceLocation loc = parser.getLocation(xleft, xright);
+        RESULT = new Code(loc);
+    :}
+    ;
+
+compound_stmt ::=
+      if_stmt:p
+        {: RESULT = p; :}
+    | moduledef:p
+        {: RESULT = p; :}
+    ;
+
+if_stmt ::=
+      IF:i value:v COLON suite:p1 elif:p2
+        {: RESULT = new Branch(parser.getLocation(ileft, iright), v, p1, p2); :}
+    ;
+    
+elif ::=
+      ELSE COLON suite:p
+        {: RESULT = p; :}
+    | ELIF:i value:v COLON suite:p1 elif:p2
+        {: RESULT = new Branch(parser.getLocation(ileft, iright), v, p1, p2); :}
+    ;
+
+moduledef ::=
+      MODULE:s var:v OF type_name:n module_body:m
+        {:
+            final CodeType t;
+            if (n instanceof RecursiveType && ((RecursiveType)n).type instanceof CodeType) {
+                t = (CodeType) parser.typeEq.unfold((RecursiveType)n);
+            } else {
+                parser.errors.add(new SyntacticError(n.getSourceLocation(), "Undefined type '" + n + "'"));
+                t = CodeType.NIL_TYPE;
+            }
+            Code code = new Code(parser.getLocation(sleft, sright), m, t);
+            RESULT = new Assignment(v, code);
+        :}
+    ;
+
+module_body ::=
+      COLON NL INDENT proc_abs_map:m DEDENT
+        {: RESULT = m; :}
+    | COLON NL INDENT PASSKW:p NL DEDENT
+        {: RESULT = new HashMap(); :}
+    | COLON PASSKW:p NL
+        {: RESULT = new HashMap(); :}
+    ;
+    
+
+proc_abs_map ::=
+      DEF ID:n process_abstraction:p proc_abs_map:m
+        {:
+            RESULT = m;
+            RESULT.put(n, p);
+        :}
+    | DEF ID:n process_abstraction:p
+        {:
+            RESULT = new HashMap();
+            RESULT.put(n, p);
+        :}
+    ;
+ 
+process_abstraction ::=
+      LPAREN:x id_list:a RPAREN COLON suite:p
+        {: 
+            SourceLocation l = parser.getLocation(xleft, xright);
+            RESULT = new ProcessAbstraction(l, a, p);
+        :}
+    | LPAREN:x RPAREN COLON suite:p
+        {: 
+            SourceLocation l = parser.getLocation(xleft, xright);
+            RESULT = new ProcessAbstraction(l, Collections.EMPTY_LIST, p);
+        :}
+    ;
+    
+id_list ::=
+      var:id
+        {: RESULT = new LinkedList<Variable>(); RESULT.add(id); :}
+    | var:id COMMA
+        {: RESULT = new LinkedList<Variable>(); RESULT.add(id); :}
+    | var:id COMMA id_list:vl
+        {: RESULT = vl; RESULT.add(0, id); :}
+    ;
+
+arguments ::= 
+      LPAREN value_list:args RPAREN
+        {: RESULT = args; :}
+    | LPAREN RPAREN
+        {: RESULT = new LinkedList<CallasValue>(); :}
+    ;
+    
+proc_stmt ::= 
+      value:v
+        {: RESULT=v; :} 
+    | value:v DOT ID:id arguments:args
+        {: RESULT = new Call(v, id, (List<CallasValue>)args);:}
+    | value:m DOT ID:f arguments:a EVERY value:evr
+    	{: RESULT = new Timer(parser.getLocation(fleft,fright),m, f, a, evr); :} 	
+    | ID:f arguments:a EVERY value:evr
+        {:
+        SourceLocation loc = parser.getLocation(fleft, fright);
+        String varName = parser.newVariableName();
+        Variable var = new Variable(loc, varName); 
+        LoadSensorCode l = new LoadSensorCode(loc);
+        Timer t = new Timer(loc, var, f, a, evr);
+        RESULT = new Let(var, l, t);
+        :}
+    | KILL:x value:v
+    	{: RESULT = new Kill(parser.getLocation(xleft, xright), v); :}
+    | SELECT:t value:v SEND:s ID:function arguments:a
+    	{: RESULT = new Send(parser.getLocation(tleft,tright), v, function, a); :}
+    | value:left MERGE:i value:right
+        {: RESULT = new Update(parser.getLocation(ileft, iright), left, right); :}
+    | ID:n MERGE_ASSIGN:i value:v
+    	{: 
+    		SourceLocation loc = parser.getLocation(nleft, nright);
+            Variable var = new Variable(loc, n); 
+            Update up = new Update(parser.getLocation(ileft,iright),var,v);
+            RESULT = new Assignment(var, up);
+        :}
+    | EXTERN:e ID:name arguments:args
+        {: RESULT = new Extern(parser.getLocation(eleft, eright), name, args); :}
+    | SELECT:t value:v RECEIVE:r
+    	{: RESULT = new Receive(parser.getLocation(tleft,tright),v); :}
+    | LOAD:x
+        {: RESULT = new LoadSensorCode(parser.getLocation(xleft, xright)); :}
+    | STORE:x value:v
+        {: RESULT = new StoreSensorCode(parser.getLocation(xleft, xright), v); :}
+    | INSTALL:x value:v
+        {:  
+        SourceLocation loc = parser.getLocation(xleft, xright);
+        String varName = parser.newVariableName();
+        Variable var = new Variable(loc, varName);
+        LoadSensorCode p1 = new LoadSensorCode(loc);
+        Update p2 = new Update(loc,var,v);
+        StoreSensorCode p3 = new StoreSensorCode(loc,var);
+        Let let1 = new Let(var,p2,p3);
+        Let let2 = new Let(var,p1,let1);
+        RESULT = let2;
+        :}
+    | OPEN:x value:v
+		{: RESULT = new Open(parser.getLocation(xleft, xright), v); :}
+	| CLOSE:x value:v
+		{: RESULT = new Close(parser.getLocation(xleft, xright), v); :}
+    ;
+
+/* ===============================================
+ * Values
+ * =============================================== */
+
+value ::=
+      or_test:v
+        {: RESULT = v; :} 
+    ;
+
+or_test ::=
+      xor_test:v1 BOOL_OR:op or_test:v2
+        {:
+        SourceLocation loc = parser.getLocation(opleft, opright);
+        RESULT = new BinaryOperation(loc, v1, op, v2);
+        :}
+    | xor_test:v
+        {: RESULT = v; :} 
+    ;
+    
+xor_test ::=
+      and_test:v1 BOOL_EXCLUSIVE_OR:op xor_test:v2
+        {:
+        SourceLocation loc = parser.getLocation(opleft, opright);
+        RESULT = new BinaryOperation(loc, v1, op, v2);
+        :}
+    | and_test:v
+        {: RESULT = v; :} 
+    ;
+    
+and_test ::=
+      not_test:v1 BOOL_AND:op and_test:v2
+        {:
+        SourceLocation loc = parser.getLocation(opleft, opright);
+        RESULT = new BinaryOperation(loc, v1, op, v2);
+        :}
+    | not_test:v
+        {: RESULT = v; :} 
+    ;
+    
+not_test ::=
+      BOOL_NOT:op not_test:v
+        {:
+        SourceLocation loc = parser.getLocation(opleft, opright);
+        RESULT = new UnaryOperation(loc, op, v);
+        :}
+    | comparison:v
+        {: RESULT = v; :} 
+    ;
+    
+comparison ::=
+      expr:v1 comp_op:op comparison:v2
+        {:
+        SourceLocation loc = parser.getLocation(opleft, opright);
+        RESULT = new BinaryOperation(loc, v1, op, v2);
+        :}
+    | expr:v
+        {: RESULT = v; :} 
+    ;
+    
+comp_op ::=
+      LONG_LESS_THAN:v
+        {: RESULT = v; :} 
+    | DOUBLE_LESS_THAN:v
+        {: RESULT = v; :} 
+    | DOUBLE_GREATER_THAN:v
+        {: RESULT = v; :} 
+    | LONG_GREATER_THAN:v
+        {: RESULT = v; :} 
+    | LONG_EQUALS:v
+        {: RESULT = v; :} 
+    | LONG_GREATER_THAN_EQUALS:v
+        {: RESULT = v; :} 
+    | LONG_LESS_THAN_EQUALS:v
+        {: RESULT = v; :} 
+    | LONG_DIFFERENT:v
+        {: RESULT = v; :} 
+    ;
+
+expr ::=
+      xor_expr:v1 LONG_OR:op expr:v2
+        {:
+        SourceLocation loc = parser.getLocation(opleft, opright);
+        RESULT = new BinaryOperation(loc, v1, op, v2);
+        :}
+    | xor_expr:v
+        {: RESULT = v; :} 
+    ;
+    
+xor_expr ::=
+      and_expr:v1 LONG_EXCLUSIVE_OR:op xor_expr:v2
+        {:
+        SourceLocation loc = parser.getLocation(opleft, opright);
+        RESULT = new BinaryOperation(loc, v1, op, v2);
+        :}
+    | and_expr:v
+        {: RESULT = v; :} 
+    ;
+    
+and_expr ::=
+      shift_expr:v1 LONG_AND:op and_expr:v2
+        {:
+        SourceLocation loc = parser.getLocation(opleft, opright);
+        RESULT = new BinaryOperation(loc, v1, op, v2);
+        :}
+    | shift_expr:v
+        {: RESULT = v; :} 
+    ;
+    
+shift_expr ::=
+      arith_expr:v1 LONG_SHIFT_LEFT:op shift_expr:v2
+        {:
+        SourceLocation loc = parser.getLocation(opleft, opright);
+        RESULT = new BinaryOperation(loc, v1, op, v2);
+        :}
+    | arith_expr:v1 LONG_SHIFT_RIGHT:op shift_expr:v2
+        {:
+        SourceLocation loc = parser.getLocation(opleft, opright);
+        RESULT = new BinaryOperation(loc, v1, op, v2);
+        :}
+    | arith_expr:v
+        {: RESULT = v; :} 
+    ;    
+
+arith_expr ::=
+      term:v1 LONG_ADDITION:op arith_expr:v2
+        {:
+        SourceLocation loc = parser.getLocation(opleft, opright);
+        RESULT = new BinaryOperation(loc, v1, op, v2);
+        :}
+    | term:v1 LONG_SUBTRACTION:op arith_expr:v2
+        {:
+        SourceLocation loc = parser.getLocation(opleft, opright);
+        RESULT = new BinaryOperation(loc, v1, op, v2);
+        :}
+    | term:v1 DOUBLE_ADDITION:op arith_expr:v2
+        {:
+        SourceLocation loc = parser.getLocation(opleft, opright);
+        RESULT = new BinaryOperation(loc, v1, op, v2);
+        :}
+    | term:v1 DOUBLE_SUBTRACTION:op arith_expr:v2
+        {:
+        SourceLocation loc = parser.getLocation(opleft, opright);
+        RESULT = new BinaryOperation(loc, v1, op, v2);
+        :}
+    | term:v
+        {: RESULT = v; :} 
+    ;
+    
+term ::=
+      factor:v1 LONG_MULTIPLICATION:op term:v2
+        {:
+        SourceLocation loc = parser.getLocation(opleft, opright);
+        RESULT = new BinaryOperation(loc, v1, op, v2);
+        :}
+    | factor:v1 DOUBLE_MULTIPLICATION:op term:v2
+        {:
+        SourceLocation loc = parser.getLocation(opleft, opright);
+        RESULT = new BinaryOperation(loc, v1, op, v2);
+        :}
+    | factor:v1 DOUBLE_DIVISION:op term:v2
+        {:
+        SourceLocation loc = parser.getLocation(opleft, opright);
+        RESULT = new BinaryOperation(loc, v1, op, v2);
+        :}
+    | factor:v1 LONG_MODULUS:op term:v2
+        {:
+        SourceLocation loc = parser.getLocation(opleft, opright);
+        RESULT = new BinaryOperation(loc, v1, op, v2);
+        :}
+    | factor:v1 LONG_DIVISION:op term:v2
+        {:
+        SourceLocation loc = parser.getLocation(opleft, opright);
+        RESULT = new BinaryOperation(loc, v1, op, v2);
+        :}
+    | factor:v
+        {: RESULT = v; :} 
+    ;
+    
+factor ::=
+      LONG_ADDITION:op factor:v
+        {:
+        RESULT = v;
+        :}
+    | LONG_SUBTRACTION:op factor:v
+        {:
+        SourceLocation loc = parser.getLocation(opleft, opright);
+        RESULT = new UnaryOperation(loc, UnaryOperator.LONG_NEGATION, v);
+        :}
+    | DOUBLE_SUBTRACTION:op factor:v
+        {:
+        SourceLocation loc = parser.getLocation(opleft, opright);
+        RESULT = new UnaryOperation(loc, UnaryOperator.DOUBLE_NEGATION, v);
+        :}
+    | LONG_NOT:op factor:v
+        {:
+        SourceLocation loc = parser.getLocation(opleft, opright);
+        RESULT = new UnaryOperation(loc, op, v);
+        :}
+    | atom:v
+        {: RESULT = v; :} 
+    ;
+
+/*
+power ::=
+      atom:v1 POWER:op factor:v2
+        {:
+        SourceLocation loc = parser.getLocation(opleft, opright);
+        RESULT = new BinaryOperation(loc, v1, op, v2);
+        :}
+    | atom:v
+        {: RESULT = v; :} 
+    ;
+*/
+
+atom ::=
+      builtin:b
+        {: RESULT = b; :}
+    | var:v
+        {: RESULT = v; :}
+    ;
+
+builtin ::=
+      LONG:x
+        {: RESULT = new BLong(parser.getLocation(xleft, xright), x.longValue());:}
+    | DOUBLE:x
+        {: RESULT = new BDouble(parser.getLocation(xleft, xright), x.doubleValue());:}
+    | STRING:x
+        {: RESULT = new BString(parser.getLocation(xleft, xright), x);:}
+    | TRUE:x
+        {: RESULT = new BBool(parser.getLocation(xleft, xright), true);:}
+    | FALSE:x
+        {: RESULT = new BBool(parser.getLocation(xleft, xright), false);:}
+    ;
+
+var ::=
+      ID:n
+        {: RESULT = new Variable(parser.getLocation(nleft, nright), n); :}
+    ;
+
+value_list ::= 
+      value:v
+        {: RESULT = new LinkedList(); RESULT.add(v); :}
+    | value:v COMMA
+        {: RESULT = new LinkedList(); RESULT.add(v); :}
+    | value:v COMMA value_list:vs
+        {: RESULT = vs; RESULT.add(0, v);:}
+    ;

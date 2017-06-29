@@ -1,0 +1,15 @@
+{--
+ - The ATM machine in  a Distributed implementation of the ATM aplication.
+ -
+ - Imports the channel from the bank site.
+ - An ATM connected to this bank only
+ - An user that conducts a session with the ATM.
+ - 
+ - @author Herve' Paulino
+ - $Id: atm.tyco,v 1.2 2004/03/05 13:46:53 tyco Exp $
+ -}
+import bank from bank
+include "../../atm/interactiveUser.tyc"
+include "../../atm/atm.tyc"
+
+AnInteractiveUser [NewATM [bank] ]

@@ -1,0 +1,48 @@
+{-
+ - Computation in tyco proceeds by message exchanging.  There are times
+ - however when one needs to store values for later retrieval.  An
+ - imperative variable is exactly that: it allows reading and writing.  A
+ - simple one variable cell can be written as follows.
+ -
+ - Use the -rand option to tycoc to obtain different output.
+ -
+ - Vasco T. Vasconcelos
+ - $Id: cell.tyco,v 1.1.1.1 2002/11/30 14:37:29 tyco Exp $
+ -}
+
+def
+ -- A one place buffer cell
+ Cell (self, value) =  self ? { 
+
+    read (replyTo) =
+      replyTo ! [value] |
+      Cell [self, value]
+      
+    write (newValue) = 
+      Cell [self, newValue]
+  }
+in
+
+-- in-def is crucial
+def
+  {-
+   - A Cell constructor.
+   -}
+  NewCell (value, replyTo) =
+    new result
+    Cell [result, value] |
+    replyTo ! [result]
+in
+def
+  {-
+   - A default constructor for an Integer cell.
+   -}
+  NewIntegerCell (replyTo) =
+    replyTo ! [NewCell [0]]
+    
+  {-
+   - A default constructor for a Boolean cell.
+   -}
+  NewBooleanCell (replyTo) =
+    replyTo ! [NewCell [false]]
+in

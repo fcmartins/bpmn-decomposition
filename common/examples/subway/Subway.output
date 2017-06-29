@@ -1,0 +1,74 @@
+1 - All possible paths
+2 - Shortest path
+0 - Exit
+Choose option > 
+Stations
+Restauradores:
+Avenida:
+Parque:
+Sao Sebastiao:
+Praca de Espanha:
+Jardim Zoologico:
+Laranjeiras:
+Alto dos Moinhos:
+Colegio Militar Luz:
+Carnide:
+Pontinha:
+Rato:
+Marques de Pombal:
+Picoas:
+Saldanha:
+Campo Pequeno:
+Entre Campos:
+Cidade Universitaria:
+Oriente:
+Cabo Ruivo:
+Olivais:
+Chelas:
+Bela Vista:
+Olaias:
+Cais do Sodre:
+Baixa Chiado:
+Rossio:
+Martim Moniz:
+Intendente:
+Anjos:
+Arroios:
+Alameda:
+Areeiro:
+Roma:
+Alvalade:
+Campo Grande:
+Telheiras:
+[]
+Choose start node > Choose end node > 
+Answer
+Anjos:
+Intendente:
+Martim Moniz:
+Rossio:
+Baixa Chiado:
+Restauradores:
+Avenida:
+Marques de Pombal:
+Picoas:
+Saldanha:
+Campo Pequeno:
+Entre Campos:
+Cidade Universitaria:
+Campo Grande:
+Alvalade:
+Roma:
+[]:
+Anjos:
+Arroios:
+Alameda:
+Areeiro:
+Roma:
+[]:
+[]
+
+1 - All possible paths
+2 - Shortest path
+0 - Exit
+Choose option > Exiting program

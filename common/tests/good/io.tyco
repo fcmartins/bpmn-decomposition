@@ -1,0 +1,16 @@
+{-
+ - Check the io primitive object
+ -
+ - Vasco T. Vasconcelos
+ - $Id: io.tyco,v 1.1 2004/02/12 17:44:20 tyco Exp $
+ -}
+
+new done
+io ! putb [false, done] |
+done ? {done () = inaction}
+
+{-
+new res
+io ! getb [res] |
+res ? {val (x) = inaction}
+-}

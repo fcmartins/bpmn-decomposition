@@ -1,0 +1,17 @@
+
+defmodule Nil:
+   pass
+
+defmodule Gateway:
+   string gatewayChannel()
+
+defmodule Sensor:
+   Nil init()
+   Nil receiver(string c2)
+   Nil setVariable_bool(string key, bool value)
+   Nil setVariable_double(string key, double value)
+   Nil setVariable_long(string key, long value)
+   Nil setVariable_string(string key, string value)
+   string gatewayChannel()
+   Nil wsn_function1(string c1)
+   Nil wsn_function2(string c1, long option)

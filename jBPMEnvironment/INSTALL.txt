@@ -1,0 +1,31 @@
+1.1. 'mvn package' of project;
+
+1.2. Copy the .jar to the directory "dependencies" available at the root of jbpm;
+
+2. In jBPM console:
+2.1. Go to Authoring->Artifact Repository and upload the generated .jar;
+
+2.2. Go to Authoring->Project Authoring and then New Item->Project (if needed create a repository before if there is no repository created)
+(the fields may be filled with any chosen value);
+
+2.3. On the Project Settings dropdown menu choose Dependencies, click Add from repository and select the uploaded .jar (it should be the .jar not the .pom) and save;
+
+2.4. Select New item->Work item definition, name it with any name and replace the generated content with the content available in the file src/main/resources/MyWorkDefinitions.wid (in this project) and save;
+
+2.5. On the Project Settings dropdown menu choose "Deployment descriptor" and on the "Work item handlers" section add the following entries:
+
+==========================================================================
+Value (1st column): ExecuteWSN
+Value (2nd column): new workitem.handlers.ExecuteWsnTaskWorkItemHandler(ksession)
+Resolver type: mvel
+==========================================================================
+Value (1st column): AwaitVariables
+Value (2nd column): new workitem.handlers.AwaitVariablesTaskWorkItemHandler(ksession)
+Resolver type: mvel
+==========================================================================
+Value (1st column): SubscribeVariables
+Value (2nd column): new workitem.handlers.SubscribeVariablesTaskWorkItemHandler(ksession)
+Resolver type: mvel
+==========================================================================
+
+2.6. Save.

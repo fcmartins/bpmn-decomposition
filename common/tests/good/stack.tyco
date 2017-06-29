@@ -1,0 +1,45 @@
+{-
+ - A stack supporting the usual push, and pop/top operations
+ - Pop requests to empty stacks are simply ignored.
+ -
+ - Vasco T. Vasconcelos
+ - $Id: stack.tyco,v 1.1 2004/02/12 17:44:20 tyco Exp $
+ -}
+
+include "../../examples/datatypes/simpleList.tyc"
+
+def Stack (self) =
+  def Go (contents) =
+    self ? {
+      push (element) :
+        new l
+        Cons [l, element, contents] |
+        Go [l]
+      pop (replyto) =
+        case contents ! [] of {
+          nil () =
+            Go [contents]
+          cons (head, tail) =
+            replyto ! [head] |
+            Go [tail]
+        }
+    }
+  in
+  new c
+  Nil [c] |
+  Go [c]
+in
+new s
+Stack [s] |
+
+s ! push [1] ;
+s ! push [2] ;
+io ! puts ["Pop after push 1 and push 2: "] ;
+io ! puti [s ! pop []] ;
+io ! prints ["\n"] |
+
+s ! push [3] ;
+s ! push [4] ;
+io ! puts ["Pop after push 3 and push 4: "] ;
+io ! puti [s ! pop []] ;
+io ! prints ["\n"]

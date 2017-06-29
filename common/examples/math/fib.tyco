@@ -1,0 +1,20 @@
+{-
+ - The Fibonnaci function, recursive
+ - Compare with nthFib.tyco
+ -
+ - Vasco T. Vasconcelos
+ - $Id: fib.tyco,v 1.1 2004/02/12 17:44:20 tyco Exp $
+ -}
+
+def Fib (n, r) =
+  if n == 1 or n == 2
+  then r ! [1]
+  else r ! [Fib [n - 1] + Fib [n - 2]]
+in
+  let n = Fib [20]
+  in
+    io ! puts ["Fib (20) = "] ;
+    io ! puti [n] ;
+    io ! prints ["\n"]
+
+| def X()=inaction in inaction

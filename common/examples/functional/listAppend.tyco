@@ -1,0 +1,36 @@
+{-
+ - Appending two String lists; printing the result
+ -
+ - Vasco T. Vasconcelos
+ - $Id: listAppend.tyco,v 1.1 2004/02/12 17:44:20 tyco Exp $
+ -}
+
+include "listOps.tyc"
+include "../math/streamOps.tyc"
+
+def
+-- The List ["a", "b", "c"] located at l.
+AList (l) =
+  Cons[l, "a", NewCons["b", NewCons["c", NewEmptyList[]]]]
+
+-- The List ["x", "y", "z"] located at m.
+AnotherList (m) =
+  Cons[m, "z", NewCons["y", NewCons["x", NewEmptyList[]]]]
+
+-- Print the strings in a list.
+PrintStringList (l) =
+  new s
+  ToStream [l, s] |
+  PrintStringStream [s]
+
+-- PrintStringStream[ToStream[l]]
+in
+
+-- Append and print.
+
+new l AList [l] |
+new m AnotherList [m] |
+let
+  n = Append [l, m]
+in
+  PrintStringList [Append [n, n]]

@@ -1,0 +1,23 @@
+<ivy-module version="1.0">
+    <info organisation="org.callas" module="cvm-java" revision="1.0"/>
+    <configurations>
+        <conf name="main" description="Consists of the Java implementation of the CVM."/>
+        <conf name="app" extends="main" description="An API for developing applications based on plugins."/>
+        <conf name="rmi" extends="app" description="An extension of CVM that adds support for RMI."/>
+        <conf name="lang" extends="main" description="Includes an API for manipulating the CVM bytecode. Also includes an assembler for the CVM bytecode."/>
+        <conf name="test" extends="main" description="Test cases."/>
+    </configurations>
+    <publications>
+        <artifact name="libcvm" type="jar"  conf="main" ext="jar"/>
+        <artifact name="libcvm-app" type="jar"  conf="app" ext="jar"/>
+        <artifact name="libcvm-rmi" type="jar"  conf="rmi" ext="jar"/>
+        <artifact name="libcvm-lang" type="jar"  conf="lang" ext="jar"/>
+    </publications>
+    <dependencies>
+        <dependency org="lasige.gloss" name="tycocommon" rev="1.0" conf="lang->default"/>
+        <dependency org="lasige.gloss" name="javacup" conf="lang->default" rev="0.10k"/>
+        <dependency org="lasige.gloss" name="jflex" conf="lang->default" rev="1.3.5"/>
+        <dependency org="commons-cli" name="commons-cli" rev="1.2" conf="app->default;rmi->default"/>
+        <dependency org="junit" name="junit" rev="3.8" conf="test->default"/>
+    </dependencies>
+</ivy-module>

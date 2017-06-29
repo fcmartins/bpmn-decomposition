@@ -1,0 +1,59 @@
+import org.drools.core.process.core.datatype.impl.type.StringDataType;
+import org.drools.core.process.core.datatype.impl.type.IntegerDataType;
+import org.drools.core.process.core.datatype.impl.type.FloatDataType;
+import org.drools.core.process.core.datatype.impl.type.ObjectDataType;
+
+[
+  // the Execute WSN work item
+  [
+    "name" : "Execute WSN",
+    "parameters" : [
+      "Method" : new StringDataType(),
+      "URL" : new StringDataType(),
+      "WSNID" : new IntegerDataType(),
+      "Function" : new StringDataType(),
+      "Parameters" : new StringDataType(),
+      "Headers" : new StringDataType(),
+      "WSNIPPort" : new StringDataType()
+    ],
+    "displayName" : "Execute WSN",
+    "defaultHandler": "workitem.handlers.ExecuteWsnTaskWorkItemHandler",
+    "icon" : "icons/send.png"
+  ],
+
+  // the Subscribe Variables work item
+  [
+    "name" : "Subscribe Variables",
+    "parameters" : [
+        "URL" : new StringDataType(),
+        "WSNID" : new IntegerDataType(),
+       "Variables" : new StringDataType(),
+       "SensorDataValidityDateWindow" : new IntegerDataType(),
+       "SensorDataNthEntry" : new IntegerDataType()
+    ],
+    "displayName" : "Subscribe Variables",
+    "defaultHandler": "workitem.handlers.SubscribeVariablesTaskWorkItemHandler",
+    "icon" : "icons/subscribe.png"
+  ],
+  
+  // the Await Variables work item
+  [
+    "name" : "Await Variables",
+    "parameters" : [
+       "Variables" : new StringDataType()
+    ],
+    "displayName" : "Await Variables",
+    "defaultHandler": "workitem.handlers.AwaitVariablesTaskWorkItemHandler",
+    "icon" : "icons/receive.png"
+  ],
+  
+  // the Log Input work item
+  [
+    "name" : "Log Input",
+    "parameters" : [
+    	"input1" : new FloatDataType()
+    ],
+    "displayName" : "Log Input",
+    "icon" : "icons/log.png"
+  ]
+]

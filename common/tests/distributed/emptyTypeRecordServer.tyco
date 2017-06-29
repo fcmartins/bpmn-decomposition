@@ -1,0 +1,8 @@
+{--
+ - Test the export of a name with an empty type.
+ - The server.
+ - 
+ - @author Herve' Paulino
+ -}
+export new s, c
+inaction

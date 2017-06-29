@@ -1,0 +1,30 @@
+{-
+ - Bank
+ -
+ - Vasco T. Vasconcelos, Herve' Paulino
+ - $Id$
+ -}
+
+{-
+ - A bank with a single account (mine).
+ - Autenticates a single client (I), replies the handle to its only account.
+ -}
+def Bank (self, theOnlyAccount) =
+  self ? {
+    autenticate (id, pin, replyto) =
+      Bank [self, theOnlyAccount] |
+      if id == "tyco" and pin == 1313
+      then replyto ! success [theOnlyAccount]
+      else replyto ! failure []
+  }
+in 
+
+{-
+ - Constructor
+ -}
+ def NewBank(theOnlyAccount, replyTo)  =
+ 	new result
+ 	Bank [result, theOnlyAccount] |
+ 	replyTo ! [result]
+in
+  

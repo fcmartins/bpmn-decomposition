@@ -1,0 +1,8 @@
+<ivysettings>
+    <resolvers>
+        <filesystem name="gloss-publish" m2compatible="true">
+          <artifact pattern="${user.home}/lasige-serv/home/cogumbreiro/public_html/repo/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]"/>
+        </filesystem>
+    </resolvers>
+</ivysettings>
+

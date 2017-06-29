@@ -1,0 +1,20 @@
+{--
+ - Test the export of channels to the name-server.
+ - 
+ - @author Herve' Paulino
+ -}
+export new c
+def X(self, user) = 
+		self ? (r) =
+				r ! [user] |
+				X[self, user]
+in 
+new x X[x, 0] |
+def 
+	Y(self) =
+		self ? () = 
+		if x ! [] == 0 then 
+			inaction 
+in 
+Y[c] | c ![]
+

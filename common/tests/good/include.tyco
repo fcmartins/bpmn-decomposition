@@ -1,0 +1,12 @@
+{-
+ - Including files
+ - Run the compiler from the current directory
+ - Vasco T. Vasconcelos
+ - March 2001
+ -}
+
+io
+include "includeBang.tyc"
+puti 
+include "includeComm.tyc" ;
+inaction

@@ -1,0 +1,43 @@
+\begin{myfigure}
+  \begin{gather*}
+%     \tag{\SmonoidProgram}
+%     P_1 \parp P_2 \congr P_2 \parp P_1,
+%     \qquad
+%     P \parp \inactionp \congr P,
+%     \qquad
+%     P_1 \parp (P_2 \parp P_3) \congr (P_1 \parp P_2) \parp P_3
+%     \\
+     \tag{\SmonoidSensor}
+    S_1 \parn S_2 \congr S_2 \parn S_1,
+    \qquad
+    S \parn \inactionn \congr S
+    \qquad
+    S_1 \parn (S_2 \parn S_3)  \congr (S_1 \parn S_2) \parn S_3
+    \\
+%     \tag{\Sseq, \Sprogram}
+%     \inactionp \seq P \congr P
+%     \qquad \qquad
+%     \frac{
+%       P_1 \congr P_2
+%     }{
+%       \sensord[P_1] \congr \sensord[P_2]
+%     }
+%     \\
+    \tag{\Sbroadcast, \Sbattery}
+    \sensord \congr \tagsensor{\vec P}{O}{p}{r}{e}{\inactionn}
+    \qquad \qquad
+    \frac{
+      e < \min(\energyIn, \energyOut)
+    }{
+      \sensor {\vec P}{O}{p}{r}{e} \congr \inactionn
+    }
+  \end{gather*}
+  \\[-0.4cm]
+\caption{Structural congruence for processes and sensors.}
+\label{fig:structural-congruence}
+\end{myfigure}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End: 

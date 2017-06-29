@@ -1,0 +1,20 @@
+{-
+ - Semantic Error - Identifier analysis
+ -
+ - Vasco T. Vasconcelos
+ - March 2001
+ -}
+
+-- Undeclared procedure
+
+X [false, 112] |
+
+-- Redeclaration of a procedure
+
+def
+  X (a, b) = inaction
+  Y () = inaction
+  X (a) = inaction
+  Z (a, b, c) = inaction
+in
+inaction

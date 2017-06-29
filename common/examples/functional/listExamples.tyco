@@ -1,0 +1,47 @@
+{-
+ - Playing with lists
+ -
+ - Vasco T. Vasconcelos
+ - $Id: listExamples.tyco,v 1.1 2004/02/12 17:44:20 tyco Exp $
+ -}
+
+include "listOps.tyc"
+
+{-
+ - A list comprising elements 1, 2, 3, located at channel l.
+ -}
+
+new l
+List123 [l] |
+
+{-
+ - Here is how we print the sum of the lengths of lists l and l.
+ -}
+
+io ! puts ["Sum of lengths: "] ;
+io ! puti [Length [l] + Length [l]] ;
+io ! prints [" \n"] |
+
+{-
+ - Making a 1, 2, 3, 1, 2, 3, 1, 2, 3 list.
+ -}
+
+io ! puts ["Length of append: "] ;
+io ! puti [Length [Append [Append [l, l], l]]] ;
+io ! prints ["\n"] |
+
+{- Using the list length server. -}
+
+new length
+Length1 [length] |
+io ! puts ["Sum of lengths: "] ;
+io ! puti [length ! [l] + length ! [l]] ;
+io ! prints ["\n"] |
+
+{- 
+ - Printing the last element of list l.
+ -}
+
+io ! puts ["Last: "] ;
+io ! puti [Last [l]] ;
+io ! prints ["\n"]

@@ -1,0 +1,19 @@
+{-
+ - Example: manipulating a Stack.
+ -
+ - Vasco T. Vasconcelos
+ - $Id: myStack.tyco,v 1.1 2004/02/12 17:44:20 tyco Exp $
+ -}
+
+include "stack.tyc"
+
+let stack = NewStack [] 
+in
+{ io ! puti [stack ! pop []] ; io ! prints ["\n"] } |
+io ! puts ["here"];
+stack ! push [-12] ;
+{ io ! puti [stack ! pop []] ; io ! prints ["\n"] } |
+stack ! push [4] ;
+stack ! push [132] ;
+stack ! push [-312] ;
+{ io ! puti [stack ! pop []] ; io ! prints ["\n"] }

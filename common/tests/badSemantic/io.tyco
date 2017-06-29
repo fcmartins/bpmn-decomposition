@@ -1,0 +1,16 @@
+{-
+ - Testing the io object.
+ - Not typable.
+ -
+ - Vasco T. Vasconcelos
+ - March 2001
+ -}
+
+new r
+io ! geti [r] |
+r ? {
+  val (x) = inaction
+  foo () = inaction
+}
+
+      

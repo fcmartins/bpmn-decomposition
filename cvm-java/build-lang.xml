@@ -1,0 +1,74 @@
+<!-- Version $Id: build-lang.xml,v 1.5 2012/12/13 15:32:39 cogumbreiro Exp $ -->
+
+<project name="cvm-lang" xmlns:ivy="antlib:org.apache.ivy.ant">
+	<!-- dependencies -->
+	<fail unless="main-bin" />
+	<fail unless="target" />
+    <fail unless="src" />
+
+	<!-- PROPERTIES -->
+	
+    <property name="callasasm.jar" value="${target}/callasasm.jar" />
+    <property name="libcvm-lang.jar" value="${target}/libcvm-lang.jar" />
+    <property name="libcvm-lang-nodeps.jar" value="${target}/libcvm-lang-nodeps.jar" />
+
+    <!-- internal properties -->
+    <property name="lang-src" value="${src}/lang/java" />
+    <property name="lang-bin" value="${target}/lang-classes" />
+    <property name="lang-src-gen" value="${target}/lang-src-generated-sources" />
+    <property name="javacup.jar" value="${lib.dir}/javacup.jar" />
+    <property name="jflex.jar" value="${lib.dir}/jflex.jar" />
+    <property name="javacup.xml" value="${lib.dir}/javacup.xml" />
+    <property name="jflex.xml" value="${lib.dir}/jflex.xml" />
+    
+    <property name="java-cup.class.path" value="${javacup.jar}" />
+    <property name="jflex.class.path" value="${jflex.jar}" />
+    <property name="jflex.destination.dir" value="${lang-src-gen}/org/callas/vm/parse" />
+    <property name="java-cup.destination.dir" value="${lang-src-gen}/org/callas/vm/parse" />
+
+    <property name="tycocommon.jar" value="${lib.dir}/tycocommon.jar" />
+    <property name="javacup-runtime.jar" value="${lib.dir}/javacup-runtime.jar" />
+    <path id="lang.class.path">
+        <pathelement location="${tycocommon.jar}" />
+        <pathelement location="${javacup-runtime.jar}" />
+        <pathelement location="${main-bin}" />
+    </path>
+	
+	<!-- TARGETS -->
+	
+    <target name="-init-lang">
+        <mkdir dir="${lang-src-gen}" />
+        <mkdir dir="${lang-bin}" />
+    </target>
+
+    <target name="-generate-lang">
+        <ant  antfile="${jflex.xml}" target="jflex">
+            <property name="jflex.filename" value="${src}/lang/jflex/callas-asm.lex" />
+        </ant>
+        <ant antfile="${javacup.xml}" target="java-cup">
+            <property name="java-cup.filename" value="${src}/lang/java-cup/callas-asm.cup" />
+        </ant>
+    </target>
+
+    <target name="-compile-lang">
+        <javac destdir="${lang-bin}" classpathref="lang.class.path" fork="true" srcdir="${lang-src}" debug="true" includeantruntime="false">
+            <sourcepath path="${lang-src-gen}" />
+            <include name="**/*.java" />
+        </javac>
+    </target>
+	
+    <target name="-jar-lang">
+        <jar destfile="${libcvm-lang.jar}">
+            <fileset dir="${lang-bin}">
+                <exclude name="**/package.html" />
+            </fileset>
+        </jar>
+        <jar destfile="${libcvm-lang-nodeps.jar}">
+            <zipfileset src="${tycocommon.jar}" />
+            <fileset dir="${main-bin}">
+                <exclude name="**/package.html" />
+            </fileset>
+            <zipfileset src="${libcvm-lang.jar}"/>
+        </jar>
+    </target>
+</project>

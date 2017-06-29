@@ -1,0 +1,26 @@
+{--
+ -  The Seti server.
+ -  It is composed by two definitions: Install and Go.
+ -  The first allows a client to import the second, 
+ -  that fetches and processes a chunk.
+ - 
+ - @param self Reference to the object.
+ - @param database Reference to the database.
+ - 
+ - @author Herve' Paulino
+ - $Id:$
+ -}
+def 
+	Install(self, database) =
+		self ? (client) =
+			Go[client, database] |
+			Install[self, database]
+	
+	Go(self, database) = 		
+		self ? () =
+			new data 
+			database ! newChunk[data] |
+			data ! process[] ;
+			Go[self, database] | 
+			self ! [] 	
+in

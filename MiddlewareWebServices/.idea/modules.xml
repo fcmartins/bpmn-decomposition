@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../DatabaseCommon/DatabaseCommon.iml" filepath="$PROJECT_DIR$/../DatabaseCommon/DatabaseCommon.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../DemoProgramVariables/DemoProgramVariables.iml" filepath="$PROJECT_DIR$/../DemoProgramVariables/DemoProgramVariables.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../MiddlewareExecuteService/MiddlewareExecuteService.iml" filepath="$PROJECT_DIR$/../MiddlewareExecuteService/MiddlewareExecuteService.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../MiddlewareJbpmService/MiddlewareJbpmService.iml" filepath="$PROJECT_DIR$/../MiddlewareJbpmService/MiddlewareJbpmService.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../MiddlewareWebServiceCommon/MiddlewareWebServiceCommon.iml" filepath="$PROJECT_DIR$/../MiddlewareWebServiceCommon/MiddlewareWebServiceCommon.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SubscriberService.iml" filepath="$PROJECT_DIR$/SubscriberService.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../MiddlewareWsnInternalService/WsnInternalService.iml" filepath="$PROJECT_DIR$/../MiddlewareWsnInternalService/WsnInternalService.iml" />
+    </modules>
+  </component>
+</project>

@@ -1,0 +1,30 @@
+{-
+ - Session
+ -
+ - Vasco T. Vasconcelos
+ - $Id$
+ -
+ - A session with a client supporting balance, withdraw and deposit
+ - operations, and terminated with quit.
+ -}
+def Session (self, account, ack) =
+  self ? {
+    deposit (amount) :
+      account ! deposit [amount] |
+      Session [self, account, ack]
+    withdraw (amount, replyto) =
+      case account ! withdraw [amount] of {
+	overdraft () =
+	  replyto ! overdraft [] |
+	  Session [self, account, ack]
+	dispense () =
+	  replyto ! dispense [] |
+	  Session [self, account, ack]
+      }
+    balance (replyto) =
+      account ! balance [replyto] |
+      Session [self, account, ack]
+    quit () =
+      ack ! done []	
+  }
+in

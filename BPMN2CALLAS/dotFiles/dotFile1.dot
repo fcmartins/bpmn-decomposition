@@ -1,0 +1,8 @@
+digraph G {
+rankdir=LR;
+splines=false;
+	Task_6 -> _DataStoreReference_3;
+	ExclusiveGateway_2 -> Task_6;
+	Task_6 -> EndEvent_4;
+	GeneratedStartEvent_1 -> ExclusiveGateway_2;
+}

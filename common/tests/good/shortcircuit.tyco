@@ -1,0 +1,84 @@
+if true and true 
+then io ! printb[true]
+else io ! printb[false]
+|
+
+if true and false
+then io ! printb[true]
+else io ! printb[false]
+|
+
+if false and false
+then io ! printb[true]
+else io ! printb[false]
+|
+
+if true or true 
+then io ! printb[true]
+else io ! printb[false]
+|
+
+if true or false 
+then io ! printb[true]
+else io ! printb[false]
+|
+
+if false or false 
+then io ! printb[true]
+else io ! printb[false]
+|
+
+if (true and true) or (true and true)
+then io ! printb[true]
+else io ! printb[false]
+|
+
+if (true and false) or (true and false)
+then io ! printb[true]
+else io ! printb[false]
+|
+
+if (true or true) and (true or true)
+then io ! printb[true]
+else io ! printb[false]
+|
+
+if (true or false) and (true or false)
+then io ! printb[true]
+else io ! printb[false]
+|
+
+if (true and true) or (true or true)
+then io ! printb[true]
+else io ! printb[false]
+|
+
+if (true or false) and (true and false)
+then io ! printb[true]
+else io ! printb[false]
+|
+
+
+if 1==1
+then io ! printb[true]
+else io ! printb[false]
+|
+
+if 1/=1
+then io ! printb[true]
+else io ! printb[false]
+|
+
+if 1/=1 or 2==2
+then io ! printb[true]
+else io ! printb[false]
+|
+
+
+if 1>1
+then io ! printb[true]
+else io ! printb[false]
+|
+
+
+inaction

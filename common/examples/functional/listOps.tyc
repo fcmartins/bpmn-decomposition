@@ -1,0 +1,98 @@
+{-
+ - Computing with lists
+ -
+ - Vasco T. Vasconcelos
+ - $Id: listOps.tyc,v 1.2 2004/01/12 17:19:44 tyco Exp $
+-}
+
+include "../datatypes/simpleList.tyc"
+
+def
+
+{- Defining list values is cumbersome, for TyCO provides no special
+syntax for it.  The following process describes a list composed of
+elements 1, 2, and 3 (in this order), and located at name l.  -}
+
+List123 (l) =
+  new n  Nil  [n] |
+  new c1 Cons [c1, 3, n] |
+  new c2 Cons [c2, 2, c1] |
+  Cons [l, 1, c2]
+
+{- Here is how we write the Null predicate: -}
+
+Null (l, r) =
+  case l ! [] of {
+    nil  ()     = r ! [true]
+    cons (_, _) = r ! [false]
+  }
+
+{- As an example of a recursive definition, let us try to compute the
+number of elements present in a list.  -}
+
+Length (l, r) =
+  case l ! [] of {
+    nil ()      =
+      r ! [0]
+    cons (_, t) =
+      r ! [Length [t] + 1]
+  }
+
+{- There is an alternative definition of the procedure Length, more in
+line with object-based programming. The idea is to setup a
+(persistent) object that accepts requests for computing the length of
+lists. -}
+
+Length1 (self) =
+  self ? (l, r) =
+    case l ! [] of {
+      nil () =
+   	    Length1 [self] |
+        r ! [0]
+      cons (_, t) =
+   	    Length1 [self] |
+        r ! [self ! [t] + 1]
+    }
+
+{- List append -}
+
+Append (l1, l2, r) =
+  case l1 ! [] of {
+    nil () =
+      r ! [l2]
+    cons (h, t) =
+      new c
+      Cons [c, h, Append [t, l2]] |
+      r ! [c]
+  }
+
+{- The function that returns the last element of a non empty list.
+When the list, argument to the function, is non-empty, we ignore the
+call.  Indeed, if all we are concerned about is the proper behaviour
+of Last on non-empty lists, then we may ignore calls conveying
+empty lists, by just not replying to these sort of calls. -}
+
+Last (l, r) =
+  case l ! [] of {
+    nil () =
+      inaction
+    cons (h, t) =
+      case t ! [] of {
+        nil () =
+          r ! [h]
+        cons (_, _) =
+          Last [t, r]
+      }
+  }
+
+{- Feeding the list into a stream -}
+
+ToStream (l, s) =
+  case l ! [] of {
+    nil () =
+      inaction
+    cons (h, t) =
+      s ! [h] ; ToStream [t, s]
+  }
+
+in

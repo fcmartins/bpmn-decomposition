@@ -1,0 +1,7 @@
+{--
+ - Test a message with a label. The client.
+ - 
+ - @author Herve' Paulino
+ -}
+import s from lm
+s ! m["Hello World"]

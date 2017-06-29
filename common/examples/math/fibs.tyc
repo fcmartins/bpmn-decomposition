@@ -1,0 +1,60 @@
+{-
+ - The fibonnaci function
+ - A more efficient version
+ -
+ - Vasco T. Vasconcelos
+ - $Id: fibs.tyc,v 1.1.1.1 2002/11/30 14:37:29 tyco Exp $
+ -}
+
+include "streamOps.tyc"
+
+def
+
+{-
+ - Resends whatever comes in a input stream into two output streams.
+ -}
+Duplicator (inStream, outStream1, outStream2) =
+  inStream ? (x) :
+  outStream1 ! [x] ;
+  outStream2 ! [x] ;
+  Duplicator [inStream, outStream1, outStream2]
+
+{-
+ - The above solution is purely sequential.
+ - To send on two streams in parallel, we must hand-code the protocol.
+ -}
+
+Duplicator1 (inStream, outStream1, outStream2) =
+  inStream ? (x) :
+  new r1, r2
+  outStream1 ! [x, r1] |
+  outStream2 ! [x, r2] |
+  r1 ? { done () = 
+    r2 ? { done () =
+      Duplicator1 [inStream, outStream1, outStream2]
+    }
+  }
+
+in def -- Just to make the Duplicators polymorphic
+
+{-
+ - Gets two integers on two given streams;
+ - outputs its sum on a given stream.
+ -}
+Adder (inStream1, inStream2, outStream) =
+  inStream1 ? (x) :
+  inStream2 ? (y) :
+  outStream ! [x + y + 0] ;
+  Adder [inStream1, inStream2, outStream]
+
+{-
+ - Feed a stream with the Fibonnaci numbers
+ -}
+Fibs (f1) = 
+  new f2, tf1
+  Duplicator1 [tf1, f1, f2]   | tf1 ! [1] ; inaction |
+  new tf2, ttf
+  Duplicator [ttf, tf1, tf2] | ttf ! [1] ; inaction |
+  Adder [f2, tf2, ttf] 
+
+in

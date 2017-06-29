@@ -1,0 +1,73 @@
+Use Case: 1 Semantic Checking
+
+--------------------------------------------------
+
+CHARACTERISTIC INFORMATION
+
+Goal in Context: Verify syntactic and semantic validity of the source code.
+
+Scope: Editing
+
+Level: Primary task
+
+Preconditions: none
+
+Success End Condition: A list of the error messages.
+
+Failed End Condition: none
+
+Primary Actor: Editor
+
+Trigger: Save file.
+
+----------------------------------------
+
+MAIN SUCCESS SCENARIO
+
+1. Send the source code to the semantic verifier.
+
+2. Semantic checker returns a list of errors in the file.
+
+----------------------
+
+EXTENSIONS
+
+None.
+
+--------------------
+
+SUB-VARIATIONS
+
+None.
+
+----------------------
+
+RELATED INFORMATION (optional)
+
+Priority: high
+
+Performance Target: In the range of milliseconds.
+
+Frequency: Once per file being saved.
+
+Superordinate Use Case: none
+
+Subordinate Use Cases: none
+
+Channel to primary actor: string, file
+
+Secondary Actors: none
+
+Channel to Secondary Actors: none
+
+----------------------------
+
+OPEN ISSUES (optional)
+
+None.
+
+---------------------------
+
+SCHEDULE
+
+Due Date: 21-Apr-2008

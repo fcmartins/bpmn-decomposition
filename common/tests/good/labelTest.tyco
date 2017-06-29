@@ -1,0 +1,12 @@
+new x ,y
+{ if x == y then 
+	io!prints["Equal \n"]
+else
+	io!prints["Not equal \n"]
+}
+|
+{ if x == x then 
+	io!prints["Equal \n"]
+else
+	io!prints["Not equal \n"]
+}

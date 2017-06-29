@@ -1,0 +1,11 @@
+{-
+ - Check the scope of a receptor
+ -
+ - Vasco T. Vasconcelos
+ - March 2001
+ -}
+
+new x
+x ? () =
+  inaction |
+  inaction

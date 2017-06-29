@@ -1,0 +1,184 @@
+{--
+ - A list
+ - featuring isEmpty, toString, add, size, element, clone, contains
+ - equals and remove.
+ -
+ - @author Andre Goncalves
+ - $Id$
+ -}
+ 
+def 
+List (self) =
+	def 
+	Nil (list) = 
+		list ? {
+			isEmpty (replyTo) = 
+				Nil [list] |
+				replyTo ! [true]
+			toString (replyTo) =
+				Nil [list] |
+				replyTo ! [""]
+			add (newList, elem) =
+				Cons [newList, elem, list] |
+				Nil [list]
+			size (replyTo) =
+				Nil [list] |
+				replyTo ! [0]
+			element (pos, otherPos, replyTo) =
+				Nil [list] |
+				replyTo ! err["Index out of bounds."]
+			clone (replyTo) =
+				Nil [list] | {
+				new newList List [newList] |
+				replyTo ! [newList]	
+				}
+			contains (elem, replyTo) =
+				Nil [list] |
+				replyTo ! [false]    			
+			equals (otherList, pos, replyTo) =
+				Nil [list] |
+				replyTo ! [true]
+			type (replyTo) =
+				Nil [list] |
+				replyTo ! nil []
+			remove (elem) :
+				Nil [list] 
+		}
+	Cons (list, head, tail) =
+		list ? {
+			isEmpty (replyTo) = 
+				Cons [list, head, tail] |
+				replyTo ! [false]
+			toString (replyTo) =
+				Cons [list, head, tail] |
+				replyTo ! [tail ! toString [] ^ " " ^ head ! toString[]]	
+			add (newList, elem) =
+				Cons [list, head, tail] |
+				Cons [newList, elem, list]
+			size (replyTo) =
+				Cons [list, head, tail] |
+				replyTo ! [1 + tail ! size[]]				
+    	element (pos, otherPos, replyTo) =
+				Cons [list, head, tail] |
+				if pos == otherPos + 0 then
+					replyTo ! ok[head]
+				else
+					tail ! element [pos, otherPos - 1 , replyTo]
+			clone (replyTo) =
+				Cons [list, head, tail] |
+				let newList = tail ! clone [] in
+				newList ! add [head];
+				replyTo ! [newList]
+			contains (elem, replyTo) =
+				Cons [list, head, tail] |
+				if head ! equals [elem] then
+					replyTo ! [true]
+				else
+					tail ! contains [elem, replyTo]
+			equals (otherList, pos, replyTo) =
+				Cons [list, head, tail] |
+				if head ! equals [otherList ! element [pos]] then
+					tail ! equals [otherList, pos - 1, replyTo]
+				else
+					replyTo ! [false]
+			remove (elem) :
+				case tail ! type [] of {
+					nil() =
+						Cons [list, head, tail]
+					cons(h,t) =
+						if head ! equals [elem] then
+							Cons [list, h, t] 
+						else
+							tail ! remove [elem]; 
+							Cons [list, head, tail] 
+				}
+			type (replyTo) =
+				Cons [list, head, tail] |
+				replyTo ! cons [head, tail]
+		}
+	Go (list) =
+		self ? {
+			{--
+			 - Returns true if this list contains no elements.
+			 - @param replyTo The return value
+			 -}
+			isEmpty (replyTo) = 
+				Go [list] |
+				list ! isEmpty [replyTo]
+			{--
+			 - Create a string output.
+			 - @param replyTo The return value
+			 -}
+			toString (replyTo) =
+				Go [list] |
+				replyTo !["["^list ! toString[]^"]"]
+			{--
+			 - Appends the specified element to the end of this list.
+			 - @param elem element to be appended to this list
+			 -}
+			add (elem) :
+				new newList 
+				list ! add [newList, elem] |
+				Go [newList] 
+			{--
+			 - Returns the number of elements in this list. 
+			 - @param replyTo The return value
+			 -}
+			size (replyTo) = 
+				Go [list] |
+				replyTo ! [list ! size []]
+			{--
+			 - Returns the element at the specified position in this list.
+			 - @param pos index of element to return.
+			 - @param replyTo The return value
+			 -}
+    	element (pos, replyTo) =
+    		Go [list] |
+   			case list ! element [pos, self ! size[]] of {
+						-- this is wrong in case of an error 
+						-- the program is stoped
+   				err (msg) = inaction
+   				ok (element) =
+   					replyTo ! [element]
+   			}
+   		{--
+   		 - Creates and returns a copy of this list.
+			 - @param replyTo The return value
+   		 -}
+			clone (replyTo) =
+				Go [list] |
+				replyTo ! [list ! clone []]
+			{--
+			 - Returns true if this list contains the specified element.
+			 - @param elem element whose presence in this list is to be tested. 
+			 - @param replyTo The return value
+			 -}
+			contains (elem, replyTo) =
+				Go [list] |
+				list ! contains [elem, replyTo]
+			{--
+			 - Compares the specified object with this list for equality.
+			 - @param otherList the object to be compared for equality with this list. 
+			 - @param replyTo The return value
+			 -}
+			equals (otherList, replyTo) =
+				Go [list] |
+				if  list ! size [] == otherList ! size [] + 0 then
+					list ! equals [otherList, list ! size [], replyTo]
+				else
+					replyTo ! [false]
+			{--
+			 - Removes the first occurrence in this list of the specified element.
+			 - @param elem element to be removed from this list, if present.
+			 -}
+			remove (elem) :
+				if list ! contains [elem] then
+					list ! remove [elem];
+					Go [list] 
+				else
+					Go [list] 
+		}
+	in
+	new list Nil [list] |
+	Go [list]
+in

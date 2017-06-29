@@ -1,0 +1,8 @@
+{--
+ - Test a message with a label. A client whose type must not unify with
+ - the one exported by the server.
+ - 
+ - @author Herve' Paulino
+ -}
+import s from lm
+s ! m[17]

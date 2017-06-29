@@ -1,0 +1,23 @@
+{--
+ - A server that computes the factorial of a number.
+ - 
+ - @author Herve' Paulino
+ -}
+
+export new fact
+def 
+	FactServer(self) =
+      self ? (client, n, replyTo) = 
+      	Fact[client] | 
+      	replyTo ! [client ! [n]] |
+      	FactServer[self]
+   
+	Fact(self) = 
+		self ? (n, replyTo) =
+			Fact[self] |
+			 if n == 0 then
+			    replyTo ! [1]
+	  		else
+    			replyTo ! [n*self ! [n-1]]   	  
+in
+FactServer[fact] 

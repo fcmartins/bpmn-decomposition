@@ -1,0 +1,36 @@
+def 
+	Cell(self, value) =
+		self ? {
+			write(v) :
+				Cell[self, v]
+			
+			read(r) =	
+				r ! [value] | Cell[self, value]
+		}
+		
+	Def1(self, obj) =
+		self ? {
+			get(r) =
+		--		io ! printi[obj ! read[]] |
+				if obj ! read []  < 0 then {
+			--		io ! puts["ERR"] ;
+					r ! err[]
+				}
+				else  {
+				--	io ! puts["OK"] ;
+					r ! ok[obj]
+				}
+		}
+		
+{-	Def2(self) =
+		self ? ()  {
+			print() = 	
+	-}		
+in
+new c Cell[c, -1] |
+new d1 Def1[d1, c] |
+case d1 ! get[] of {
+	err() = io ! prints["error"]
+	ok(obj) = io ! printi [obj ! read[]]
+}
+			

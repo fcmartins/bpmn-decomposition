@@ -1,0 +1,14 @@
+{-
+ - Testing space allocation
+ -
+ - Vasco T. Vasconcelos
+ - $Id: space.tyco,v 1.1 2004/02/12 17:44:20 tyco Exp $
+ -}
+
+new a
+a ? { lulu () = inaction lala (u, v) = inaction lili (x, y, z) = inaction } |
+new b
+b ! [a] |
+b ? (c) = c ! lala [1, 2] |
+
+io ! prints ["done!\n"]

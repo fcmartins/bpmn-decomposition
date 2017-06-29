@@ -1,0 +1,6 @@
+{--
+ - The client to the scheduling test.
+ - 
+ - @author Herve' Paulino
+ -}import x from sched
+x ! []

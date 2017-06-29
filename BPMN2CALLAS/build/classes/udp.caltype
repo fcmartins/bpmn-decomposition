@@ -1,0 +1,22 @@
+defmodule Nil: pass
+
+defmodule Extern:
+  bool logLong(long val)
+  bool logDouble(double val)
+  bool logString(string val)
+  long macAddr()
+  bool blink()
+  bool setLEDColor(long pos, long red, long green, long blue)
+  bool setLEDOn(long pos, bool isOn)
+  long getLuminosity()
+  double getTemperature()
+  long getTime()
+  double getAccelX()
+  double getAccelY()
+  double getAccelZ()
+  double getAccel()
+  double getInclX()
+  double getInclY()
+  double getInclZ()
+  long getBatteryLevel()
+

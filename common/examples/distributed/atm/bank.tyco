@@ -1,0 +1,15 @@
+{--
+ - The Bank in a Distributed implementation of the ATM aplication.
+ -
+ - Exports the bank channel to the network.
+ - A bank account with initial balance 100
+ - A bank with its only account.
+ - 
+ - @author Herve' Paulino
+ - $Id: bank.tyco,v 1.2 2004/03/05 13:46:53 tyco Exp $
+ -}
+export new bank
+include "../../datatypes/accountOps.tyc"
+include "../../atm/bank.tyc"
+
+Bank [bank, NewAccount[100]] 

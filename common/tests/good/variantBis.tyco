@@ -1,0 +1,57 @@
+{-
+ - A program with polymorphism over variant records.
+ - A program not typable in TyCO 0.1, but accepted by the compiler.
+ -
+ - Vasco T. Vasconcelos
+ - $Id: variantBis.tyco,v 1.1 2004/02/12 17:44:20 tyco Exp $
+ -}
+
+def
+{-
+ - Constructors for lists and for trees.
+ - Notice that Cons is shared by the two data types.
+ -}
+ 
+Cons (l, h, t) = l ? (r) = r ! cons [h, t] | Cons [l, h, t]
+Nil  (l)       = l ? (r) = r ! nil  []     | Nil  [l]
+Leaf (l, x) = l ? (r) = r ! bud [x] | Leaf [l, x]
+
+in def
+
+{- Here is how we write the Null predicate for Lists -}
+
+NullList (l, r) =
+  case l ! [] of {
+    nil  ()     = r ! [true]
+    cons (_, _) = r ! [false]
+  }
+
+{- Same for Trees -}
+
+NullTree (t, r) =
+  case t ! [] of {
+    bud  ()     = r ! [true]
+    cons (_, _) = r ! [false]
+  }
+
+in def
+
+Tree123 (t) =
+  new a, b, c
+  Leaf [a, 1] | Leaf [b, 2] | Leaf [c, 3] |
+  new u
+  Cons [u, a, b] | Cons [t, u, c]
+
+List123 (l) =
+  new n  Nil  [n] |
+  new c1 Cons [c1, 3, n] |
+  new c2 Cons [c2, 2, c1] |
+  Cons [l, 1, c2]
+
+in
+
+new l, t
+List123 [l] | Tree123 [t] |
+
+io ! printb [NullList [l]] |
+io ! printb [NullTree [t]]

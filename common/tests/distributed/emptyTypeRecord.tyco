@@ -1,0 +1,14 @@
+{--
+ - Test the export of a name with an empty type.
+ - The client.
+ - 
+ - @author Herve' Paulino
+ -}
+import s, c from etr 
+-- The operation
+{ c ? (x, r) = r![x*x] } |
+-- Launch the operation and print the result
+{s ? (x) =  io ! puts["Result: "] ; io!printi[x ! [17]]} |
+s ! [c] 
+
+

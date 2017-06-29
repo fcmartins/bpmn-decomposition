@@ -1,0 +1,177 @@
+package org.callas.parse;
+
+import java.util.HashMap;
+import java.util.List;
+
+import java_cup.runtime.Symbol;
+
+import java.util.HashMap;
+import java.util.List;
+import java_cup.runtime.Symbol;
+import org.callas.absyn.FileSection;
+import org.callas.absyn.NetworkFile;
+import org.callas.absyn.SourceValue;
+import org.callas.core.IFileLoader;
+import org.tyco.common.errorMsg.ErrorMessage;
+import org.tyco.common.errorMsg.SourceLocation;
+import org.tyco.common.errorMsg.msgs.SyntacticError;
+
+
+/**
+ * The grammar of Callas
+ *
+ * @author Tiago Cogumbreiro
+ * @version $Id: callas-network.cup,v 1.1 2011/01/21 17:08:11 cogumbreiro Exp $
+ */
+ 
+parser code {:
+ 
+	public List<ErrorMessage> errors;
+	
+	public String filename;
+	
+	IFileLoader loader;
+	
+	NetworkGrm(List<ErrorMessage> errors, String filename, java.io.InputStream in, IFileLoader loader){
+		this(new NetworkLexer(in));
+		this.errors = errors;
+		((NetworkLexer)getScanner()).errors = errors;
+        this.filename = filename;
+        this.loader = loader;
+	}
+	
+    SourceLocation getLocation(int line, int col) {
+       return new SourceLocation(filename, line + 1, col + 1);
+    }
+		
+    /**
+     * Print the error message.
+     * @param msg The message
+     * @param current The token where the error was detected
+     */
+    public void report_error (String msg, java_cup.runtime.Symbol info) {
+        SourceLocation loc = info.left != -1 ? getLocation(info.left, info.right) : null;
+        errors.add(new SyntacticError(loc, msg));
+    }
+    
+    public void syntax_error(Symbol cur_token) {
+        SourceLocation loc = cur_token.left != -1 ? getLocation(cur_token.left, cur_token.right) : null;
+        String result = cur_token.value == null ? "." : " at '" + cur_token.value + "'";
+        errors.add(new SyntacticError(loc, "Syntax error" + result));
+    }
+    
+    public void unrecovered_syntax_error(Symbol cur_token) {
+      report_fatal_error("Couldn't repair and continue parse!", cur_token);
+    }
+
+    public void report_fatal_error(
+    String   message, 
+    Object   info)
+    {
+      /* stop parsing (not really necessary since we throw an exception, but) */
+      done_parsing();
+
+      /* use the normal error message reporting to put out the message */
+      report_error(message, info);
+    }
+:}
+
+terminal
+    SENSOR,
+    EQ,
+	INDENT,
+	DEDENT,
+	NL,
+    COLON,
+    PASSKW;
+        
+
+terminal java.lang.String KEY, VALUE;
+
+non terminal NetworkFile network_file, top_level;
+non terminal FileSection sensor;
+non terminal SensorBody sensor_body;
+
+start with top_level;
+
+top_level ::= 
+      INDENT network_file:f DEDENT
+    {: RESULT = f; :}
+    
+    | network_file:f
+    {: RESULT = f; :}
+    
+    | /* empty */
+    {: RESULT = new NetworkFile(parser.loader, parser.filename); :}
+    
+    | error:x
+    {: RESULT = new NetworkFile(parser.loader, parser.filename); :}
+    
+    ;
+
+/* ===============================================
+ * Network file
+ * =============================================== */
+
+network_file ::=
+      network_file:f sensor:s
+    {:
+        RESULT = f;
+        RESULT.add(s);
+    :}
+    
+    | network_file:f KEY:k EQ VALUE:v NL
+    {:
+        RESULT = f;
+		RESULT.put(parser.getLocation(kleft, kright), k, v);
+    :}
+    
+	| sensor:s
+	{:
+	   RESULT = new NetworkFile(parser.loader, parser.filename);
+	   RESULT.add(s);
+	:}
+	
+	| KEY:k EQ VALUE:v NL
+	{:
+        RESULT = new NetworkFile(parser.loader, parser.filename);
+		RESULT.put(parser.getLocation(kleft, kright), k, v);
+	:}
+	
+	;
+
+/* ===============================================
+ * Sensor
+ * =============================================== */
+
+sensor ::=
+      SENSOR:s COLON NL INDENT PASSKW DEDENT
+    {:
+        SensorBody b = new SensorBody(parser.loader);
+        RESULT = b.create(parser.getLocation(sleft, sright));
+    :}
+    
+    | SENSOR:s COLON PASSKW NL
+    {:
+        SensorBody b = new SensorBody(parser.loader);
+        RESULT = b.create(parser.getLocation(sleft, sright));
+    :}
+    
+    | SENSOR:s COLON NL INDENT sensor_body:b DEDENT
+    {:
+        RESULT = b.create(parser.getLocation(sleft, sright));
+    :}
+    ;
+
+sensor_body ::=
+      KEY:k EQ VALUE:v NL
+    {:
+        RESULT = new SensorBody(parser.loader);
+        RESULT.put(parser.getLocation(kleft, kright), k, v);
+    :}
+    | sensor_body:s KEY:k EQ VALUE:v NL
+    {:
+        RESULT = s;
+        RESULT.put(parser.getLocation(kleft, kright), k, v);
+    :}
+    ;            

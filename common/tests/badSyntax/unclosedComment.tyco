@@ -1,0 +1,10 @@
+-- Syntax Error
+
+-- Unclosed comment at end of file
+
+new x
+x ! lala ["lele"]
+{-
+ - How does this java-like comment
+ - look like?
+ - PS: forgot to close the thing

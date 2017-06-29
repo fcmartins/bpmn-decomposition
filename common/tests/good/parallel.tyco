@@ -1,0 +1,9 @@
+{-
+ - Use the -rand option of tycoc
+ -
+ - Vasco T. Vasconcelos
+ - March 2001
+ -}
+
+io ! prints ["Hello "] |
+io ! prints ["TyCO "]

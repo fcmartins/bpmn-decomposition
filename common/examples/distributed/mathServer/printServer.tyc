@@ -1,0 +1,42 @@
+{--
+ - A printer server that answers an arbitrary printer.
+ - @param self Reference to the object.
+ - @param printers The list of printers.
+ - 
+ - @author Vasco T. Vasconcelos, Herve' Paulino
+ - $Id$
+ -}
+ 
+include "printer.tyc"
+def
+PrintServer (self, printers) =
+	self ? {
+		getPrinter (replyTo) =
+	    	PrintServer [self, printers] |
+	    	self ! choose[replyTo]
+	    	
+	    choose(replyTo) =	
+	    	PrintServer [self, printers] |
+		    new choose
+    		choose ! [] |
+    		def Loop(list) = 
+		    	case list ! [] of {
+    				cons(h, t) = 
+    					{ choose ? () = replyTo ! [h] } |
+    					Loop[t]
+    				nil() = inaction
+		    	}
+    		in 
+    		Loop[printers] 
+	}
+in
+def 
+	{-
+	 - The constructor.
+	 -}
+	NewPrintServer(printers, replyTo) =
+		new result 
+		PrintServer[result, printers] |
+		replyTo ! [result]
+in
+		

@@ -1,0 +1,24 @@
+{-
+ - The Fibonnaci function, using streams for a for of memoing
+ - Compare with fib.tyco
+ -
+ - Vasco T. Vasconcelos
+ - $Id: nthFib.tyco,v 1.1 2004/02/12 17:44:20 tyco Exp $
+ -}
+
+include "./fibs.tyc"
+
+def
+
+{-
+ - Compute the n-th fibonnaci number
+ -}
+Fib (n, r) =
+  new stream
+  Fibs [stream] |
+  Take [n, stream, r] -- Tail call
+
+in
+io ! puts ["Fib (20) = "] ;
+io ! puti [Fib [20]] ;
+io ! prints ["\n"]

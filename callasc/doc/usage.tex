@@ -1,0 +1,52 @@
+\documentclass[a4paper]{article}
+\usepackage{amsmath}
+\title{Interaction with the CSN compiler}
+\author{Tiago Cogumbreiro}
+
+\begin{document}
+
+\maketitle
+
+\section{Validation}
+
+For verifying the validity of a CSN source, we define the operation
+\emph{validate} of the interface \textsf{IValidator} that expects a
+file name and the success of the operation and a list of messages,
+ordered by the position each was found in the source code:
+\begin{equation*}
+  \operatorname{validate}(\mathsf{String}) \rightarrow \mathsf{Result}
+\end{equation*}
+
+A result is a structures that consists of:
+\begin{description}
+\item[is successful] Specifies if the target file name is valid (or any file
+  name it itself includes).
+\item[messages] A sequence of messages related to \textit{e.g.\@}
+  errors, or warnings.
+\end{description}
+\begin{equation*}
+  \mathsf{Result} = \mathsf{boolean}\ is\ successful,\ \mathsf{List(Message)}\ messages
+\end{equation*}
+
+A message is a class with the following attributes:
+\begin{description}
+\item[title] A one line description of the message.
+\item[summary] A multi-line description of the message. For
+  example, showing the expected type of a certain variable.
+\item[file name] A file-system dependent file name, containing the
+  source code.
+\item[column] The offset, from the start of a line, in terms of
+  characters, where the error is found. The base of the index is 1.
+\item[line] The offset, from the start of the file, in terms of lines,
+  where the error is found. The base of the index is 1.
+\item[level] The severity of the error. This specification of this
+  datum is specified next.
+\end{description}
+\begin{equation*}
+  \mathsf{Message} = \mathsf{String}\ title, \mathsf{String}\ summary, \mathsf{String}\ filename, \mathsf{int}\ column, \mathsf{int}\ line, \mathsf{Level}\ level
+\end{equation*}
+
+The \emph{level} is a class that follows
+\texttt{java.util.logging.Level} (we may use this class).
+
+\end{document}

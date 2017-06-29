@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: BPMN2CALLAS
+Bundle-SymbolicName: BPMN2CALLAS
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: BPMN2CALLAS.jar,
+ software/daniel/bpmn2callas-code/workspace/BPMN2CALLAS/lib/tycocommon-1.0.jar
+Export-Package: common,
+ decompose,
+ intermediate,
+ main,
+ problems,
+ semant,
+ structured,
+ thingsGateway,
+ translate

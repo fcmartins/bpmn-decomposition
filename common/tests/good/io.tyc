@@ -1,0 +1,25 @@
+{-
+ - We can almost write the io object
+ -
+ - Vasco T. Vasconcelos
+ - April 2001
+ -}
+
+new io
+def IO () = 
+  io ? {
+    getb (r)    = let x = $InputBoolean [] in r ! val[x] | IO []
+    geti (r)    = let x = $InputInteger [] in r ! val[x] | IO []
+    gets (r)    = let x = $InputString  [] in r ! val[x] | IO []
+    getf (r)    = let x = $InputFloat   [] in r ! val[x] | IO []
+    putb (x, r) = $OutputBoolean [x] ; (r ! done [] | IO [])
+    puti (x, r) = $OutputInteger [x] ; (r ! done [] | IO [])
+    puts (x, r) = $OutputString  [x] ; (r ! done [] | IO [])
+    putf (x, r) = $OutputFloat   [x] ; (r ! done [] | IO [])
+    printb (x)  = new r $OutputBoolean [x, r] | IO []
+    printi (x)  = new r $OutputInteger [x, r] | IO []
+    prints (x)  = new r $OutputString  [x, r] | IO []
+    printf (x)  = new r $OutputFloat   [x, r] | IO []
+ }
+in
+IO []

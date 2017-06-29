@@ -1,0 +1,8 @@
+
+interface = iface.caltype
+
+sensor:
+   code = node.callas
+
+sensor:
+   code = sink.callas

@@ -1,0 +1,81 @@
+{--
+ - The server that manages client membership and location.
+ - 
+ - @param self A reference to the object.
+ - @param list List of clients online.
+ - 
+ - @author Herve' Paulino
+ - $Id:$
+ -}
+def 
+	Server(self, list) = self ? {
+		
+		-- Log a client in the system
+		-- Returns ok if the client has logged in
+		-- Returns error if the client is already logged in
+		login(client, replyTo) = 
+			case list ! get [client] ! [] of {
+				cons(h, t) = 
+					replyTo ! error[] |
+					Server[self, list] 					
+				nil() = 
+					replyTo ! ok[] |
+					self ! spawnLog [client ! getId[], list, "in"] |
+					Server[self, NewCons[client, list]] 					
+			} 
+		
+		-- Logs a client out of the system. 	
+		logout(id) =
+			Server[self, list]  |
+			case self ! findPeer[id, list] of {
+				ok(peer) = 
+					let newlist = list ! remove[peer] in  
+						self ! setNewList[newlist] ;
+						self ! spawnLog [id, newlist, "out"]  
+
+				error() = inaction -- something went wrong, the client that logged out is not in the database
+			}	
+		
+		-- Spawns the log in if a client to all its peers.
+		spawnLog (id, clients, op) =
+			Server[self, list] |	
+	 		case clients ! [] of {
+				cons(h, t) =
+					if id /= h ! getId[] then { 
+						h ! getPort[] ! logInfo [id, op] |
+						self ! spawnLog[id, t, op]
+					}
+				nil() = inaction
+			}
+		
+		-- Returns the list of all logged clients.			 
+		list(replyTo) =
+			replyTo ! [list ! toString[]] |
+			Server[self, list]
+		
+		findPeer(id, clients, replyTo) =
+			Server[self, list] |
+			case clients ! [] of {
+				cons(h, t) = 
+					if id == h ! getId[] and id /= "" then
+						replyTo ! ok[h]
+					else
+						self ! findPeer[id, t, replyTo]
+				nil() = 
+					replyTo ! error[] 
+			}
+										
+		-- Returns the location of the client with the given identifier.	
+		getPeer(id, replyTo) =
+			Server[self, list] |
+			case self ! findPeer [id, list] of {
+				ok(peer) = replyTo ! ok[peer ! getPort[]]	
+				error() = replyTo ! error[]
+			} 
+		
+		-- Set a new list of clients
+		setNewList(newList) : 
+			Server[self, newList] 
+	
+	}
+in	

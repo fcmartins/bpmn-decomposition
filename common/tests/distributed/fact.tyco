@@ -1,0 +1,10 @@
+{--
+ - The client to the fact server.
+ - 
+ - @author Herve' Paulino
+ -}
+import fact from fact 
+new x
+io ! puts ["Result: "] ;
+io ! puti [fact ! [x, 10]] ;
+io ! prints ["\n"] 

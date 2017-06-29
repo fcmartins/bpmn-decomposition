@@ -1,0 +1,235 @@
+<!-- versao $Id: build.xml,v 1.7 2011/10/18 15:33:08 cogumbreiro Exp $ -->
+
+<project name="callas" default="dist" xmlns:ivy="antlib:org.apache.ivy.ant">
+	<!-- Load user properties in the project directory, file 'user.properties'. -->
+	<property file="${basedir}/build.properties" />
+
+    <!-- Bootstrap Ivy -->
+    <get usetimestamp="true" src="http://homepages.lasige.di.fc.ul.pt/~cogumbreiro/repo/bootstrap-ivy.xml" dest="bootstrap-ivy.xml" />
+    <import file="bootstrap-ivy.xml" />
+
+	<!-- dependencies -->
+	<property name="lib.dir" value="${basedir}/lib" />
+	<property name="junit.jar" value="${lib.dir}/junit-4.0.jar" />
+    <property name="libcvm.jar" value="${lib.dir}/libcvm-1.0.jar" />
+    <property name="libcvm-lang.jar" value="${lib.dir}/libcvm-lang-1.0.jar" />
+    <!--<property name="libcvm-runtime.jar" value="${lib.dir}/libcvm-runtime.jar" />-->
+    <property name="tycocommon.jar" value="${lib.dir}/tycocommon-1.0.jar" />
+
+	<property name="build-props.label" value="&quot;${basedir}${file.separator}build.properties&quot;" />
+	<property name="dcc-repo.label" value="&quot;:extssh:YOURUSERNAME@cvs.dcc.fc.up.pt:/home/cvsroot&quot;" />
+	<property name="propfile-warning" value=" Create or update properties-file with filename &quot;${basedir}${file.separator}build.properties&quot; in order to declare the aforementioned property." />
+
+	<!-- internal properties -->
+	<property name="target" value="${basedir}/target" />
+	<property name="callasc.jar" value="${target}/callasc.jar" description="Where to generate the compiler." />
+	<property name="callas-src.zip" value="${target}/callas-src.zip" description="The archive holding the source distribution." />
+	<property name="src-gen" value="${basedir}/target/generated-sources" />
+	<property name="main-src" value="${basedir}/src/main/java" />
+	<property name="test-src" value="${basedir}/src/test/java" />
+	<property name="main-build" value="${target}/classes" />
+	<property name="test-build" value="${target}/test-classes" />
+	<property name="test-report" value="${target}/test-reports" />
+	<property name="dist" value="${target}/dist" />
+
+	<patternset id="sources">
+		<include name="**/*.java" />
+	</patternset>
+
+	<target name="eclipse" description="Inititialize this project as an Eclipse project.">
+		<copy todir="${basedir}/">
+			<fileset dir="${basedir}/eclipse/" />
+		</copy>
+	</target>
+
+    <!-- Resolve dependencies -->
+    <target name="-init" depends="ivy-init">
+        <mkdir dir="${target}" />
+        <mkdir dir="${test-build}" />
+
+        <ivy:resolve />
+        <ivy:retrieve pattern="${lib.dir}/[artifact]-[revision].[ext]" />
+    </target>
+    <target name="resolve" depends="-init" description="Downloads the dependencies."/>
+
+	<target name="-init-dirs">
+		<mkdir dir="${dist}/src" />
+		<mkdir dir="${src-gen}" />
+		<mkdir dir="${dist}/lib" />
+		<mkdir dir="${main-build}" />
+		<mkdir dir="${test-build}" />
+		<mkdir dir="${test-report}" />
+	</target>
+	
+    <target name="-init-parsers">
+        <!-- by default we use the JavaCUP and JFlex that comes with tycocommon -->
+        <property name="java-cup.class.path" value="${lib.dir}/javacup-0.10k.jar" />
+        <property name="javacup-runtime.jar" value="${lib.dir}/javacup-runtime-0.10k.jar" />
+        <property name="java-cup.xml" value="${lib.dir}/javacup-0.10k.xml" />
+    	
+        <property name="jflex.class.path" value="${lib.dir}/jflex-1.3.5.jar" />
+        <property name="jflex.xml" value="${lib.dir}/jflex-1.3.5.xml" />
+    	
+        <property name="jflex.destination.dir" value="${src-gen}/org/callas/parse" />
+        <property name="java-cup.destination.dir" value="${src-gen}/org/callas/parse" />
+    </target>
+
+	<!-- Generate parsers -->
+	<target name="generate-parsers" description="Executes JFLex and Cup for intermediate language" depends="-init,-init-parsers,-generate-network-parser,-generate-process-parser" />
+
+	<target name="generate-network-parser" depends="-init,-init-parsers,-generate-network-parser" />
+	<target name="generate-process-parser" depends="-init,-init-parsers,-generate-process-parser" />
+
+	<target name="-generate-network-parser">
+		<!-- callas network language -->
+		<ant antfile="${jflex.xml}" target="jflex">
+			<property name="jflex.filename" value="${basedir}/src/main/jflex/callas-network.lex" />
+		</ant>
+		<ant antfile="${java-cup.xml}" target="java-cup">
+			<property name="java-cup.filename" value="${basedir}/src/main/java-cup/callas-network.cup" />
+			<property name="java-cup.class" value="NetworkGrm" />
+			<property name="java-cup.symbols" value="NetworkSym" />
+		</ant>
+	</target>
+	<target name="-generate-process-parser">
+		<!-- callas process language -->
+		<ant antfile="${jflex.xml}" target="jflex">
+			<property name="jflex.filename" value="${basedir}/src/main/jflex/callas-proc.lex" />
+		</ant>
+		<ant antfile="${java-cup.xml}" target="java-cup">
+			<property name="java-cup.filename" value="${basedir}/src/main/java-cup/callas-proc.cup" />
+			<property name="java-cup.class" value="ProcessGrm" />
+			<property name="java-cup.symbols" value="ProcessSym" />
+		</ant>
+	</target>
+
+	<target name="-init-classpath">
+		<path id="main.classpath">
+			<pathelement location="${tycocommon.jar}" />
+			<pathelement location="${javacup-runtime.jar}" />
+            <pathelement location="${libcvm.jar}" />
+			<pathelement location="${libcvm-lang.jar}" />
+		</path>
+
+		<path id="test.classpath">
+			<path refid="main.classpath" />
+			<pathelement location="${main-build}" />
+			<pathelement location="${junit.jar}" />
+			<pathelement location="${test-build}" />
+		</path>
+	</target>
+
+	<target name="-compile" description="Compiles the source
+					     code.">
+		<javac destdir="${main-build}"
+		       classpathref="main.classpath" source="1.7"
+		       srcdir="${main-src}" debug="true"
+		       includeantruntime="false">
+			<sourcepath path="${src-gen}" />
+			<patternset refid="sources" />
+		</javac>
+	</target>
+
+	<target name="sdist" description="Creates a distributable archive of the source code. Generates 'callas-src.zip'." depends="-init-dirs,-init,-init-parsers,-generate-network-parser,-generate-process-parser">
+		<copy todir="${dist}/">
+			<fileset dir="dist-files" />
+		</copy>
+		<copy todir="${dist}/lib">
+			<fileset dir="${basedir}/lib" includes="*.jar" />
+		</copy>
+		<!-- copy our dependencies -->
+		<jar destfile="${dist}/lib/common.jar">
+            <zipfileset src="${libcvm.jar}" />
+			<zipfileset src="${libcvm-lang.jar}" />
+			<zipfileset src="${javacup-runtime.jar}" />
+			<zipfileset src="${tycocommon.jar}" />
+		</jar>
+		<copy todir="${dist}/src">
+			<fileset dir="${main-src}">
+				<patternset refid="sources" />
+			</fileset>
+			<!--
+			<fileset dir="${test-src}">
+				<patternset refid="sources" />
+			</fileset>
+			-->
+			<fileset dir="${src-gen}" />
+		</copy>
+		<!-- generate our source archive -->
+		<zip destfile="${callas-src.zip}">
+			<fileset dir="${dist}" />
+		</zip>
+	</target>
+
+	<target name="disttest" depends="-init-dirs,-init,test-compile,sdist,-init-classpath" description="Compiles and tests the generated source distribution.">
+		<delete dir="${target}/sdist-test" />
+		<mkdir dir="${target}/sdist-test" />
+		<unzip src="${callas-src.zip}" dest="${target}/sdist-test" />
+		<ant inheritrefs="false" inheritall="false" antfile="${target}/sdist-test/build.xml" />
+		<!-- Test the distribution. -->
+		<junit printsummary="true" haltonfailure="true">
+			<classpath location="${junit.jar}" />
+			<classpath location="${target}/sdist-test/bin" />
+			<classpath refid="main.classpath" />
+			<classpath location="${test-build}" />
+
+			<formatter type="brief" usefile="false" />
+			<formatter type="xml" />
+
+			<batchtest todir="${test-report}">
+				<fileset dir="${test-build}" includes="**/*Test.class" />
+			</batchtest>
+		</junit>
+	</target>
+
+	<target name="-test" description="Test our software.">
+		<junit printsummary="true" haltonfailure="true">
+			<classpath refid="test.classpath" />
+
+			<formatter type="brief" usefile="false" />
+			<formatter type="xml" />
+
+			<batchtest todir="${test-report}">
+				<fileset dir="${test-build}" includes="**/*Test.class" />
+			</batchtest>
+		</junit>
+	</target>
+
+	<target name="-test-compile" description="Compile our tests.">
+		<javac destdir="${test-build}" debug="true" srcdir="${test-src}" includeantruntime="false">
+			<classpath refid="test.classpath" />
+			<sourcepath path="${src-gen}" />
+		</javac>
+	</target>
+
+	<target name="compile" description="Compiles the source code." depends="-init-dirs,-init,-init-parsers,-generate-network-parser,-generate-process-parser,-init-classpath,-compile" />
+	<target name="test-compile" description="Compile our tests." depends="compile,-test-compile" />
+	<target name="test" description="Test our software." depends="test-compile,-test" />
+
+	<!--
+	Generates a binary distribution of this project:
+	 * file 'callasc.jar' for the compiler
+	 * file 'callasi.jar' for the interpreter
+	 -->
+	<target name="bdist" description="Creates a distributable archives of the binary code (three executable JARs). Generates 'callasi.jar' and 'callasc.jar'." depends="compile">
+		<!-- the callas compiler -->
+		<jar destfile="${callasc.jar}">
+            <zipfileset src="${libcvm.jar}" />
+			<zipfileset src="${libcvm-lang.jar}" />
+			<zipfileset src="${javacup-runtime.jar}" />
+			<zipfileset src="${tycocommon.jar}" />
+			<fileset dir="${main-build}">
+				<exclude name="**/package.html" />
+			</fileset>
+			<manifest>
+				<attribute name="Main-Class" value="org.callas.callas.Compiler" />
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="dist" description="Generates the binary and the source code distributables." depends="bdist, sdist" />
+    	
+	<target name="clean" description="Deletes the generated files.">
+		<delete dir="${target}" />
+	</target>
+</project>

@@ -1,0 +1,20 @@
+{-
+ - Check the primitive operators.
+ -
+ - Novelties include:
+ -   Equality extensible to all types.
+ -
+ - Vasco T. Vasconcelos
+ - March 2001
+ -}
+
+new a
+-- Too many leading zeroes
+a ! [000433] |
+
+-- Too many leading zeroes
+a ! [00.435] |
+
+-- Needs a .0 before the `e`
+a ! [433e4]
+

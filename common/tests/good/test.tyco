@@ -1,0 +1,11 @@
+new s
+def Bag (self) =
+  def Go (size) =
+    self ? {
+      get () =
+        Bag [s] -- Go [size - 1]
+    }
+  in Go [23]
+in new b Bag [b]
+
+| def X() = inaction in inaction

@@ -1,0 +1,12 @@
+{--
+ -  The Seti client.
+ -  Creates a new channel, sends it to the server to receive
+ -  the instalation code and triggers it to initiate the chunk processing.
+ - 
+ - @author Herve' Paulino
+ - $Id: client.tyco,v 1.2 2004/03/05 19:18:14 tyco Exp $
+ -}
+import server from seti
+new client 
+server ! [client] |
+client ! []

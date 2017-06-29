@@ -1,0 +1,34 @@
+{-
+ - ATM
+ -
+ - Vasco T. Vasconcelos, Herve' Paulino
+ - $Id$
+ -}
+include "session.tyc"
+
+{-
+ - An ATM that autenticates a client against a bank,
+ - and then conducts a session.
+ -}
+def ATM (self, bank) =
+  self ? (accountId, pin, replyto) =
+    case bank ! autenticate [accountId, pin] of {
+      success (account) =
+	new actions
+	replyto ! success [actions] |
+        Session [actions, account] ;
+	ATM [self, bank]
+      failure () =
+	replyto ! failure [] |
+	ATM [self, bank]
+    }
+
+in
+{-
+ - Constructor
+ -} 
+ def NewATM (bank, replyTo) =
+ 	new result
+ 	ATM [result, bank] |
+ 	replyTo ! [result]
+in

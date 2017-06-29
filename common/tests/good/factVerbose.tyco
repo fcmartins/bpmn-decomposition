@@ -1,0 +1,19 @@
+{-
+ - Factorial, written in core TyCO
+ -
+ - Vasco T. Vasconcelos
+ - $Id: factVerbose.tyco,v 1.1 2004/02/12 17:44:20 tyco Exp $
+ -}
+
+def Fact (n, r) =
+  if n == 0
+  then 
+    r ! [1]
+  else
+    new s
+    Fact [n-1, s] |
+    s ? (x) = r ! [n * x]
+in
+new t
+Fact [10, t] |
+t ? (x) = io ! printi [x]

@@ -1,0 +1,5 @@
+procedure.tyco:10.1: 
+  I have come across a call to an undeclared procedure X
+procedure.tyco:17.3: 
+  I have already encountered a declaration for procedure X in the present def
+2 errors

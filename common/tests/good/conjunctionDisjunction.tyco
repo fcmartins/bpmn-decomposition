@@ -1,0 +1,18 @@
+{-
+ - Read two boolean values; print its conjunction and its disjunction.
+ -
+ - Vasco T. Vasconcelos
+ - $Id: conjunctionDisjunction.tyco,v 1.1 2004/02/12 17:44:20 tyco Exp $
+ -}
+
+io ! puts ["Give me two boolean values, one per line, please:\n"] ;
+let
+   b1 = io ! getb []
+   b2 = io ! getb []
+in
+  io ! puts ["Their conjunction is "] ;
+  io ! putb [b1 and b2] ;
+  io ! prints ["\n"] |
+  io ! puts ["Their disjunction is "] ;
+  io ! putb [b1 or b2] ;
+  io ! prints ["\n"]

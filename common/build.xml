@@ -1,0 +1,285 @@
+<project name="common" default="examples and tests">
+
+   <!-- =================================================================== -->
+   <!-- (init) task -->
+   <!-- =================================================================== -->
+   <target name="(init)" description="Initializes data and time stamp and prints Ant version to the console">
+
+	 <property name="project" value="common"/>
+   																	
+     <!-- Create the time stamp -->
+     <tstamp/>
+     <!-- displays ant version -->
+     <echo message="${ant.version}"/>
+   
+    <!-- fills the variables considering the os -->
+	<condition property="executable" value="cmd" >
+      <os family="windows"/>
+  	</condition>
+	<condition property="arg" value="/c" >
+      <os family="windows"/>
+  	</condition>
+	<condition property="dots" value=";" >
+      <os family="windows"/>
+  	</condition>
+
+	<condition property="executable" value="/bin/sh">
+      <os family="unix"/>
+  	</condition>
+	<condition property="arg" value="-c" >
+      <os family="unix"/>
+  	</condition>
+	<condition property="dots" value=":" >
+      <os family="unix"/>
+  	</condition>
+
+	 <!-- Set global properties for this build -->
+    <property name="tycodir" value="${basedir}/../tyco"/>
+    <property name="commondir" value="${basedir}/../common"/>
+    <property name="tycovmdir" value="${basedir}/../tycovm"/>
+    <property name="ditycovmdir" value="${basedir}/../ditycovm"/>
+    <property name="vmdir" value="${basedir}/../vm"/>
+    <property name="mildir" value="${basedir}/../mil/"/>
+    <property name="tycocdir" value="${basedir}/../tycoc/"/>
+    <property name ="classpathdir" value="${commondir}/src${dots}${ditycovmdir}/src${dots}${mildir}/src${dots}${tycodir}/src${dots}${tycocdir}/src${dots}${tycovmdir}/src${dots}${vmdir}/src"/>
+    <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+    <property name="VERSION" value="0.4"/>
+   </target>
+
+	<!-- =================================================================== -->
+	<!-- Deletes test.output if property test.output.deleted is not set -->
+	<!-- =================================================================== -->
+	<target name="(delete)" 
+		description="Deletes test.output if property test.output.deleted is not set" depends="(init)" unless="test.output.deleted">
+		
+	   	<delete file="${commondir}/test.output" />
+
+	    <property name="test.output.deleted" value="true"/>
+	   	
+   </target>
+
+   <!-- =================================================================== -->
+   <!-- Generates JavaDoc -->
+   <!-- =================================================================== -->
+  	<target name="javadoc" description="Generates JavaDoc" depends="(init)">
+    	<ant antfile="${tycodir}/build.xml" dir="${basedir}" target="javadoc"/>
+   	</target>
+
+   <!-- =================================================================== -->
+   <!-- Compiles all files in the suplied base directory -->
+   <!-- =================================================================== -->
+   <target name="(compile)" description="Compiles all files in the suplied base directory" depends="(init)">
+
+    <!-- fills the variables considering the os -->
+	<condition property="command" 
+		value="for %f in (*.tyco) do 
+	        echo Compiling %~nf.tyco &amp;&amp;
+        	java -cp ${classpathdir} org.tyco.tyco.tyco.Tycoc %~nf.tyco >>${commondir}/test.output 2&gt;&amp;1" >
+		<os family="windows"/>
+  	</condition>
+	<condition property="command" 
+		value="for file in $$(ls -1 *.tyco | sed 's/.tyco//g');do 
+			echo Compiling $$file;
+            java -cp ${classpathdir} org.tyco.tyco.tyco.Tycoc $$file.tyco >>${commondir}/test.output;done" >
+		<os family="unix"/>
+	</condition>
+
+    <exec executable="${executable}"
+    	dir="${basedir}">
+     	<arg value="${arg}" />
+        <arg value="${command}"/>
+    </exec>
+  </target>
+
+   <!-- =================================================================== -->
+   <!-- Compiles and tests all files in the suplied base directory -->
+   <!-- =================================================================== -->
+   <target name="(compile - test)" description="Compiles and tests all files in the suplied base directory" depends="(init)">
+
+   	<!-- fills the variables considering the os -->
+	<condition property="command" 
+		value="for %f in (*.tyco) do 
+            echo Compiling %~nf.tyco &amp;&amp;
+        	java -cp ${classpathdir} org.tyco.tyco.tyco.Tycoc %~nf.tyco &gt; %~nf.temp.............................. 2&gt;&amp;1 &amp;&amp;
+			java -cp ${classpathdir} org.tyco.util.CleanPath %~nf.temp.............................. &amp;&amp;
+			diff -q --strip-trailing-cr %~nf.temp.............................. %~nf.output >>${commondir}/test.output 2&gt;&amp;1 ||
+			diff    --strip-trailing-cr %~nf.temp.............................. %~nf.output >>${commondir}/test.output 2&gt;&amp;1" >
+		<os family="windows"/>
+  	</condition>
+   	<condition property="command" 
+		value="for file in $$(ls -1 *.tyco | sed 's/.tyco//g');do 
+			echo Compiling $$file;
+            java -cp ${classpathdir} org.tyco.tyco.tyco.Tycoc $$file.tyco &gt; $$file.temp.............................. 2&gt;&amp;1; 
+			java -cp ${classpathdir} org.tyco.util.CleanPath $$file.temp.............................. &amp;&amp;
+   			diff -q --strip-trailing-cr $$file.temp.............................. $$file.output >>${commondir}/test.output 2&gt;&amp;1||
+   			diff    --strip-trailing-cr $$file.temp.............................. $$file.output >>${commondir}/test.output 2&gt;&amp;1;
+   			done">
+		<os family="unix"/>
+	</condition>
+
+    <exec executable="${executable}"
+    	dir="${basedir}">
+     	<arg value="${arg}" />
+        <arg value="${command}"/>
+    </exec>
+  </target>
+
+   <!-- =================================================================== -->
+   <!-- Runs and tests all files in the suplied base directory -->
+   <!-- =================================================================== -->
+   <target name="(run - test)" description="Runs and tests all files in the suplied base directory" depends="(init)">
+
+    <!-- fills the variables considering the os -->
+	<condition 
+		property="command" 
+		value="for %f in (*.tyco) do 
+	        echo Running %~nf.mil &amp;&amp;
+        	java -cp ${classpathdir} org.tyco.tyco.tyco.Tyco -number-threads 1 %~nf.mil &lt; %~nf.input &gt; %~nf.temp.............................. 2&gt;&amp;1 &amp;&amp;
+    		diff -q --strip-trailing-cr %~nf.temp.............................. %~nf.output >>${commondir}/test.output 2&gt;&amp;1 ||
+			diff    --strip-trailing-cr %~nf.temp.............................. %~nf.output >>${commondir}/test.output 2&gt;&amp;1">
+		<os family="windows"/>
+  	</condition>
+	<condition 
+		property="command" 
+		value="for file in $$(ls -1 *.mil | sed 's/.mil//g');do 
+			echo Running $$file;
+            java -cp ${classpathdir} org.tyco.tyco.tyco.Tyco -number-threads 1 $$file.mil &lt; $$file.input &gt; $$file.temp.............................. 2&gt;&amp;1 ; 
+			diff -q --strip-trailing-cr $$file.temp.............................. $$file.output >>${commondir}/test.output 2&gt;&amp;1 ||
+			diff    --strip-trailing-cr $$file.temp.............................. $$file.output >>${commondir}/test.output 2&gt;&amp;1;
+		    done" >
+		<os family="unix"/>
+  	</condition>
+  	
+	<exec executable="${executable}"
+		dir="${basedir}">
+     	<arg value="${arg}" />
+        <arg value="${command}"/>
+	</exec>
+  </target>
+
+   <!-- =================================================================== -->
+   <!-- Compiles and runs directory/filename -->
+   <!-- =================================================================== -->
+   <target name="compile - run - one" description="Compiles and runs directory/filename(input does not work)" depends="(init)">
+
+	<input message="Enter the directory/filename to compile" addproperty="filepath"/>
+  	   
+	<echo message="Compiling ${filepath}"/>
+ 	
+	<exec executable="${executable}"
+		dir="${basedir}">
+     	<arg value="${arg}" />
+	   	<arg value="java -cp ${classpathdir} org.tyco.tyco.tyco.Tycoc ${filepath}.tyco"/>
+    </exec>
+
+    <echo message="Running ${filepath}"/>
+   	
+    <exec executable="${executable}"
+		dir="${basedir}">
+    	<arg value="${arg}" />
+		<arg value="java -cp ${classpathdir} org.tyco.tyco.tyco.Tyco -number-threads 1 ${filepath}.mil"/>
+    </exec>
+
+  </target>
+
+   <!-- =================================================================== -->
+   <!-- Compiles and runs examples -->
+   <!-- =================================================================== -->
+   <target name="examples" description="Compiles and runs examples" depends="(init), (delete)" >
+
+   		<ant antfile="${commondir}/build.xml" dir="${basedir}/examples/atm" target="(compile)"/>
+       	<ant antfile="${commondir}/build.xml" dir="${basedir}/examples/datatypes" target="(compile)"/>
+       	<ant antfile="${commondir}/build.xml" dir="${basedir}/examples/functional" target="(compile)"/>
+       	<ant antfile="${commondir}/build.xml" dir="${basedir}/examples/math" target="(compile)"/>       	       	
+       	<ant antfile="${commondir}/build.xml" dir="${basedir}/examples/subway" target="(compile)"/>
+
+       	<ant antfile="${commondir}/build.xml" dir="${basedir}/examples/atm" target="(run - test)"/>
+       	<ant antfile="${commondir}/build.xml" dir="${basedir}/examples/datatypes" target="(run - test)"/>
+       	<ant antfile="${commondir}/build.xml" dir="${basedir}/examples/functional" target="(run - test)"/>
+       	<ant antfile="${commondir}/build.xml" dir="${basedir}/examples/math" target="(run - test)"/>       	       	
+       	<ant antfile="${commondir}/build.xml" dir="${basedir}/examples/subway" target="(run - test)"/>
+   	
+	    <echo message="Verify ${commondir}/test.output for errors"/>
+
+   </target>
+
+   <!-- =================================================================== -->
+   <!-- Compiles and runs tests/good -->
+   <!-- =================================================================== -->
+   <target name="tests/good" 
+                description="Compiles and runs tests/good" depends="(init), (delete)">
+	
+	   	<ant antfile="${commondir}/build.xml" dir="${basedir}/tests/good" target="(compile)"/>
+	
+	   	<ant antfile="${commondir}/build.xml" dir="${basedir}/tests/good" target="(run - test)"/>
+    
+   		<echo message="Verify ${commondir}/test.output for errors"/>
+
+   </target>
+
+   <!-- =================================================================== -->
+   <!-- Compiles and runs tests/badRuntime -->
+   <!-- =================================================================== -->
+   <target name="tests/badRuntime" 
+               description="Compiles and runs tests/badRuntime" depends="(init), (delete)">
+
+   		<ant antfile="${commondir}/build.xml" dir="${basedir}/tests/badRuntime" target="(compile)"/>
+		
+	   	<ant antfile="${commondir}/build.xml" dir="${basedir}/tests/badRuntime" target="(run - test)"/>
+	
+   		<echo message="Verify ${commondir}/test.output for errors"/>
+   	
+   </target>
+
+   <!-- =================================================================== -->
+   <!-- Compiles tests/badSyntax -->
+   <!-- =================================================================== -->
+   <target name="tests/badSyntax" 
+               description="Compiles tests/badSyntax" depends="(init), (delete)">
+	
+   		<ant antfile="${commondir}/build.xml" dir="${basedir}/tests/badSyntax" target="(compile - test)"/>
+	    
+   		<echo message="Verify ${commondir}/test.output for errors"/>
+   	
+   </target>
+
+	<!-- =================================================================== -->
+	<!-- Compiles tests/badSemantic -->
+	<!-- =================================================================== -->
+	<target name="tests/badSemantic" 
+	            description="Compiles tests/badSemantic" depends="(init), (delete)">
+		
+		<ant antfile="${commondir}/build.xml" dir="${basedir}/tests/badSemantic" target="(compile - test)"/>
+		
+		<echo message="Verify ${commondir}/test.output for errors"/>
+		
+	</target>
+
+	<!-- =================================================================== -->
+	<!-- Compiles and runs all examples and tests -->
+	<!-- =================================================================== -->
+	<target name="examples and tests" 
+   		description="Compiles and runs all examples and tests"
+   		depends="(init), (delete)" >
+		
+   		<ant antfile="${commondir}/build.xml" target="examples"/>
+   		<ant antfile="${commondir}/build.xml" target="tests/good"/>
+   		<ant antfile="${commondir}/build.xml" target="tests/badRuntime"/>
+   		<ant antfile="${commondir}/build.xml" target="tests/badSyntax"/>
+   		<ant antfile="${commondir}/build.xml" target="tests/badSemantic"/>
+
+	</target>
+	
+	<!-- =================================================================== -->
+	<!-- Remove test.output and all *.temp from the test directories  -->
+	<!-- =================================================================== -->
+	<target name="remove test files" 
+		description="Remove test.output and all *.temp from the test directories"
+   		depends="(init)">
+
+		<delete> <fileset dir="${commondir}" includes="**/*.temp*"/> </delete>
+		<delete> <fileset dir="${commondir}" includes="**/*.mil"/> </delete>
+		<delete file="${commondir}/test.output" />
+
+	</target>
+</project>

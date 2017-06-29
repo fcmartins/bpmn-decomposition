@@ -1,0 +1,79 @@
+new telheiras Station[telheiras, "Telheiras"] |
+allStations ! add [telheiras];
+new campogrande Station[campogrande, "Campo Grande"] |
+allStations ! add [campogrande];
+new alvalade Station[alvalade, "Alvalade"] |
+allStations ! add [alvalade];
+new roma Station[roma, "Roma"] |
+allStations ! add [roma];
+new areeiro Station[areeiro, "Areeiro"] |
+allStations ! add [areeiro];
+new alameda Station[alameda, "Alameda"] |
+allStations ! add [alameda];
+new arroios Station[arroios, "Arroios"] |
+allStations ! add [arroios];
+new anjos Station[anjos, "Anjos"] |
+allStations ! add [anjos];
+new intendente Station[intendente, "Intendente"] |
+allStations ! add [intendente];
+new martimmoniz Station[martimmoniz, "Martim Moniz"] |
+allStations ! add [martimmoniz];
+new rossio Station[rossio, "Rossio"] |
+allStations ! add [rossio];
+new baixa Station[baixa, "Baixa-Chiado"] |
+allStations ! add [baixa];
+new caissodre Station[caissodre, "Cais do Sodre"] |
+allStations ! add [caissodre];
+
+
+new cidadeuniversitaria Station[cidadeuniversitaria, "Cidade Universitaria"] |
+allStations ! add [cidadeuniversitaria];
+new entrecampos Station[entrecampos, "Entre Campos"] |
+allStations ! add [entrecampos];
+new campopequeno Station[campopequeno, "Campo Pequeno"] |
+allStations ! add [campopequeno];
+new saldanha Station[saldanha, "Saldanha"] |
+allStations ! add [saldanha];
+new picoas Station[picoas, "Picoas"] |
+allStations ! add [picoas];
+new marques Station[marques, "Marques de Pombal"] |
+allStations ! add [marques];
+new rato Station[rato, "Rato"] |
+allStations ! add [rato];
+
+new olaias Station[olaias, "Olaias"] |
+allStations ! add [olaias];
+new belavista Station[belavista, "Bela Vista"] |
+allStations ! add [belavista];
+new chelas Station[chelas, "Chelas"] |
+allStations ! add [chelas];
+new olivais Station[olivais, "Olivais"] |
+allStations ! add [olivais];
+new caboruivo Station[caboruivo, "Cabo Ruivo"] |
+allStations ! add [caboruivo];
+new oriente Station[oriente, "Oriente"] |
+allStations ! add [oriente];
+
+new restauradores Station[restauradores, "Restauradores"] |
+allStations ! add [restauradores];
+new avenida Station[avenida, "Avenida"] |
+allStations ! add [avenida];
+new parque Station[parque, "Parque"] |
+allStations ! add [parque];
+new sebastiao Station[sebastiao, "Sao Sebastiao"] |
+allStations ! add [sebastiao];
+new pracaespanha Station[pracaespanha, "Praca de Espanha"] |
+allStations ! add [pracaespanha];
+new jardimzoologico Station[jardimzoologico, "Jardim Zoologico"] |
+allStations ! add [jardimzoologico];
+new laranjeiras Station[laranjeiras, "Laranjeiras"] |
+allStations ! add [laranjeiras];
+new moinhos Station[moinhos, "Alto dos Moinhos"] |
+allStations ! add [moinhos];
+new luz Station[luz, "Colegio-Militar/Luz"] |
+allStations ! add [luz];
+new carnide Station[carnide, "Carnide"] |
+allStations ! add [carnide];
+new pontinha Station[pontinha, "Pontinha"] |
+allStations ! add [pontinha];
+

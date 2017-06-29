@@ -1,0 +1,18 @@
+{-
+ - ATM
+ -
+ - Vasco T. Vasconcelos
+ - $Id: atm.tyco,v 1.1 2004/02/12 17:44:20 tyco Exp $
+ -}
+
+include "../datatypes/accountOps.tyc"
+include "bank.tyc"
+include "interactiveUser.tyc"
+include "atm.tyc"
+
+-- A bank account with initial balance 100
+-- A bank with its only account
+-- An ATM connected to this bank only
+-- An user that conducts a session with the ATM
+let atm = NewATM[NewBank [NewAccount [100]]] in
+	AnInteractiveUser [atm]

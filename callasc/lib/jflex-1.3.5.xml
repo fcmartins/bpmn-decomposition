@@ -1,0 +1,41 @@
+<!-- Version $Id: jflex.xml,v 1.2 2009/10/12 12:28:00 tyco Exp $ -->
+
+<project name="jflex">
+	<!-- Make sure jflex is available -->
+	<available classname="JFlex.Main" property="jflex.present" classpath="${jflex.class.path}" />
+	<fail unless="jflex.present" message="Use property &quot;jflex.class.path&quot; to declare the CLASSPATH of JFlex." />
+
+	<target name="jflex/check">
+		<basename property="jflex.base.filename" file="${jflex.filename}" />
+		<exec executable="bash" outputproperty="jflex.class" failifexecutionfails="false">
+			<arg value="-c" />
+			<arg value="grep %class ${jflex.filename} | sed -e 's/%class//' | sed -e 's/ //'" />
+		</exec>
+		<condition property="jflex.output" value="${jflex.destination.dir}/${jflex.class}.java">
+			<isset property="jflex.class" />
+		</condition>
+		<property name="jflex.generated.filename" value="${jflex.destination.dir}/.${jflex.base.filename}" />
+
+		<!-- when we do not have the grep and sed commands, then we fallback to a hidden file. -->
+		<condition property="jflex.output" value="${jflex.generated.filename}">
+			<not>
+				<isset property="jflex.class" />
+			</not>
+		</condition>
+		<uptodate property="jflex.run" targetfile="${jflex.output}" srcfile="${jflex.filename}" />
+	</target>
+
+	<target name="jflex" description="An utility task for interfacing with JFlex." depends="jflex/check" unless="jflex.run">
+		<fail unless="jflex.destination.dir" message="Declare where the files will be generated to." />
+		<fail unless="jflex.filename" message="Declare the JFlex specification filename." />
+		<echo>JFlex.Main --nobak ${jflex.filename}</echo>
+		<mkdir dir="${jflex.destination.dir}" />
+		<java classname="JFlex.Main" fork="true" classpath="${jflex.class.path}">
+			<arg value="--nobak" />
+			<arg value="-d" />
+			<arg value="${jflex.destination.dir}" />
+			<arg value="${jflex.filename}" />
+		</java>
+		<touch file="${jflex.generated.filename}" />
+	</target>
+</project>

@@ -1,0 +1,64 @@
+{-
+ - Interactive User
+ -
+ - Vasco T. Vasconcelos
+ - $Id$
+ -}
+
+
+def
+{-
+ - An interface between the keyboard and an atm.
+ -}
+AnInteractiveUser (atm) =
+  io ! puts ["User Id? "] ;
+  let
+    id = io ! gets []
+  in
+  io ! puts ["PIN? "] ;
+  let
+    pin = io ! geti []
+  in
+    case atm ! [id, pin] of {
+      success (session) =
+	def Loop () =
+      	  io ! puts ["Op (withdraw, deposit, balance, quit)? "] ;
+          let
+            op = io ! gets []
+          in
+            if op == "withdraw"
+            then Withdraw [session] ; Loop []
+            else if op == "deposit"
+            then Deposit [session] ; Loop []
+            else if op == "balance"
+            then Balance [session] ; Loop []
+            else if op == "quit"
+            then Quit [session]
+            else Loop []
+        in Loop []
+      failure () =
+        io ! prints ["Autentication failure\n"] 
+    }
+
+Withdraw (session, replyTo) =
+  io ! puts ["amount? "] ;
+    case session ! withdraw [io ! geti []] of {
+      overdraft () =
+	io ! puts ["You asked too much!\n", replyTo]
+      dispense () =
+	io ! puts ["Don't forget the cash!\n", replyTo]
+    }
+
+Deposit (session, replyTo) =
+  io ! puts ["amount? "] ;
+    session ! deposit [io ! geti [], replyTo]
+
+Balance (session, replyTo) =
+    io ! puti [session ! balance []] ;
+    io ! puts [" is your balance\n", replyTo]
+
+Quit (session) =
+  session ! quit [] |
+  io ! prints ["See you\n"]
+
+in

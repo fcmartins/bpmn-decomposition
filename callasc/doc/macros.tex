@@ -1,0 +1,249 @@
+% The below macros make no sense w/o these packages
+\usepackage{listings}
+
+\def\eg{\emph{e.g.}\;}
+
+% KEYWORDS
+%\newcommand{\keyword}[1]{\textsf{#1}\,}
+\newcommand{\keyword}[1]{\text{\lstinline{#1}}\,}
+\newcommand{\stopk}{\keyword{stop}}
+\newcommand{\idlek}{\keyword{idle}}
+\newcommand{\netTypek}{\keyword{Net}}
+\newcommand{\bcastk}{\keyword{broadcast}}
+\newcommand{\yieldk}{\keyword{yield}}
+\newcommand{\lock}{\keyword{loc}}
+\newcommand{\netk}{\keyword{net}}
+\newcommand{\installk}{\keyword{install}}
+\newcommand{\sensek}{\keyword{sense}}
+\newcommand{\fieldk}{\keyword{field}}
+\newcommand{\posk}{\keyword{pos}}
+\newcommand{\batk}{\keyword{bat}}
+\newcommand{\radk}{\keyword{rad}}
+\newcommand{\mack}{\keyword{mac}}
+\newcommand{\ink}{\keyword{in}}
+\newcommand{\offk}{\keyword{off}}
+\newcommand{\ifk}{\keyword{if}}
+\newcommand{\letk}{\keyword{let}}
+\newcommand{\thenk}{\keyword{then}}
+\newcommand{\elsek}{\keyword{else}}
+\newcommand{\handlek}{\keyword{handle}}
+\newcommand{\typeMeasure}{\keyword{measure}}
+\newcommand{\typeBat}{\keyword{bat}}
+\newcommand{\typePos}{\keyword{pos}}
+
+% VALUES
+%\newcommand{\register}[1]{\keyword r_{#1}}
+
+% NETWORK
+\newcommand{\inactionn}{\offk}
+\newcommand{\inactionp}{\idlek}
+\newcommand{\sensor}[5]{[{#1}::{#2}]^{{#3}, {#4}}_{{#5}}}
+%\newcommand{\sensor}[2]{[{#1}::{#2}]}
+%\newcommand{\sensors}[6]{[{#1}, {#2}, {#3}]^{{#4},{#5}}_{{#6}}}
+\newcommand{\sensord}{\sensor {\vec P} O p r e}
+%\newcommand{\sensorsd}{\sensors H P O p r e}
+\newcommand{\tagsensor}[6]{[{#1}::{#2}]^{{#3}, {#4}}_{{#5}}\{{#6}\}}
+%\newcommand{\tagsensor}[3]{[{#1}::{#2}]\{{#3}\}}
+%\newcommand{\tagsensord}[2][P]{\tagsensor {#1} O p r e {#2}}
+\newcommand{\tagsensord}{\tagsensor {\vec P} O p r e S}
+\newcommand{\module}[2]{\{{#1}\,\dots\,{#2}\}}
+%\newcommand{\moduled}{\{\method{l_1}{\vec x_1}{P_1} \dots \method{l_n}{\vec x_n}{P_n}\}}
+\newcommand{\moduled}{\{\method{l_i}{\vec x_i}{P_i}\}_{i\in I}}
+\newcommand{\method}[3]{{#1} = ({#2})\,{#3}}
+\newcommand{\methodd}{\method l {\vec x} P}
+\newcommand{\invk}[3]{{#1}.{#2}({#3})}
+\newcommand{\invkd}{\invk {v}{l}{\vec v}}
+\newcommand{\bcast}[2]{\bcastk {#1}({#2})}
+\newcommand{\bcastd}{\bcast {l}{\vec v}}
+\newcommand{\yield}[1]{\yieldk {#1}}
+\newcommand{\yieldd}{\yield P}
+\newcommand{\install}[2]{{#1}.\installk {#2}}
+\newcommand{\installd}{\install v v}
+\newcommand{\sense}[2]{\fieldk ({#1})\, \ink {#2}}
+\newcommand{\sensed}{\fieldk}
+\newcommand{\Let}[3]{\letk {#1} = {#2}\, \ink {#3}}
+\newcommand{\Letd}{\Let x P P}
+\newcommand{\Value}[2]{\langle {{#1}} \rangle^{{#2}}}
+\newcommand{\Valued}{\Value {\vec v} p}
+\newcommand{\parn}{\,\vert\,}
+\newcommand{\parp}{\, \vert\, }
+\newcommand{\seq}{\;;\;}
+\newcommand{\ldb}{\{\makebox[.1ex][r]{$|$}} % Left Double Bracket
+\newcommand{\rdb}{|\makebox[-.03ex]{$\}$}} % Right Double Bracket
+\newcommand{\ldsq}{[\![} % Left Double SQuare bracket
+\newcommand{\rdsq}{]\!]} % Right Double SQuare bracket
+\def\context#1{\mathcal{C}\ldsq#1\rdsq}
+\def\emptycontext{[\;]}
+
+% CONSTANTS
+%\newcommand{\numreg}{\keyword R}
+
+% TYPES
+\def\obj#1{\{#1\}}
+\def\objd{\obj {l_i \colon \vec T_i \rightarrow T_i}_{i \in I}}
+\def\senObj#1{[#1]}
+\def\senObjd{\senObj {l_i \colon \vec T_i \rightarrow T_i}_{i \in I}}
+\def\anyObj#1{<#1>}
+\def\anyObjd{\anyObj {l_i \colon \vec T_i \rightarrow T_i}_{i \in I}}
+%\newcommand{\integer}{\keyword{int}}
+%\newcommand{\existstype}[1][\tau]{\exists\alpha.{#1}}
+% sets
+\newcommand{\dom}{\operatorname{dom}}
+\newcommand{\disj}{\operatorname{,}}
+
+% OPERATIONAL SEMANTICS
+\newcommand{\bottom}{\perp}
+\newcommand{\dist}{\operatorname{d}}
+\newcommand{\fn}{\operatorname{fn}}
+\newcommand{\fv}{\operatorname{fv}}
+\newcommand{\untag}{\operatorname{untag}}
+\newcommand{\energyIn}{\mathsf{e_{in}}}
+\newcommand{\energyOut}{\mathsf{e_{out}}}
+\newcommand{\methJoin}{+}
+\newcommand{\subs}[2]{[{#1}/{#2}]}
+\newcommand{\update}[2]{\{{#1}\colon {#2}\}}
+\newcommand{\congr}{\equiv}
+\newcommand{\reduces}{\rightarrow}
+\newcommand{\tagreduces}[4]{\rightarrow^{{#1},{#2}}_{{#3},{#4}}}
+\newcommand{\tagreducesd}{\tagreduces p {r} {l_i} {\vec v}}
+\newcommand{\reducesn}{\reduces^{*}}
+\newcommand{\disprule}[2]{
+    #2 \tag{#1}
+}
+
+% LTS semantics
+\newcommand{\ltsreduces}[1]{\stackrel{{#1}}\longrightarrow}
+\newcommand{\labelLocal}[3]{{#1}[{#2}]\rightarrow {#3}}
+\newcommand{\labelLocald}{\labelLocal{l_i}{\vec v}{(\vec x_i) P_i}}
+\newcommand{\labelNet}[2]{{#1}[{#2}]\uparrow}
+\newcommand{\labelNetd}{\labelNet{l_i}{\vec v}}
+\newcommand{\labelNetNet}[4]{\labelNet{{#1}}{{#2}} ({#3}, {#4})}
+\newcommand{\labelNetNetd}{\labelNetNet {l_i} {\vec v} p r}
+\newcommand{\labelInst}[1]{{#1}\rightleftharpoons}
+\newcommand{\labelInstd}{\labelInst{v}}
+\newcommand{\labelSense}[3]{\subs {#1} {#2}\downarrow{#3}}
+\newcommand{\labelSensed}{\labelSense v x {}}
+\newcommand{\labelSenseNetd}{\labelSense v x p}
+\newcommand{\labelTau}{\tau}
+\newcommand{\labelAny}{\gamma}
+
+% RULE NAMES
+\newcommand{\mkRrule}[1]{{\footnotesize \textsc{R-#1}}}
+\newcommand{\mkTrule}[1]{{\footnotesize \textsc{T-#1}}}
+\newcommand{\mkSrule}[1]{{\footnotesize \textsc{S-#1}}}
+% Reduction
+\newcommand{\Rinstall}{\mkRrule{install}}
+\newcommand{\RinstallTop}{\mkRrule{install-top}}
+\newcommand{\Rlet}{\mkRrule{let}}
+\newcommand{\Rswitch}{\mkRrule{switch}}
+\newcommand{\Rmethod}{\mkRrule{method}}
+\newcommand{\RmethodTop}{\mkRrule{method-top}}
+\newcommand{\RnoMethodTop}{\mkRrule{no-method-top}}
+\newcommand{\RnetCall}{\mkRrule{broadcast}}
+\newcommand{\Rrelease}{\mkRrule{release}}
+\newcommand{\Rsense}{\mkRrule{sense}}
+\newcommand{\RsenseDef}{\mkRrule{sense-def}}
+\newcommand{\Rstructural}{\mkRrule{structural}}
+\newcommand{\Rpar}{\mkRrule{parallel}}
+\newcommand{\Rseq}{\mkRrule{seq}}
+\newcommand{\Rnetwork}{\mkRrule{network}}
+\newcommand{\Rsensor}{\mkRrule{sensor}}
+\newcommand{\Rtrans}{\mkRrule{Transmission}}
+\newcommand{\Rtagstructural}{\mkRrule{Tag-Structural}}
+\newcommand{\Revent}{\mkRrule{event}}
+\newcommand{\Rret}{\mkRrule{return}}
+\newcommand{\Rcongr}{\mkRrule{congr}}
+
+\newcommand{\SmonoidProgram}{\mkSrule{monoid-Program}}
+\newcommand{\SmonoidSensor}{\mkSrule{monoid-Sensor}}
+\newcommand{\Sbroadcast}{\mkSrule{broadcast}}
+\newcommand{\Sbattery}{\mkSrule{bat-exhausted}}
+\newcommand{\Sseq}{\mkSrule{idle-seq}}
+\newcommand{\Sprogram}{\mkSrule{program-stru}}
+
+% Typing
+\newcommand{\type}{\vdash}
+\newcommand{\TSinaction}{\mkTrule{term}}
+\newcommand{\Tparallel}{\mkTrule{par}}
+\newcommand{\TseqP}{\mkTrule{seqP}}
+\newcommand{\TSsensor}{\mkTrule{sensor}}
+\newcommand{\TSbSensor}{\mkTrule{bSensor}}
+\newcommand{\TPinaction}{\mkTrule{idle}}
+\newcommand{\TPpar}{\mkTrule{pPar}}
+\newcommand{\Tlet}{\mkTrule{let}}
+\newcommand{\Tcall}{\mkTrule{call}}
+\newcommand{\Tinst}{\mkTrule{inst}}
+\newcommand{\Tbcast}{\mkTrule{bcast}}
+\newcommand{\TVvar}{\mkTrule{var}}
+\newcommand{\TVlabel}{\mkTrule{label}}
+\newcommand{\TVseq}{\mkTrule{seq}}
+\newcommand{\Tobj}{\mkTrule{obj}}
+\newcommand{\Tbin}{\mkTrule{built-in}}
+\newcommand{\Tnet}{\mkTrule{net}}
+\newcommand{\Tloc}{\mkTrule{loc}}
+% Subtyping
+%\newcommand{\Sref}{\mkSrule{ref}}
+
+
+% GRAMMAR definition
+% Capitalised versions are to be used in align-like environments
+\newcommand{\pad}{\;\;}
+\newcommand{\Space}[1]{\pad{#1}\pad}
+\newcommand{\grmeq}{\Space{::=}}
+\newcommand{\Eq}{\Space=}
+\newcommand{\grmor}{\;\mid\;}
+
+% Figures
+\newenvironment{myfigure}{
+  \begin{figure}[t]\centering\hrulefill\par\vspace{-4ex}}{
+    \hrulefill\end{figure}}
+
+\newcommand{\myparagraph}[1]{\vspace*{0.2cm}\noindent\textbf{#1}}
+
+% To do
+\newcommand{\todo}[1]{[\textbf{Todo:} #1]}
+
+% Theorem like environments
+\newtheorem{definition}{Definition}
+\newtheorem{example}{Example}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+%  LANGUAGE
+\lstset{language=Java,
+  extendedchars=true,
+  showstringspaces=false,
+  basicstyle=\sffamily\footnotesize,
+  morekeywords={stop,install,in,net,loc,if,then,else,off,let,match,with,not},
+  sensitive=false,
+  morecomment=[s]{\{-}{-\}},
+  morecomment=[l]--,
+%  moredelim=[is][\emph]{'}{'},
+  literate={senS}{${_{b}^{p,r}}$}1 
+           {senX}{${_{b_1}^{{p_1},{r_1}}}$}2
+           {senY}{${_{b_n}^{{p_n},{r_n}}}$}2
+           {vx}{$\vec{x}$}1
+           {vy}{$\vec{y}$}1
+           {pz}{${p}$}1 {bz}{${b}$}1 {rz}{${r}$}1
+           {px}{${p_1}$}1 {py}{${p_n}$}1
+           {fz}{$F$}1
+           {rx}{${r_1}$}1 {ry}{${r_n}$}1
+           {bx}{${b_1}$}1 {by}{${b_n}$}1
+           {wx}{${w_1}$}1 {wy}{${w_n}$}1
+           {mx}{${m_1}$}1 {my}{${m_n}$}1
+}
+\lstset{backgroundcolor=,rulecolor=,showstringspaces=false, frame=tb, texcl}
+
+
+% Abbreviations
+\newcommand{\cf}{\textit{cf.}\@}
+
+% dimensions
+\newcommand{\rulespace}{0.0cm}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End: 

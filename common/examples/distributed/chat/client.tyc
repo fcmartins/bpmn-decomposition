@@ -1,0 +1,48 @@
+{--
+ - The information of a client.
+ - 
+ - @param self A reference to the object.
+ - @param id The identifier of the client.
+ - @param port Port to communicate with the client.
+ - 
+ - @author Herve' Paulino
+ - $Id:$
+ -}
+-- A writer to print on screen incomming messages
+include "writer.tyc"
+
+def
+	Client(self, id, port) = self ? {
+		
+		-- Returns the client's identifier.
+		getId(replyTo) =
+			replyTo ! [id] |
+			Client[self, id, port]
+		
+		-- Retuns the port to which the client is bound to the server.	
+		getPort(replyTo) =
+			replyTo ! [port] |
+			Client[self, id, port]			   	
+		
+		-- String representation of the client.
+		toString(replyTo) =
+			replyTo ! [id]	|
+			Client[self, id, port]	
+		
+		-- Equality of clients	
+		equals(client, replyTo) =
+			Client[self, id, port]	|
+		 	if id == client ! getId[] and id /= "" then 
+    			replyTo ! [true]
+	    	else
+    			replyTo ! [false]			   	
+	}
+	
+	{-
+	 - The constructor
+	 -}
+	NewClient(id, replyTo) =
+		new result
+		Client[result, id, NewWriter[]] |
+		replyTo ! [result]	
+in

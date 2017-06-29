@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: BPMNCommon
+Bundle-SymbolicName: BPMNCommon
+Bundle-Version: 1.0.0.qualifier
+Export-Package: bpmn2,
+ bpmn2.helpers,
+ bpmn2.helpers.wsn,
+ bpmn2.schema,
+ exception,
+ jaxb

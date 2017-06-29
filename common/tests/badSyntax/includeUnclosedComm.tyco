@@ -1,0 +1,10 @@
+-- Syntax Error
+
+-- Including a file containing an unclosed comment
+
+new x
+x ! lala ["lele"] |
+
+include "unclosedComment.tyco" |
+
+y ! []

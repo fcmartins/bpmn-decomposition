@@ -1,0 +1,10 @@
+io.tyco:11.3: 
+  [Unification Error] 
+  For the object located at r, I was expecting the type:
+	{foo: , val: a1}
+  but found the following type:
+	{val: Integer}
+  (I have found record types with different number of components.)
+  This is the point in the program where unification failed.
+  The source of the problem can be at a distant point in the source code.
+1 errors

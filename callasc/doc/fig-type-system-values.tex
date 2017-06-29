@@ -1,0 +1,44 @@
+\begin{myfigure}
+  \begin{gather*}
+    \Gamma \type b \colon B
+    \qquad
+%    \Gamma \disj l \colon T \type l \colon T
+%    \qquad
+    \Gamma \disj x \colon T \type x \colon T
+    \qquad
+    \frac{
+      \forall i. \Gamma \type x_i \colon T_i
+    }
+    {
+      \Gamma \type \vec x \colon \vec T
+    }
+    \tag{\Tbin, 
+      % \TVlabel, 
+      \TVvar, \TVseq}
+    \\[\rulespace]
+    \Gamma \type \netk \colon \netTypek
+    \qquad
+    \Gamma \disj \lock \colon \senObjd \type \lock \colon \senObjd
+    \tag{\Tnet, \Tloc}
+    \\[\rulespace]
+    \frac{
+      %\forall i \in I. \Gamma \type l_i \colon \vec T_i \rightarrow T_i
+      %\qquad
+      \forall i \in I.\Gamma \disj \vec x_i \colon \vec T_i \type P_i \colon T_i
+    }
+    {
+      \Gamma \type \moduled \colon \objd
+   }
+   \tag{\Tobj}
+ \end{gather*}
+ \\[-0.4cm]
+\caption{Typing rules 
+  %for labels and 
+  for values.}
+\label{fig:type-system-values}
+\end{myfigure}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End: 

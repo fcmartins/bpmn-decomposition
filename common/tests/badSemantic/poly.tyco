@@ -1,0 +1,14 @@
+{-
+ - Testing polymorphism
+ -
+ - Vasco T. Vasconcelos
+ - March 2001
+ -}
+
+new x
+{def Y (y) = x ! [y] in Y [1]} |
+x ! [true] |
+
+new b
+def Z (z) = b ! [z]
+in Z [1] | Z [true]

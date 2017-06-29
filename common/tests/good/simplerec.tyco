@@ -1,0 +1,7 @@
+def Bosta (n) =
+--  if n > 0 then
+--    Bosta [ n - 1]
+    Bosta [n]
+in
+  --Bosta [10000]
+  inaction

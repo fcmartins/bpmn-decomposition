@@ -1,0 +1,12 @@
+Directory good contains files that should compile
+Directory badSyntax contains files contain syntax errors
+Directory badSemantic contains files contain semantic errors
+
+For each tyco source file, there should be a .input and .output file.
+For example:
+
+	mathServer.tyco
+	mathServerinput
+	mathServer.output
+
+$Id: readme,v 1.1.1.1 2002/11/30 14:37:22 tyco Exp $

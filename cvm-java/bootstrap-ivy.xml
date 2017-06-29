@@ -1,0 +1,32 @@
+<project name="bootstrap-ivy">
+	<property name="ivy.dir" location="${user.home}/.ant/lib" />
+	<property name="ivy.jar.file" value="${ivy.dir}/ivy.jar" />
+
+	<target name="-ivy-download" unless="ivy.found" depends="-ivy-check">
+		<mkdir dir="${ivy.dir}" />
+		<get src="http://homepages.lasige.di.fc.ul.pt/~cogumbreiro/repo/ivy-latest.jar" dest="${ivy.jar.file}" usetimestamp="true" />
+	</target>
+
+	<target name="-ivy-check">
+		<condition property="ivy.found">
+			<typefound uri="antlib:org.apache.ivy.ant" name="cleancache" />
+		</condition>
+	</target>
+
+	<target name="ivy-init" depends="-ivy-download" unless="ivy.found">
+		<typedef uri="antlib:org.apache.ivy.ant" onerror="fail" loaderRef="ivyLoader">
+			<classpath>
+				<pathelement location="${ivy.jar.file}" />
+			</classpath>
+		</typedef>
+		<fail>
+			<condition>
+				<not>
+					<typefound uri="antlib:org.apache.ivy.ant" name="cleancache" />
+				</not>
+			</condition>
+	            You need Apache Ivy 2.0 or later from http://ant.apache.org/
+	            It could not be loaded from http://homepages.lasige.di.fc.ul.pt/~cogumbreiro/repo/ivy-latest.jar
+        </fail>
+	</target>
+</project>

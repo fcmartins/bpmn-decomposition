@@ -1,0 +1,29 @@
+{-
+ - Polymorphism for open records
+ -
+ - Vasco T. Vasconcelos
+ - May 2001
+ -}
+
+def
+Double (n, r) =
+  r ! [2 * n ]
+in
+{ new r
+  Double [5, r] |
+  r ? {
+    val (x) = io ! printi [x]
+    foo () = inaction
+  }
+} |
+{ new r
+  Double [7, r] |
+  {- I could not find label oof in the following type
+   - for the location r of an object:
+   -	{foo: , val: Integer}
+   -}
+  r ? {
+    val (x) = io ! printi [x]
+    oof () = inaction
+  }
+}

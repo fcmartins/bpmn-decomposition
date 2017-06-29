@@ -1,0 +1,8 @@
+{-
+ - Semantic Error - Identifier analysis
+ -
+ - Vasco T. Vasconcelos
+ - May 2001
+ -}
+
+a ? () = inaction

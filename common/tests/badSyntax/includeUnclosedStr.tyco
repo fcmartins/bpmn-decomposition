@@ -1,0 +1,7 @@
+-- Syntax Error
+
+-- Including a file containing an unclosed string
+
+new x
+include "unclosedString.tyco" |
+x ! lala ["lele"]

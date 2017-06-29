@@ -1,0 +1,187 @@
+package org.callas.vm.parse;
+
+import java.io.*;
+import java.util.*;
+import org.callas.vm.*;
+import org.callas.vm.ast.*;
+import org.tyco.common.symbol.Symbol;
+import org.tyco.common.errorMsg.ErrorMessage;
+import org.tyco.common.errorMsg.SourceLocation;
+import org.tyco.common.errorMsg.msgs.SyntacticError;
+
+parser code {:
+    String filename;
+    List<ErrorMessage> errors;
+     
+    public Grm(List<ErrorMessage> errors, String filename,
+            InputStream inputStream) {
+        this(new Lex(inputStream));
+        this.errors = errors;
+        this.filename = filename;
+    }
+    
+    SourceLocation getLocation(int line, int col) {
+       return new SourceLocation(filename, line + 1, col + 1);
+    }
+        
+    /**
+     * Print the error message.
+     * @param msg The message
+     * @param current The token where the error was detected
+     */
+    public void report_error (String msg, java_cup.runtime.Symbol info) {
+        SourceLocation loc = info.left != -1 ? getLocation(info.left, info.right) : null;
+        errors.add(new SyntacticError(loc, msg));
+    }
+    
+    public void syntax_error(java_cup.runtime.Symbol cur_token) {
+        SourceLocation loc = cur_token.left != -1 ? getLocation(cur_token.left, cur_token.right) : null;
+        String result = cur_token.value == null ? "." : " at '" + cur_token.value + "'";
+        errors.add(new SyntacticError(loc, "Syntax error" + result));
+    }
+    
+    public void unrecovered_syntax_error(java_cup.runtime.Symbol cur_token) {
+      report_fatal_error("Couldn't repair and continue parse", cur_token);
+    }
+
+    public void report_fatal_error(String message, Object info) {
+      /* stop parsing (not really necessary since we throw an exception, but) */
+      done_parsing();
+
+      /* use the normal error message reporting to put out the message */
+      report_error(message, info);
+    }
+:};
+
+/* lex tokens */
+terminal STRING, LONG, MODULE, FUNCTION, LOCALS, CODE, SYMBOLS, UPDATE,
+         EXTERN, CALL, RECEIVE, SEND, TIMER, RETURN, LOADC, LOADM, LOADB,
+         STOREB, LOAD, STORE, DUP, LADD, DADD,
+         LSUB, DSUB, LMUL, DMUL, LDIV, DDIV, LREM, BNOT, BAND, BOR, IFTRUE,
+         LEQ, DEQ, LGT, DGT, LLT, DLT, BOOL, DOUBLE, GOTO,
+         LNEG, LXOR, LSHR, LSHL, LAND, LOR, BXOR, DNEG, LNOT, POP, SWAP,
+         PARAMETERS, FREEVARS;
+
+terminal String STRING_VALUE;
+terminal Long LONG_VALUE;
+terminal Double DOUBLE_VALUE;
+
+/* grammar tokens */
+non terminal CVMBuiltinValue value;
+non terminal CVMFunction function;
+non terminal CVMModule module;
+non terminal Byte byte;
+non terminal Integer integer;
+non terminal String string;
+non terminal List modules;
+non terminal List/*<CVMStmt>*/ instructions;
+non terminal List values;
+non terminal Map/*<Symbol,CVMFunction>*/ functions;
+non terminal BinaryOperator binop;
+non terminal UnaryOperator unop;
+non terminal CVMStmt instruction;
+
+/* grammar */
+
+module ::= MODULE functions:fs
+            {: RESULT = new CVMModule(fs); :};
+
+function ::=
+    PARAMETERS byte:params
+    FREEVARS byte:freeVars
+    LOCALS byte:locals
+    CODE instructions:c
+    SYMBOLS values:vs
+    {:
+        RESULT = new CVMFunction(params.byteValue(),
+                              freeVars.byteValue(), locals.byteValue(),
+                              (List<CVMStmt>)c, (List<CVMValue>)vs);
+     :};
+
+binop ::=
+      LADD {: RESULT = BinaryOperator.LONG_ADDITION; :}
+    | DADD {: RESULT = BinaryOperator.DOUBLE_ADDITION; :}
+    | BAND {: RESULT = BinaryOperator.BOOL_AND; :}
+    | LAND {: RESULT = BinaryOperator.LONG_AND; :}
+    | LDIV {: RESULT = BinaryOperator.LONG_DIVISION; :}
+    | DDIV {: RESULT = BinaryOperator.DOUBLE_DIVISION; :}
+    | DEQ  {: RESULT = BinaryOperator.DOUBLE_EQUALS; :}
+    | LEQ  {: RESULT = BinaryOperator.LONG_EQUALS; :}
+    | LLT  {: RESULT = BinaryOperator.LONG_LESS_THAN; :}
+    | LGT  {: RESULT = BinaryOperator.LONG_GREATER_THAN; :}
+    | DLT  {: RESULT = BinaryOperator.DOUBLE_LESS_THAN; :}
+    | DGT  {: RESULT = BinaryOperator.DOUBLE_GREATER_THAN; :}
+    | LREM {: RESULT = BinaryOperator.LONG_REMAINDER; :}
+    | LMUL {: RESULT = BinaryOperator.LONG_MULTIPLICATION; :}
+    | DMUL {: RESULT = BinaryOperator.DOUBLE_MULTIPLICATION; :}
+    | BOR  {: RESULT = BinaryOperator.BOOL_OR; :}
+    | LOR  {: RESULT = BinaryOperator.LONG_OR; :}
+    | LSUB {: RESULT = BinaryOperator.LONG_SUBTRACTION; :}
+    | DSUB {: RESULT = BinaryOperator.DOUBLE_SUBTRACTION; :}
+    | LSHR {: RESULT = BinaryOperator.LONG_SHIFT_RIGHT; :}
+    | LSHL {: RESULT = BinaryOperator.LONG_SHIFT_LEFT; :}
+    | LXOR {: RESULT = BinaryOperator.LONG_EXCLUSIVE_OR; :}
+    | BXOR {: RESULT = BinaryOperator.BOOL_EXCLUSIVE_OR; :}
+    ;
+
+unop ::=
+      LNEG {: RESULT = UnaryOperator.LONG_NEGATION; :}
+    | DNEG {: RESULT = UnaryOperator.DOUBLE_NEGATION; :}
+    | BNOT {: RESULT = UnaryOperator.BOOL_NOT; :}
+    | LNOT {: RESULT = UnaryOperator.LONG_NOT; :}
+    ;
+
+instruction ::= binop:op  {: RESULT = new CVMBinaryOp(op); :}
+              | unop:op  {: RESULT = new CVMUnaryOp(op); :}
+              | GOTO integer:n {: RESULT = new CVMGoto(n.intValue()); :}
+              | IFTRUE integer:n {: RESULT = new CVMIfTrue(n.intValue()); :}
+              | UPDATE {: RESULT = CVMUpdate.UPDATE; :}
+              | LOAD byte:k {: RESULT = new CVMLoad(k.byteValue()); :} 
+              | LOADB {: RESULT = CVMLoadSensorCode.LOADB; :}
+              | LOADC byte:k {: RESULT = new CVMLoadConstant(k.byteValue()); :}
+              | LOADM {: RESULT = CVMLoadModule.LOADM; :}
+              | RECEIVE {: RESULT = CVMReceive.RECEIVE; :}
+              | RETURN {: RESULT = CVMReturn.RETURN; :}
+              | SEND {: RESULT = CVMSend.SEND; :}
+              | EXTERN {: RESULT = CVMExtern.EXTERN; :}
+              | STOREB {: RESULT = CVMStoreSensorCode.STOREB; :}
+              | STORE byte:k {: RESULT = new CVMStore(k.byteValue()); :}
+              | CALL {: RESULT = CVMCall.CALL; :}
+              | TIMER {: RESULT = CVMTimer.TIMER; :}
+              | POP {: RESULT = CVMPop.POP; :}
+              | DUP {: RESULT = CVMDup.DUP; :}
+              | SWAP {: RESULT = CVMSwap.SWAP; :}
+              ;
+
+value ::= BOOL byte:k {: RESULT = new CVMBBool(k.byteValue() != 0); :} 
+        | LONG LONG_VALUE:v {: RESULT = new CVMBLong(v); :}
+        | DOUBLE DOUBLE_VALUE:v {: RESULT = new CVMBDouble(v.doubleValue()); :} 
+        | string:s {: RESULT = new CVMBString(s); :}
+        ;
+
+string ::= STRING STRING_VALUE:s {: RESULT = s; :};
+
+instructions ::=
+    /* empty */ {: RESULT = new LinkedList(); :}
+    | instructions:lst instruction:ins {:
+        RESULT = lst;
+        RESULT.add(ins);
+    :}
+    ;
+               
+values ::= /* EMPTY */ {: RESULT = new LinkedList(); :}
+         | values:lst value:v {: RESULT = lst; RESULT.add(v); :}
+         ;
+ 
+modules ::= /* EMPTY */ {: RESULT = new LinkedList(); :}
+          | modules:ms module:m {: RESULT = ms; RESULT.add(m); :} 
+          ;
+
+functions ::= /* EMPTY */ {: RESULT = new TreeMap(); :}
+            | functions:lst FUNCTION STRING_VALUE:name function:f
+                {: RESULT = lst; RESULT.put(Symbol.symbol(name), f); :} 
+            ;
+
+byte ::= LONG_VALUE:v {: RESULT = new Byte((byte) v.intValue()); :};
+
+integer ::= LONG_VALUE:v {: RESULT = v.intValue(); :};

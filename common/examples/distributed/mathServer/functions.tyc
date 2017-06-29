@@ -1,0 +1,30 @@
+{--
+ - The functions featured in the math server.
+ - @param Reference to the object.
+ - 
+ - @author T. Vasconcelos, Herve' Paulino
+ - $Id$
+ -}
+ 
+def
+{-
+ - The inverse function.
+ -}
+	Inverse (self) =   self ? (x, r) = r ! [0 - x] | Inverse [self]
+{-
+ - The double function.
+ -}
+	Double (self) = self ? (x, r) = r ! [2 * x] | Double [self]
+in
+def
+	{-
+	 - The Constructors
+	 -} 
+	NewInverseFunction(replyTo) =
+		new result Inverse[result] |
+		replyTo ! [result]
+
+	NewDoubleFunction(replyTo) =
+		new result Double[result] |
+		replyTo ! [result]
+in

@@ -1,0 +1,8 @@
+{--
+ - Client of the list server.
+ - Imports the list and prints its length.
+ - 
+ - @author Herve' Paulino
+ -}
+import list from listTest
+io ! printi[list ! length[]]

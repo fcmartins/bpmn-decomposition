@@ -1,0 +1,21 @@
+{-
+ - Semantic Error - Type Inference
+ -
+ - 8 errors expected
+ -
+ - Vasco T. Vasconcelos
+ - March 2001
+ -}
+
+-- Simple unification errors on primitive (and the only) expressions
+-- 8 errors expected
+
+io ! puti [false + "lala"] |
+
+io ! putb [4 and io] |
+
+io ! putb [not 432] |
+ 
+io ! puts [true ^ 13] |
+
+if 89 * 242 then inaction else inaction

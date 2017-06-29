@@ -1,0 +1,52 @@
+{-
+ - List Constructors
+ -
+ - Vasco T. Vasconcelos
+ - $Id: listConstructors.tyc,v 1.2 2003/10/30 20:43:28 tyco Exp $
+-}
+
+{- Lists are inductively defined: a list is either empty, or a pair
+composed of an element (the head of the list) and a list (the tail).
+The former will be represented by a process Nil, the latter by a
+process Cons.  Each of these processes need a location where they may
+be queried; in addition, Cons needs to know its head and its tail.
+Nil is a process that, when invoked, answers a message labelled with
+label nil; Cons in turn answers cons together with its head and its
+tail.  Here is a possible implementation.  -}
+
+def
+  Nil (self) = self ? {
+    val (replyTo) =  
+      Nil  [self] |
+      replyTo ! nil []  
+
+    length (replyTo) = 
+  	  Nil [self] |
+      replyTo ! [0]     
+    } 
+    
+  Cons (self, head, tail) = self ? {
+     val (replyTo) =  
+       replyTo ! cons [head, tail] | 
+       Cons [self, head, tail]
+       
+     length (replyTo) = 
+	   Cons [self, head, tail] |
+       replyTo ! [tail ! length [] + 1]
+    } 
+in
+def
+
+Append (l1, l2, r) =
+  case l1 ! [] of {
+    nil () =
+      r ! [l2]
+    cons (h, t) =
+      new c
+      Cons [c, h, Append [t, l2]] |
+      r ! [c]
+  }
+in
+
+-- The list interface
+include "listInterface.tyc"

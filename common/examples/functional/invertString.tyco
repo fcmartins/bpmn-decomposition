@@ -1,0 +1,16 @@
+{- 
+ - Reversing a string
+ -
+ - Vasco T. Vasconcelos
+ - $Id: invertString.tyco,v 1.1 2004/02/12 17:44:20 tyco Exp $
+ -}
+
+def
+Reverse (s, r) =
+  if s == ""
+  then
+    r ! [""]
+  else
+      r ! [Reverse [tl s] ^ hd s]
+in
+io ! prints [Reverse ["\nstcejbO tnerrucnoC depYT"]]

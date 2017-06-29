@@ -1,0 +1,34 @@
+{-
+ - Trying to create an object located io,
+ - with the exact type of the primitive io object.
+ -
+ - Vasco T. Vasconcelos
+ - May 2003
+ -}
+
+{-
+io: {
+  getb: {val: Boolean},
+  geti: {val: Integer},
+  gets: {val: String},
+  printb: Boolean,
+  printi: Integer,
+  prints: String,
+  putb: Boolean {done: },
+  puti: Integer {done: },
+  puts: String {done: }
+}
+-}
+
+io ? {
+  getb (r) = r ? (x) = inaction
+  geti (r) = r ! [-321]
+  gets (r) = r ! ["hi there"]
+  printb (x) = inaction
+  printi (x) = inaction
+  prints (x) = inaction
+  putb (x, r) = inaction
+  puti (x, r) = inaction
+  puts (x, r) = inaction
+}
+      

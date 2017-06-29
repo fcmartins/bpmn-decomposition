@@ -1,0 +1,37 @@
+<!-- Version $Id: javacup.xml,v 1.1 2011/08/02 10:36:42 cogumbreiro Exp $ -->
+
+<!--
+    An utility task for calling JavaCUP.
+-->
+<project name="java-cup">
+	<!-- Make sure javacup is available. -->
+	<available classname="java_cup.Main" property="java-cup.present" classpath="${java-cup.class.path}" ignoresystemclasses="yes" />
+	<fail unless="java-cup.present" message="Use property &quot;java-cup.class.path&quot; to declare the CLASSPATH of JavaCUP." />
+	<property name="java-cup.symbols" value="sym" />
+	<property name="java-cup.class" value="Grm" />
+
+	<target name="java-cup/check">
+		<uptodate property="java-cup.run1" targetfile="${java-cup.destination.dir}/${java-cup.class}.java" srcfile="${java-cup.filename}" />
+		<uptodate property="java-cup.run2" targetfile="${java-cup.destination.dir}/${java-cup.symbols}.java" srcfile="${java-cup.filename}" />
+		<condition property="java-cup.run">
+			<!-- both files must be up to date in order for everything is up to date -->
+			<and>
+				<isset property="java-cup.run1" />
+				<isset property="java-cup.run2" />
+			</and>
+		</condition>
+	</target>
+	<target name="java-cup" description="An utility task for interfacing with JavaCUP." depends="java-cup/check" unless="java-cup.run">
+		<fail unless="java-cup.destination.dir" message="Declare where the files will be generated to." />
+		<fail unless="java-cup.filename" message="Declare the grammar filename." />
+		<echo>java_cup.Main -parser ${java-cup.class} ${java-cup.filename}</echo>
+		<mkdir dir="${java-cup.destination.dir}" />
+		<java classname="java_cup.Main" dir="${java-cup.destination.dir}" fork="true" classpath="${java-cup.class.path}">
+			<arg value="-parser" />
+			<arg value="${java-cup.class}" />
+			<arg value="-symbols" />
+			<arg value="${java-cup.symbols}" />
+			<arg value="${java-cup.filename}" />
+		</java>
+	</target>
+</project>

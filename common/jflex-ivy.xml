@@ -1,0 +1,7 @@
+<ivy-module version="2.0">
+    <info organisation="lasige.gloss" module="jflex" revision="1.3.5" />
+    <publications>
+        <artifact name="jflex" type="jar" ext="jar"/>    	
+        <artifact name="jflex" type="xml" ext="xml"/>       
+    </publications>
+</ivy-module>

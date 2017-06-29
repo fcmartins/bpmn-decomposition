@@ -1,0 +1,25 @@
+; This should work OK on installations using the defaults of Eclipse.
+;
+; These are the default values.
+
+
+; The tyco-common project:
+; tycocommon.path = ${basedir}/../common
+
+; The tyco-common JAR:
+; tycocommon.jar = ${tycocommon.path}/dist/tycocommon.jar
+; if it does not exist, then try this one:
+; tycocommon.jar = ${basedir}/lib/tycocommon.jar
+
+; JavaCUP's runtime JAR:
+; javacup-runtime.jar = ${tycocommon.path}/dist/javacup-runtime.jar
+; if it does not exist, then try this one:
+; javacup-runtime.jar = ${basedir}/lib/javacup-runtime.jar
+
+; The CVM-extra JAR:
+; libcvm-extra.jar = ${basedir}/../cvm/target/libcvm-extra.jar
+; if it does not exist, then try this one:
+; libcvm-extra.jar = ${basedir}/lib/libcvm-extra.jar
+
+; [Optional] Declare where JUnit 4 is located.
+; junit.jar = ${basedir}/lib/junit.jar

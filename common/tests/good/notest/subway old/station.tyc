@@ -1,0 +1,229 @@
+{--
+ - A station
+ - featuring isEmpty, toString, addLink, removeLink, links, paths, time,
+ - line, lessStations, lessChanges and lessTime.
+ -
+ - @author Andre Goncalves
+ - $Id$
+ -}
+ 
+def 
+Station (self, name) = 
+	def
+	Link (s, station, time, line) = 
+		s ? {
+			toString (replyTo) =
+			replyTo ! ["{" ^ station ! toString[] ^
+								", " ^ ToString[time] ^ ", " ^ line ^ "}"] |
+				Link [s, station, time, line] 
+			getStation (replyTo) = 
+				Link [s, station ,time, line] |
+				replyTo ! [station] 
+			equals (con, replyTo) = 
+				let x = con ! getStation [] in
+				replyTo ! [x ! equals[station]] |
+				Link [s, station, time, line] 
+			getTime (replyTo) = 
+				replyTo ! [time] |
+				Link [s, station, time, line] 
+			setTime (newtime) = 
+				Link [s, station, newtime, line] 
+			getLine (replyTo) = 
+				replyTo ! [line] |
+				Link [s, station, time, line]
+	}
+	
+	Control (self, replyTo) =
+		def 
+			Go (state, np, paths) = 
+				self ? {
+					kill () =
+						if np == 1 then
+							if state then
+								replyTo ! ok[paths]
+							else
+								replyTo ! err[]
+						else
+							Go [state, np - 1, paths]
+					fork () :
+						Go [state, np + 1, paths]
+					found (path) =
+						paths ! add [path];
+						if np == 1 then
+							if state then
+								replyTo ! ok[paths]
+							else
+								replyTo ! err[]
+						else
+							Go [true, np - 1, paths]
+				}
+		in
+		new paths List [paths] |
+		Go [false,1, paths]
+
+
+		Changes (path, r) = 
+				---Go [links] |
+						def loop1 (change, line, pos) =
+							if pos == path ! size[] then
+								r ! [change]
+							else
+								let l = path ! element [pos] ! line [path ! element [pos+1]] in
+								if line == l ^ "" then
+									loop1 [change, line, pos +1]
+								else 
+									loop1 [change + 1, l, pos +1]							
+						in 
+						loop1 [0, self ! line [path ! element[2]], 2]
+
+			times (path, r) =
+				---Go [links] |
+						def loop1 (time, pos) =
+							if pos == path ! size[] then
+								r ! [time + Changes[path] * 5]
+								--r ! [time + self ! Changes[path] * 5]
+							else
+								loop1 [time + path ! element [pos] ! time [path ! element [pos+1]] ,pos +1]
+						in 
+						loop1 [0, 2]
+
+		
+	Go (links) = 
+		self ? {
+			equals (station, replyTo) =
+				Go [links] |
+				replyTo ! [(name ^ "") == station ! toString[]]  	
+			toString (replyTo) =
+				Go [links] |
+				replyTo ! [name]
+			addLink (n, t, l) :
+				new newLink Link[newLink, n, t, l] |				
+				links ! add [newLink];
+				Go [links] 
+			removeLink (name, replyTo) =
+				links ! remove [name];
+				Go [links]
+			links (replyTo) = 
+				Go [links] |
+				replyTo ! [links]
+			time (to, replyTo) =
+				Go [links] |
+				def loop (pos) =
+					if pos == 0 then
+						replyTo ! [0]
+					else
+						if to ! equals [links ! element[pos] ! getStation[]] then
+							replyTo ! [links ! element[pos] ! getTime[]]
+						else
+							loop [pos - 1]
+				in
+					loop [links ! size []]
+			line (to, replyTo) =
+				Go [links] |
+				def loop (pos) =
+					if pos == 0 then
+						replyTo ! [""]
+					else
+						if to ! equals [links ! element[pos] ! getStation[]] then
+							replyTo ! [links ! element[pos] ! getLine[]]
+						else
+							loop [pos - 1]
+				in
+					loop [links ! size []]			
+
+				
+			paths (to, replyTo) =
+				Go [links] |
+				new control Control [control, replyTo] |
+				def 
+					findCycle (fromStation, visited, size) =
+						if size == 0 then
+							control ! kill[]
+						else
+							if visited ! contains [fromStation ! links [] ! element [size] ! getStation[]] then
+								findCycle [fromStation, visited, size -1]
+							else 
+								control ! fork[]; 
+								{
+									find [fromStation ! links [] ! element [size] ! getStation[], visited] |
+									findCycle [fromStation, visited, size -1]
+								}
+							
+					find (fromStation, visited) = 
+						let newVisited = visited ! clone[] in
+						newVisited ! add [fromStation];
+						if fromStation ! equals [to] then						
+							control ! found [newVisited]
+						else
+							findCycle [fromStation, newVisited, fromStation ! links[] ! size[]]
+				in 
+				{
+					new v List [v] |
+					find [self, v]
+				}
+				
+			lessStations (to, replyTo) =
+				Go [links] |
+				case self ! paths [to] of {
+					err () = inaction
+					ok (paths) =
+						def loop (selection, pos) =
+							if pos == 0 then
+								replyTo ! [selection]
+							else
+								if selection ! size[] > paths ! element[pos] ! size [] then
+									loop [paths ! element[pos], pos - 1]
+								else
+									loop [selection, pos - 1]
+						in 
+						loop [paths ! element[paths ! size[]], paths ! size[] - 1]
+				}
+				
+			lessChanges (to, replyTo) =
+				Go [links] |
+				case self ! paths [to] of {
+					err () = inaction
+					ok (paths) =
+						def
+							loop (changes, selection, pos) =
+								if pos == paths ! size[] +1  then
+									replyTo ! [changes, selection]
+								else
+									io ! puts ["antes da chamada"];
+									let c = Changes [paths ! element[pos]] in
+									--let c = self ! Changes [paths ! element[pos]] in
+									io ! puts ["depois da chamada"];
+									if changes > c then
+										loop [c, paths ! element[pos], pos + 1]
+									else
+										loop [changes, selection, pos + 1]													
+						in
+						loop [Changes[paths ! element[1]], paths ! element[1], 2]
+						--loop [self ! Changes[paths ! element[1]], paths ! element[1], 2]
+				}
+				
+			lessTime (to, replyTo) =
+				Go [links] |
+				case self ! paths [to] of {
+					err () = inaction
+					ok (paths) =
+						def loop (time, selection, pos) =
+							if pos == paths ! size[] +1  then
+								replyTo ! [time, selection]
+							else
+								let t = times [paths ! element[pos]] in
+								--let t = self ! times [paths ! element[pos]] in
+								if time > t then
+									loop [t, paths ! element[pos], pos + 1]
+								else
+									loop [time, selection, pos + 1]		
+						in
+						loop [times[paths ! element[1]], paths ! element[1], 2]
+						--loop [self ! times[paths ! element[1]], paths ! element[1], 2]
+				}
+		}
+		
+	in
+		new newLinks List [newLinks] |
+		Go [newLinks]
+in

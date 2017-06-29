@@ -1,0 +1,63 @@
+{-
+ - Operations on streams
+ -
+ - Vasco T. Vasconcelos
+ - $Id: streamOps.tyc,v 1.1.1.1 2002/11/30 14:37:29 tyco Exp $
+ -}
+
+def
+
+{-
+ - Produce consecutive integers on a given channel.
+ -}
+Ints (next, outStream) =
+  outStream ! [next] ;
+  Ints [next + 1, outStream]
+
+{-
+ - Produce consecutive integers on a given channel, up to a given number.
+ -}
+IntsUpTo (next, limit, outStream) =
+  if next < limit
+  then
+    outStream ! [next] ;
+    IntsUpTo [next + 1, limit, outStream]
+
+{-
+ - Print a stream of Strings, each terminated by a space.
+ -}
+PrintStringStream (s) =
+  s ? (x) :
+  io ! puts [x] ;
+  io ! puts [" "] ;
+  PrintStringStream [s]
+
+{-
+ - Print a stream of Integers, each terminated by a space.
+ -}
+PrintIntegerStream (s) =
+  s ? (x) :
+  io ! puti [x] ;
+  io ! puts [" "] ;
+  PrintIntegerStream [s]
+
+{-
+ - Get the n-th element in a stream.
+ -}
+Take (n, inStream, r) =
+  inStream ? (x) :
+  if n == 1
+  then r ! [x]
+  else Take [n - 1, inStream, r]
+
+{-
+ - Forward  the first n elements in a stream.
+ -}
+TakeUpTo (n, inStream, outStream) =
+  inStream ? (x) :
+  if n > 0
+  then
+    outStream ! [x];
+    TakeUpTo [n - 1, inStream, outStream]
+
+in

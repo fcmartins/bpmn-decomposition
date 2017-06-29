@@ -1,0 +1,101 @@
+expression.tyco:13.12: 
+  [Unification Error] 
+  I was expecting an Integer expression in the left operand of an arithmetic expression,
+  but was confronted with the following type:
+	Boolean
+  This is the point in the program where unification failed.
+  The source of the problem can be at a distant point in the source code.
+expression.tyco:13.25: 
+  [Unification Error] 
+  I was expecting an Integer expression in the right operand of an arithmetic expression,
+  but was confronted with the following type:
+	String
+  This is the point in the program where unification failed.
+  The source of the problem can be at a distant point in the source code.
+expression.tyco:13.1: 
+  [Unification Error] 
+  For the message targeted at io, I was expecting the type:
+	Integer
+  but found the following type:
+	Integer {done: }
+  (or possibly the other way round.)
+  (I was trying to unify the puti-labelled component of an open record with
+  a closed record, when I found type sequences with different lengths.)
+  This is the point in the program where unification failed.
+  The source of the problem can be at a distant point in the source code.
+expression.tyco:15.12: 
+  [Unification Error] 
+  I was expecting a Boolean expression in the left operand of a boolean expression,
+  but was confronted with the following type:
+	Integer
+  This is the point in the program where unification failed.
+  The source of the problem can be at a distant point in the source code.
+expression.tyco:15.18: 
+  [Unification Error] 
+  I was expecting a Boolean expression in the right operand of a boolean expression,
+  but was confronted with the following type:
+	{getb: {val: Boolean}, geti: {val: Integer}, gets: {val: String}, printb: Boolean, printi: Integer, prints: String, putb: Boolean {done: }, puti: Integer {done: }, puts: String {done: }}
+  This is the point in the program where unification failed.
+  The source of the problem can be at a distant point in the source code.
+expression.tyco:15.1: 
+  [Unification Error] 
+  For the message targeted at io, I was expecting the type:
+	Boolean
+  but found the following type:
+	Boolean {done: }
+  (or possibly the other way round.)
+  (I was trying to unify the putb-labelled component of an open record with
+  a closed record, when I found type sequences with different lengths.)
+  This is the point in the program where unification failed.
+  The source of the problem can be at a distant point in the source code.
+expression.tyco:17.16: 
+  [Unification Error] 
+  I was expecting a Boolean expression in a not expression,
+  but was confronted with the following type:
+	Integer
+  This is the point in the program where unification failed.
+  The source of the problem can be at a distant point in the source code.
+expression.tyco:17.1: 
+  [Unification Error] 
+  For the message targeted at io, I was expecting the type:
+	Boolean
+  but found the following type:
+	Boolean {done: }
+  (or possibly the other way round.)
+  (I was trying to unify the putb-labelled component of an open record with
+  a closed record, when I found type sequences with different lengths.)
+  This is the point in the program where unification failed.
+  The source of the problem can be at a distant point in the source code.
+expression.tyco:19.12: 
+  [Unification Error] 
+  I was expecting a String expression in the left operand of a string concatenation,
+  but was confronted with the following type:
+	Boolean
+  This is the point in the program where unification failed.
+  The source of the problem can be at a distant point in the source code.
+expression.tyco:19.19: 
+  [Unification Error] 
+  I was expecting a String expression in the right operand of a string concatenation,
+  but was confronted with the following type:
+	Integer
+  This is the point in the program where unification failed.
+  The source of the problem can be at a distant point in the source code.
+expression.tyco:19.1: 
+  [Unification Error] 
+  For the message targeted at io, I was expecting the type:
+	String
+  but found the following type:
+	String {done: }
+  (or possibly the other way round.)
+  (I was trying to unify the puts-labelled component of an open record with
+  a closed record, when I found type sequences with different lengths.)
+  This is the point in the program where unification failed.
+  The source of the problem can be at a distant point in the source code.
+expression.tyco:21.7: 
+  [Unification Error] 
+  I was expecting a Boolean expression in condition of an if-then-else,
+  but was confronted with the following type:
+	Integer
+  This is the point in the program where unification failed.
+  The source of the problem can be at a distant point in the source code.
+12 errors

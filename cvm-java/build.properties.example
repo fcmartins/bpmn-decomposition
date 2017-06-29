@@ -1,0 +1,31 @@
+; This should work OK on installations using the defaults of Eclipse.
+;
+; These are the default values.
+
+; For cvm-lang
+; ============
+
+; The tyco-common project:
+; tycocommon.path = ${basedir}/../common
+
+; The tyco-common JAR:
+; tycocommon.jar = ${tycocommon.path}/dist/tycocommon.jar
+; if it does not exist, then try this one:
+; tycocommon.jar = ${basedir}/lib/tycocommon.jar
+
+; JavaCUP's runtime JAR:
+; javacup-runtime.jar = ${tycocommon.path}/dist/javacup-runtime.jar
+; if it does not exist, then try this one:
+; javacup-runtime.jar = ${basedir}/lib/javacup-runtime.jar
+
+; For cvm-app
+; ===========
+
+; The location of commons-cli.jar
+; commons-cli.jar = ${basedir}/lib/commons-cli.jar
+
+; For tests (optional)
+; ====================
+
+; The location of JUnit 3
+; junit.jar = ${basedir}/lib/junit.jar

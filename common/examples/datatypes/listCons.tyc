@@ -1,0 +1,69 @@
+{-
+ - A class describing a non-empty list.
+ - See "List.tyc" for details.
+ -
+ - Author: Vasco T. Vasconcelos
+ - $Id:$
+ -}
+Cons (self, head, tail) = self ? {
+
+  add (newHead, replyTo) = 
+    Cons[self, head, tail] |
+    new newList Cons [newList, newHead, self] |
+    replyTo![newList]
+
+  foldp (launch, gather) = 
+  Cons [self, head, tail] |
+    tail ! foldp [launch, gather] |
+    launch ! [head, gather]
+
+  foldr (function, neutral, replyTo) = 
+    Cons [self, head, tail] |
+    replyTo ! [function ! [head, tail ! foldr [function, neutral]]]   
+
+  length (replyTo) = 
+    Cons [self, head, tail] |
+    replyTo ! [tail ! length [] + 1]
+
+  toString (replyTo) = 
+    Cons [self, head, tail] |
+    replyTo ! [head ! toString [] ^ ":\n" ^ tail ! toString []]
+
+  equals (other, replyTo) = 
+    Cons [self, head, tail] |
+    case other ! val [] of
+    {
+      cons (headOther, tailOther) = 
+      replyTo ! [headOther ! equals [head] and tailOther ! equals [tail]]
+      nil () = replyTo ! [false]
+    }
+   
+  elem (e, replyTo) = 
+    Cons [self, head, tail] |
+    replyTo ! [head ! equals [e] or tail ! elem [e]]
+
+  val (replyTo) = 
+    Cons [self, head, tail] |
+    replyTo ! cons [head, tail]
+
+  null (replyTo) = 
+    Cons [self, head, tail] |
+    replyTo ! [false]
+
+  remove(value, replyTo) =
+	if value ! equals [head] then 
+      replyTo ! [tail] 		
+	else {
+      Cons [self, head, tail ! remove[value]] |
+      replyTo ! [self]   
+    }
+
+
+  
+  get(value, replyTo) =
+    Cons [self, head, tail] |
+    if value ! equals [head] then 
+      replyTo ! [self]
+    else
+      replyTo ! [tail ! get[value]]
+}

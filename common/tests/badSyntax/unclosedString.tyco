@@ -1,0 +1,6 @@
+-- Syntax Error
+
+-- Unclosed string at end of file
+
+new x
+x ! lala["Gee, forgot to close this

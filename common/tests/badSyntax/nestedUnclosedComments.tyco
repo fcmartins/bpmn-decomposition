@@ -1,0 +1,10 @@
+-- Syntax error
+
+-- Nested unclosed comments
+
+io {- outermost comment starts here
+{- level 2 -}
+back in the outermost
+{- level 2 {- level 3 -} -}
+
+! puti [437]

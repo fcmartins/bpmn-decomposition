@@ -1,0 +1,82 @@
+
+telheiras ! addLink[campogrande, 3, "Green"] ;
+campogrande ! addLink [alvalade, 3, "Green"] ;
+alvalade ! addLink [roma, 3, "Green"] ;
+roma ! addLink [areeiro, 3, "Green"] ;
+areeiro ! addLink [alameda, 3, "Green"] ;
+alameda ! addLink [arroios, 3, "Green"] ;
+arroios ! addLink [anjos, 3, "Green"] ;
+anjos ! addLink [intendente, 3, "Green"] ;
+intendente ! addLink [martimmoniz, 3, "Green"] ;
+martimmoniz ! addLink [rossio, 3, "Green"] ;
+rossio ! addLink [baixa, 3, "Green"] ;
+baixa ! addLink [caissodre, 3, "Green"] ;
+
+caissodre ! addLink [baixa, 3, "Green"] ;
+baixa ! addLink [rossio, 3, "Green"] ;
+rossio ! addLink [martimmoniz, 3, "Green"] ;
+martimmoniz ! addLink [intendente, 3, "Green"] ;
+intendente ! addLink [anjos, 3, "Green"] ;
+anjos ! addLink [arroios, 3, "Green"] ;
+arroios ! addLink [alameda, 3, "Green"] ;
+alameda ! addLink [areeiro, 3, "Green"] ;
+areeiro ! addLink [roma, 3, "Green"] ;
+roma ! addLink [alvalade, 3, "Green"] ;
+alvalade ! addLink [campogrande, 3, "Green"] ;
+campogrande ! addLink [telheiras, 3, "Green"] ;
+
+campogrande ! addLink [cidadeuniversitaria, 4, "Yellow"] ;
+cidadeuniversitaria ! addLink [entrecampos, 4, "Yellow"] ;
+entrecampos ! addLink [campopequeno, 4, "Yellow"] ;
+campopequeno ! addLink [saldanha, 4, "Yellow"] ;
+saldanha ! addLink [picoas, 4, "Yellow"] ;
+picoas ! addLink [marques, 4, "Yellow"] ;
+marques ! addLink [rato, 4, "Yellow"] ;
+
+rato ! addLink [marques, 4, "Yellow"] ;
+marques ! addLink [picoas, 4, "Yellow"] ;
+picoas ! addLink [saldanha, 4, "Yellow"] ;
+saldanha ! addLink [campopequeno, 4, "Yellow"] ;
+campopequeno ! addLink [entrecampos, 4, "Yellow"] ;
+entrecampos ! addLink [cidadeuniversitaria, 4, "Yellow"] ;
+cidadeuniversitaria ! addLink [campogrande, 4, "Yellow"] ;
+
+alameda ! addLink [olaias, 6, "Red"] ;
+olaias ! addLink [belavista, 6, "Red"] ;
+belavista ! addLink [chelas, 6, "Red"] ;
+chelas ! addLink [olivais, 6, "Red"] ;
+olivais ! addLink [caboruivo, 6, "Red"] ;
+caboruivo ! addLink [oriente, 6, "Red"] ;
+
+oriente ! addLink [caboruivo, 6, "Red"] ;
+caboruivo ! addLink [olivais, 6, "Red"] ;
+olivais ! addLink [chelas, 6, "Red"] ;
+chelas ! addLink [belavista, 6, "Red"] ;
+belavista ! addLink [olaias, 6, "Red"] ;
+olaias ! addLink [alameda, 6, "Red"] ;
+
+baixa ! addLink[restauradores, 3, "Blue"] ;
+restauradores ! addLink [avenida, 3, "Blue"] ;
+avenida ! addLink [marques, 3, "Blue"] ;
+marques ! addLink [parque, 3, "Blue"] ;
+parque ! addLink [sebastiao, 3, "Blue"] ;
+sebastiao ! addLink [pracaespanha, 3, "Blue"] ;
+pracaespanha ! addLink [jardimzoologico, 3, "Blue"] ;
+jardimzoologico ! addLink [laranjeiras, 3, "Blue"] ;
+laranjeiras ! addLink [moinhos, 3, "Blue"] ;
+moinhos ! addLink [luz, 3, "Blue"] ;
+luz ! addLink [carnide, 3, "Blue"] ;
+carnide ! addLink [pontinha, 3, "Blue"] ;
+
+pontinha ! addLink [carnide, 3, "Blue"] ;
+carnide ! addLink [luz, 3, "Blue"] ;
+luz ! addLink [moinhos, 3, "Blue"] ;
+moinhos ! addLink [laranjeiras, 3, "Blue"] ;
+laranjeiras ! addLink [jardimzoologico, 3, "Blue"] ;
+jardimzoologico ! addLink [pracaespanha, 3, "Blue"] ;
+pracaespanha ! addLink [sebastiao, 3, "Blue"] ;
+sebastiao ! addLink [parque, 3, "Blue"] ;
+parque ! addLink [marques, 3, "Blue"] ;
+marques ! addLink [avenida, 3, "Blue"] ;
+avenida ! addLink [restauradores, 3, "Blue"] ;
+restauradores ! addLink [baixa, 3, "Blue"] ;

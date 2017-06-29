@@ -1,0 +1,10 @@
+def	Main () = 
+
+	def	test() = 
+			io ! prints["test\n"] |
+			Main[] 
+	in 
+	new test test[]
+		
+in 
+Main []

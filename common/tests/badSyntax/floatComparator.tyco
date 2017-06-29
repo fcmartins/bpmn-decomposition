@@ -1,0 +1,26 @@
+{-
+ - Comparing floats
+ - Cutting down polymorphism
+ -
+ - Vasco T. Vasconcelos
+ - $Id: floatComparator.tyco,v 1.1 2004/02/12 17:44:20 tyco Exp $
+ -}
+
+def
+  X (a, b, r) = r ! [a == b + 0.0]
+in
+let
+  x = X [132.32, -32.0e+12]
+in
+  io ! putb [x] ; io ! prints ["\n"]
+
+{-
+ - The " + 0.0" is important to cut down the polymorphism;
+ - This program does not compile:
+
+def
+  X (a, b, r) = r ! [a == b]
+in
+  inaction
+
+-}

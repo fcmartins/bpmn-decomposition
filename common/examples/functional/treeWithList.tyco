@@ -1,0 +1,46 @@
+{-
+ - A binary tree constructed with the list constructors.
+ -
+ - Nodes are Cons cells; leaves are Nil cells.
+ - The only information the tree carries is its structure.
+ - We define one such tree, as well as a function to count the leaves
+ - in a tree.
+ -
+ - Vasco T. Vasconcelos
+ - $Id: treeWithList.tyco,v 1.1 2004/02/12 17:44:20 tyco Exp $
+ -}
+
+include "listOps.tyc"
+
+def
+-- Count the number of leaves in a tree
+Count (tree, replyto) =
+  case tree ! [] of {
+    nil () =
+      replyto ! [1]
+    cons (left, right) =
+        replyto ! [Count [left] + Count [right]]
+  }
+
+in def
+
+{- A tree of the following form
+
+    /\
+   /\
+    /\
+
+-}
+ATree (tree) =
+  new l1, l2, l3, l4
+  Nil [l1] | Nil [l2] | Nil [l3] | Nil [l4] |
+  new c1, c2
+--  Cons [c1, l1, c2] | Cons [c2, c1, l3] | -- segmentation fault
+  Cons [c1, l2, l3] | Cons [c2, l1, c1] | -- correct one
+  Cons [tree, c2, l4]
+
+-- Print the number of leaves in the tree
+in
+new tree ATree [tree] |
+  io ! puti [Count [tree]] ; io ! prints ["\n"]
+

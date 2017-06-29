@@ -1,0 +1,49 @@
+{-
+ - Multiple equations in a let
+ -
+ - Vasco T. Vasconcelos
+ - March 2001
+ -}
+
+def
+  X (a, r) = r ! [a, a]
+in
+-- A single equation; a single variable on the left hand side
+
+let
+  x = io ! geti []
+in
+
+-- A single equation; various variables on the left hand side
+
+new a
+let
+  x, y = X [a]
+in
+
+-- Various equations; one variable on the left
+
+new a, b, c
+let
+  x = a ! [5]
+  y = b ! [true]
+  z = c ! ["lala"]
+in
+
+-- Various equations; various variables on the left
+
+new a, b, c
+let
+  x1, x2 = X [5]
+  y = b ! [true]
+  z1, z2, z3 = c ! ["lala"]
+in
+
+-- Various equations; same variable on the left
+
+new a, b
+let
+  x = a ! [5]
+  x, y = X [true]
+in
+inaction

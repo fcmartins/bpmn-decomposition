@@ -1,0 +1,14 @@
+/.cvsignore/1.1/Fri Jan 21 17:08:11 2011//
+/AUTHORS/1.1/Fri Jan 21 17:08:11 2011//
+/README.ant-behind-proxy/1.1/Tue Oct 18 15:32:43 2011//
+/README.txt/1.2/Thu Jan 27 15:02:32 2011//
+/build.properties.example/1.2/Thu Jan 27 15:02:32 2011//
+/build.xml/1.7/Tue Oct 18 15:33:08 2011//
+/ivy.xml/1.1/Tue Oct 18 15:32:43 2011//
+/ivysettings.xml/1.1/Tue Oct 18 15:32:43 2011//
+/local-ivysettings.xml/1.1/Tue Oct 18 15:32:43 2011//
+D/dist-files////
+D/doc////
+D/eclipse////
+D/lib////
+D/src////

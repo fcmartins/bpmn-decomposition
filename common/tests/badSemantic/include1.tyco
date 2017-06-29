@@ -1,0 +1,35 @@
+{-
+ - Testing the includes.
+ - (Bug ocurred in 0.4 version.)
+ - 
+ - Paulo Rafael
+ - February 2004
+ -}
+include "empty.tyc"
+include "empty.tyc"
+include "empty.tyc"
+include "empty.tyc"
+include "empty.tyc"
+include "empty.tyc"
+include "empty.tyc"
+include "empty.tyc"
+include "empty.tyc"
+include "empty.tyc"
+include "empty.tyc"
+include "empty.tyc"
+include "empty.tyc"
+include "empty.tyc"
+include "empty.tyc"
+include "empty.tyc"
+include "empty.tyc"
+include "empty.tyc"
+include "empty.tyc"
+include "empty.tyc"
+include "empty.tyc"
+include "empty.tyc"
+include "empty.tyc"
+include "empty.tyc"
+include "empty.tyc"
+include "empty.tyc"
+include "empty.tyc"
+let a = NewA[] in inaction

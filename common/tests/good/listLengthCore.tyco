@@ -1,0 +1,24 @@
+{-
+ - List append using no abbreviations
+ -
+ - Vasco T. Vasconcelos
+ - $Id: listLengthCore.tyco,v 1.1 2004/02/12 17:44:20 tyco Exp $
+ -}
+
+include "../../examples/datatypes/List.tyc"
+
+def
+Length (l, r) =
+  new r1
+  l ! [r1] |
+  r1 ? {
+    nil () =
+      r ! [0]
+    cons (_, t) =
+      new r2
+      Length [t, r2] |
+      r2 ? {val (n) = r ! [n + 1]}
+  }
+in
+
+inaction

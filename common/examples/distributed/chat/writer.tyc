@@ -1,0 +1,30 @@
+{--
+ - Writes to the screen the messages received from the network.
+ - 
+ - @param self A reference to the object.
+ - 
+ - @author Herve' Paulino
+ - $Id:$
+ -}
+def 
+	Writer(self) = self ? {	
+		
+		-- Prints a message from a peer.				
+		print(sender, str) =
+			io ! prints["\n" ^ sender ^ " says: " ^ str ^ "\n\n>"] |
+			Writer[self]								
+		
+		-- Prints the information that a peer has logged in the system.
+		logInfo(peer, op) =
+			io ! prints ["\n" ^ peer  ^ " has logged " ^ op ^ "\n\n> "] |	
+			Writer[self]								
+	}
+
+	{-
+	 - The constructor
+	 -}
+	NewWriter(replyTo) = 
+		new result
+		Writer [result] |
+		replyTo ! [result]	
+in

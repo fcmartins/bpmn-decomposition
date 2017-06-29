@@ -1,0 +1,32 @@
+{--
+ - Replies the shortest list <name>
+ - Function to use in the List method val
+ - 
+ - @param self reference to the object
+ - @param shortestPath
+ - @return replyTo reply the shortest path
+ - 
+ - @author Paulo Rafael
+ - $Id:$
+ -}
+def 
+ShortestPathFun (self, shortestPath, replyTo) = 
+  self ? {  
+  cons (head, tail) =     
+    if 
+      shortestPath ! length [] == 0 or 
+      head ! length[] <= shortestPath ! length [] 
+    then
+      tail ! val [NewShortestPathFun [head, replyTo]]
+    else
+      tail ! val [NewShortestPathFun [shortestPath, replyTo]]
+
+  nil () = replyTo ! [shortestPath]
+  }  
+  
+-- Constructor
+NewShortestPathFun (path, newReplyTo, replyTo) =
+  new newSelf
+  replyTo ! [newSelf] |
+  ShortestPathFun [newSelf, path, newReplyTo]
+in

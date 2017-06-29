@@ -1,0 +1,51 @@
+{-
+ - The list Interface.
+ -
+ - Author: Vasco T. Vasconcelos
+ - $Id:$
+ -}
+
+def
+-- List constructors
+
+{-
+ - A Cons constructor.
+ -}  
+NewCons (head, tail, replyTo) =
+  new result
+  replyTo ! [result] |
+  Cons [result, head, tail]
+
+{-
+ - A constructor for an empty list.
+ -}  
+NewEmptyList (replyTo) =
+  new result
+  replyTo ! [result] |
+  Nil [result]
+  
+{-
+ - A constructor for a list with one element.
+ -}  
+NewOneList (elem1, replyTo) =
+  new result
+  replyTo ! [result] |
+  Cons [result, elem1, NewEmptyList[]]
+
+{-
+ - A constructor for a list with two elements.
+ -}  
+NewTwoList (elem1, elem2, replyTo) =
+  new result
+  replyTo ! [result] |
+  Cons [result, elem1, NewOneList[elem2]]
+
+{-
+ - A constructor for a list with three elements.
+ -}  
+NewThreeList (elem1, elem2, elem3, replyTo) =
+  new result
+  replyTo ! [result] |
+  Cons [result, elem1, NewTwoList[elem2, elem3]]
+
+in

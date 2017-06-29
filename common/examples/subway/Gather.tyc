@@ -1,0 +1,30 @@
+{--
+ - Gahter all the answers keeping track of how many are still to come
+ - 
+ - @param self reference to the object
+ - @param numReplies number of replies still expected
+ - @param foundPaths all the paths found to the end node
+ - @return replyTo reply the best shortestPath found
+ - 
+ - @author Paulo Rafael
+ - $Id:$
+ -}
+def 
+Gather (self, numReplies, foundPaths, replyTo) = 
+  self ? {
+    inc (r) = Gather [self, numReplies+1, foundPaths, replyTo] |
+      r ! done[] 
+
+    dec () =  Gather [self, numReplies-1, foundPaths, replyTo] |
+      if numReplies == 1 then  replyTo ! [foundPaths]
+
+    newPath (newPath, r) = Gather [self, numReplies, foundPaths!add[newPath], replyTo] |
+      r ! done[] 
+  }
+
+-- Constructor
+NewGather (newReplyTo, replyTo) =
+    new newSelf
+    replyTo ! [newSelf] |
+    Gather [newSelf, 1, NewEmptyList[], newReplyTo]
+in

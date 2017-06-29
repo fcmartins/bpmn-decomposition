@@ -1,0 +1,8 @@
+Packages common to various projects, including:
+  Error Messages
+  Symbol tables
+  Utils = Sets and Maps
+
+Used by (among others):
+  tycoil
+  tycoc

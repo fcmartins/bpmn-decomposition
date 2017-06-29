@@ -1,0 +1,20 @@
+{--
+ - Test the export of channels with recursive types.
+ - A server that constructs and exports a list.
+ - 
+ - @author Herve' Paulino
+ -}
+export new list
+
+include "../../examples/datatypes/List.tyc"
+def Element(self, val) =
+	self ? {
+		toString(replyTo) = replyTo ! [""]
+		equals(other, replyTo) = replyTo ! [false]
+	}
+in
+def NewElement(val, replyTo) =
+	new result Element[result, val] |
+	replyTo ! [result]
+in
+Cons[list, NewElement[2], NewCons[NewElement[1], NewEmptyList[]]] 

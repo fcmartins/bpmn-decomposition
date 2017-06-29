@@ -1,0 +1,35 @@
+{--
+ - Reads a message from the keyboard and sends it to
+ - a given peer.
+ - 
+ - @param self A reference to the object.
+ - @param myId The identifier of the client.
+ - @param peer A reference to the peer.
+ - @param buffer A buffer for the message.
+ - 
+ - @author Herve' Paulino
+ - $Id:$
+ -}
+
+def 
+	Reader(self, myId, peer, buffer) =
+		-- The call to the object is synchronous, thats the reason for the replyTo
+		self ? (replyTo) =
+			let str = io ! gets[] in
+				if str == "." then {
+					peer ! print [myId, buffer] |
+					io ! puts["Sent\n\n"] ;
+					replyTo ! done[]
+				}
+				else {
+					Reader[self, myId, peer, buffer ^ "\n < " ^ str] |
+					self ! [replyTo]	
+				}
+	{-
+	 - The constructor
+	 -}
+	NewReader(myId, peer, replyTo) = 
+		new result
+		Reader [result, myId, peer, ""] |
+		replyTo ! [result]	
+in

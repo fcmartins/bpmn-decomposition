@@ -1,0 +1,80 @@
+{-
+ - The problem:
+ - Apply a mathematical function to some value;
+ - print the result on some printer.
+ -
+ - The solution:
+ - The mathematical server answers a reference to a function
+ - when invoked with a string containing the name of the function.
+ - The printer server answers a reference to an available printer
+ - when asked.
+ -
+ - Vasco T. Vasconcelos
+ - $Id: mathServer.tyco,v 1.1 2004/02/12 17:44:20 tyco Exp $
+ -}
+
+def
+{-
+ - The inverse function.
+ -}
+Inverse (self) =   self ? (x, r) = r ! [0 - x] | Inverse [self]
+{-
+ - The double function.
+ -}
+Double (self) = self ? (x, r) = r ! [2 * x] | Double [self]
+in
+-- Set up two functions.
+new inverse Inverse [inverse] |
+new double Double [double] |
+
+def
+{-
+ - The mathematical server.
+ - Notice that the functions are global to the server.
+ -}
+MathServer (self) =
+    self ? (functionName, replyTo) =
+    MathServer [self] |
+    if functionName == "double"
+    then
+      replyTo ! [double]
+    else if functionName == "inverse"
+    then
+      replyTo ! [inverse]
+
+{-
+ - A printer that prints integers preceeded by its identification.
+ -}
+Printer (self, myId) =
+  self ? (anInt) =
+    io ! puts [myId ^ ": "];
+    io ! puti [anInt];
+    io ! puts ["\n"];
+    Printer [self, myId]
+in
+-- Set up three printers
+new printer1 Printer [printer1, "Printer 1"] |
+new printer2 Printer [printer2, "Printer 2"] |
+new printer3 Printer [printer3, "Printer 3"] |
+ 
+def
+{-
+ - A printer server that answers an arbitrary printer.
+ -}
+PrintServer (self) =
+  self ? (replyTo) =
+    PrintServer [self] |
+    new choose
+    choose ! [] |
+    {choose ? () = replyTo ! [printer2]} |
+    {choose ? () = replyTo ! [printer3]} |
+    {choose ? () = replyTo ! [printer1]}
+in
+-- Setup a mathematical server
+new aMathServer MathServer [aMathServer] |
+-- Setup a printer server
+new aPrintServer PrintServer [aPrintServer] |
+-- Finally, ask for a function, and for an argument, and
+-- print at some printer the result of applying the argument to the function  
+io ! puts ["Give me the name of a function (double, inverse), and then an argument "] ;
+(aPrintServer ! []) ! [(aMathServer ! [io ! gets []]) ! [io ! geti []]]

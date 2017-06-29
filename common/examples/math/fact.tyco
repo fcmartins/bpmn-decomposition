@@ -1,0 +1,17 @@
+{-
+ - Factorial
+ -
+ - Vasco T. Vasconcelos
+ - $Id: fact.tyco,v 1.1 2004/02/12 17:44:20 tyco Exp $
+ -}
+
+def Fact (n, r) =
+  if n == 0
+  then 
+    r ! [1]
+  else
+    r ! [n * Fact [ n - 1]]
+in
+io ! puts ["fact (10) = "] ; 
+io ! puti [Fact [10]];
+io ! prints ["\n"]

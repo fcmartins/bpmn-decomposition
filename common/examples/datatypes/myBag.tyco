@@ -1,0 +1,18 @@
+{-
+ - Examples: Putting and taking from the bag
+ -
+ - Vasco T. Vasconcelos
+ - $Id: myBag.tyco,v 1.1 2004/02/12 17:44:20 tyco Exp $
+ -}
+
+include "bag.tyc"
+
+let
+  -- a bag 
+  bag = NewBag []
+in
+io ! prints [bag ! get []] |
+io ! printi [bag ! size []] |
+bag ! put ["Hello "] |
+bag ! put ["TyCO "] |
+io ! printi [bag ! size []]

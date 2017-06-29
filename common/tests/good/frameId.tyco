@@ -1,0 +1,12 @@
+{-
+ - Test whether the channels id is correct in the frame
+ -
+ - Paulo Rafael
+ - $Id:
+ -}
+new x
+new y
+y ? () =
+  new x
+  x ! [] |
+  inaction

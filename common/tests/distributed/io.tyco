@@ -1,0 +1,7 @@
+{--
+ - Client to the IO server.
+ - 
+ - @author Herve' Paulino
+ -}
+import s from io
+s ! [io!gets[]]

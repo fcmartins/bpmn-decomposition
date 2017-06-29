@@ -1,0 +1,3 @@
+include "../../examples/math/intOps.tyc"
+
+io ! prints [ToString [245] ^ "\n"]

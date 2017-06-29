@@ -1,0 +1,40 @@
+<!-- Version $Id: build-app.xml,v 1.5 2011/10/17 15:48:53 cogumbreiro Exp $ -->
+
+<project name="cvm-app">
+	<!-- dependencies -->
+    <fail unless="src" />
+    <fail unless="target" />
+    <fail unless="main-bin" />
+    
+    <property name="libcvm-app.jar" value="${target}/libcvm-app.jar" />
+
+    <property name="app-src" value="${src}/app/java" />
+    <property name="app-bin" value="${target}/app-classes" />
+
+    <path id="app.class.path">
+        <pathelement location="${commons-cli.jar}" />
+        <pathelement location="${main-bin}" />
+    </path>
+	
+	<!-- TARGETS -->
+	
+	<target name="-init-app">
+		<mkdir dir="${app-bin}" />
+	</target>
+
+    <target name="-compile-app">
+        <javac destdir="${app-bin}" classpathref="app.class.path" fork="true" srcdir="${app-src}" debug="true"  includeantruntime="false">
+            <include name="**/*.java" />
+        </javac>
+	</target>
+	
+	
+	<target name="-jar-app">
+		<jar destfile="${libcvm-app.jar}">
+			<fileset dir="${app-bin}">
+				<exclude name="**/package.html" />
+			</fileset>
+		</jar>
+	</target>
+	
+</project>

@@ -1,0 +1,26 @@
+{-
+ - A polymorphic open record.
+ - Check the type of Double using the -print-types option.
+ -
+ - Vasco T. Vasconcelos
+ - $Id: openRecordPoly.tyco,v 1.1 2004/02/12 17:44:20 tyco Exp $
+ -}
+
+def
+Double (n, r) =
+  r ! [2 * n ]
+in
+{ new r
+  Double [5, r] |
+  r ? {
+    val (x) = io ! printi [x]
+    foo () = inaction
+  }
+} |
+{ new r
+  Double [7, r] |
+  r ? {
+    val (x) = io ! printi [x]
+    oof () = inaction
+  }
+}

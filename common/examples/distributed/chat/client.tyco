@@ -1,0 +1,27 @@
+{--
+ - The client of the chat program.
+ - 
+ - @author Herve' Paulino
+ - $Id: client.tyco,v 1.3 2004/03/26 15:58:43 tyco Exp $
+ -}
+import server from chat
+
+-- Client information
+include "client.tyc"
+-- Interface with the keyboard
+include "interface.tyc"
+
+{-
+ - Log in the server
+ -}
+def Login() = 
+	io ! puts ["Enter your Id "] ;
+	let id = io ! gets[] in
+		case server ! login [NewClient[id]] of {
+			ok() = 
+				NewInterface[id, server] ! []
+			error() = 	
+				io ! puts["Nickname already in use.\n"] ; 
+				Login[] 
+		}
+in Login[]

@@ -1,0 +1,15 @@
+<ivysettings>
+    <settings defaultResolver="public"/>
+    <include url="http://homepages.lasige.di.fc.ul.pt/~cogumbreiro/repo/ivysettings.xml"/>
+    <include file="local-ivysettings.xml"/>
+    
+    <resolvers>
+        <filesystem name="gloss-publish" m2compatible="true">
+          <artifact pattern="${repository.dir}/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]"/>
+        </filesystem>
+    </resolvers>
+    
+    <modules>
+        <module organisation="lasige.gloss" name="*" resolver="gloss"/>
+    </modules>
+</ivysettings>

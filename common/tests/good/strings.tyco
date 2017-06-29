@@ -1,0 +1,6 @@
+-- Testing the strings
+
+io ! prints ["quotes \" within a string"] |
+io ! prints ["newline \n within a string"] |
+io ! prints ["tab \t within a string"] |
+io ! prints ["backslash-r \r within a string"]

@@ -1,0 +1,25 @@
+\begin{myfigure}
+\begin{align*}
+  & F \grmeq & & \text{\emph{Files}}                    & & D \grmeq & & \text{\emph{Definitions}}\\
+  & \quad \grmor \; D S & & \text{file body}            & & \qquad \varepsilon & & \text{empt definition}\\
+  & & &                                                 & & \qquad x = v & & \text{constant}\\
+  & S \grmeq & & \text{\emph{Sensors}}                  & &  \\
+  & \qquad \; \inactionn & & \text{offline}             & &  O \grmeq & & \text{\emph{Objects}} \\       
+  & \quad \grmor \sensord & & \text{sensor}             & &  \qquad \; \moduled & & \text{object API}\\
+  & \quad \grmor S \parn S & & \text{composition}       & &  & & \\  
+  & & &                                                 & &  v \grmeq & & \text{\emph{Values}}\\ 
+  & P \grmeq & & \text{\emph{Programs}}                 & &  \qquad \; b & & \text{built-in value}\\
+  & \qquad \; v & & \text{value}                        & &  \quad \grmor x & & \text{variable}\\ 
+  & \quad \grmor \invkd & & \text{method call}          & &  \quad \grmor \netk & & \text{broadcast}\\
+  & \quad \grmor \installd & & \text{API update}        & &  \quad \grmor \lock & & \text{sensor object}\\
+  & \quad \grmor \Letd & & \text{local variable}        & &  \quad \grmor O & & \text{object} 
+\end{align*}
+\\[-0.4cm]
+\caption{The syntax of CSN.}
+\label{fig:syntax-sensor}
+\end{myfigure}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "figsonly"
+%%% End: 

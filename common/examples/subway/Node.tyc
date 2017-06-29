@@ -1,0 +1,38 @@
+include "../datatypes/List.tyc"
+include "ComputePathsFun.tyc"
+
+{--
+ - A node
+ - 
+ - @param self reference to the object
+ - @param name node name
+ - @param children list of nodes that go from it and to it
+ - 
+ - @author Paulo Rafael
+ - $Id:$
+ -}
+def
+Node (self, name, children) = self ? {
+
+  name (replyTo)= Node [self, name, children] |
+    replyTo ! [name]
+
+  children (replyTo)= Node [self, name, children] |
+    replyTo ! [children]
+
+  toString (replyTo) = Node [self, name, children] |
+    replyTo ! [name ! toString []]
+
+  equals (other, replyTo) = Node [self, name, children] |
+    replyTo ! [ name ! equals [other ! name []]]
+      
+  computePaths (endNode, gather) = Node [self, name, children] |
+    children ! val [NewComputePathsFun [NewEmptyList [] ! add [self], endNode, gather]]
+}
+
+-- Constructor
+NewNode (name, children, replyTo) =
+  new newSelf
+  replyTo ! [newSelf] |
+  Node [newSelf, name, children]
+in

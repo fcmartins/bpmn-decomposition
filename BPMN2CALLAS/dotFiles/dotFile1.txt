@@ -1,0 +1,11 @@
+graph 1 10.31 1.25
+node Task_6 6.5696 0.625 1.0652 0.5 Task_6 solid ellipse black lightgrey
+node _DataStoreReference_3 8.9563 1 2.7081 0.5 _DataStoreReference_3 solid ellipse black lightgrey
+node ExclusiveGateway_2 4.3365 0.625 2.4012 0.5 ExclusiveGateway_2 solid ellipse black lightgrey
+node EndEvent_4 8.9563 0.25 1.5346 0.5 EndEvent_4 solid ellipse black lightgrey
+node GeneratedStartEvent_1 1.3179 0.625 2.6359 0.5 GeneratedStartEvent_1 solid ellipse black lightgrey
+edge Task_6 _DataStoreReference_3 4 7.078 0.70361 7.2855 0.73659 7.5362 0.77645 7.7856 0.8161 solid black
+edge Task_6 EndEvent_4 4 7.078 0.54639 7.3796 0.49844 7.7727 0.43596 8.12 0.38073 solid black
+edge ExclusiveGateway_2 Task_6 4 5.5434 0.625 5.6634 0.625 5.7819 0.625 5.8933 0.625 solid black
+edge GeneratedStartEvent_1 ExclusiveGateway_2 4 2.6393 0.625 2.7566 0.625 2.8755 0.625 2.993 0.625 solid black
+stop

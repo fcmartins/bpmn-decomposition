@@ -1,0 +1,17 @@
+{-
+ - Semantic Error - Type Inference
+ - Semantic Error - Identifier analysis
+ -
+ - Vasco T. Vasconcelos
+ - March 2001
+ -}
+
+-- A variable introduced with new is used as an integer;
+-- an example that shows that the property is non-local
+
+new a
+{
+  new b
+  a ! [b]
+} |
+a ? (x) = a ! [x + 1]
